@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites 
+    name=""
+    errors="5" 
+    skipped="3" 
+    tests="9" 
+    failures="4" 
+    time="0.2531323000000001"
+    timestamp="2019-12-28 23:16:06.651581"
+    hostname="DESKTOP-EIG79TE">
+
+    
+    <testsuite
+        id="0"
+        name="TestCase1" 
+        errors="2" 
+        skipped="2" 
+        tests="8" 
+        failures="1" 
+        time="0.25248490000000007"
+        timestamp="2019-12-28 23:16:06.397820">
+      <properties>
+         <property name="python" value="3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 18:11:49) [MSC v.1900 64 bit (AMD64)]" />
+         <property name="system" value="Windows-10-10.0.18362-SP0" />
+      </properties>
+      
+        
+        <testcase classname="TestCase1" name="TestCase1:test_00_pass">
+            <system-out>test_00_pass (__main__.TestCase1) ... Stupid print
+2019-12-28 23:16:06,398 - root - DEBUG - debug message
+2019-12-28 23:16:06,398 - root - INFO - info message
+2019-12-28 23:16:06,399 - root - WARNING - very warning message
+2019-12-28 23:16:06,399 - root - ERROR - error message
+2019-12-28 23:16:06,400 - root - CRITICAL - critical message
+ok
+</system-out>
+
+            
+
+             
+
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_01_fail">
+            <system-out>test_01_fail (__main__.TestCase1) ... 
+Text will continue to be cyan
+until it is reset or changed
+
+You can colorize a single line.
+Or a single words can be highlighted
+
+Foreground, background, and styles can be combined
+==========            
+
+If unsure, reset everything back to normal.
+some red text
+and with a green background
+and in dim text
+still dim but normal color
+
+back to normal now
+FAIL
+</system-out>
+
+            
+            <system-err>Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 157, in test_01_fail
+    self.assertEqual(1, 2, "Message")
+AssertionError: 1 != 2 : Message
+</system-err>
+            
+
+             
+
+            
+            
+            <failure>Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 157, in test_01_fail
+    self.assertEqual(1, 2, "Message")
+AssertionError: 1 != 2 : Message
+</failure>
+            
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_02_subtest">
+            <system-out>test_02_subtest (__main__.TestCase1) ... Dolore modi aliquam ipsum sit dolore velit quisquam.
+Amet etincidunt porro dolorem modi ut.
+Aliquam ut consectetur dolor porro.
+Voluptatem porro ipsum quaerat voluptatem.
+Dolorem voluptatem adipisci sit voluptatem.
+Non sed est voluptatem.
+Dolorem magnam aliquam modi quiquia non.
+Velit eius sit dolorem velit dolorem porro.
+Tempora modi magnam sed quaerat adipisci.
+Eius ut consectetur porro porro.
+skipped 'Because 4'
+</system-out>
+
+            
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=0, j=0)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+ZeroDivisionError: division by zero
+</system-err>
+            
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=2, j=4)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+AssertionError: 1 != 0.5 : Message
+</system-err>
+            
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=3, j=6)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+ZeroDivisionError: division by zero
+</system-err>
+            
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=5, j=10)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+AssertionError: 1 != 0.5 : Message
+</system-err>
+            
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=6, j=12)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+ZeroDivisionError: division by zero
+</system-err>
+            
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=8, j=16)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+AssertionError: 1 != 0.5 : Message
+</system-err>
+            
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=9, j=18)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+ZeroDivisionError: division by zero
+</system-err>
+            
+
+             
+
+             
+
+            
+            
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=0, j=0)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+ZeroDivisionError: division by zero
+</failure>   
+            
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=2, j=4)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+AssertionError: 1 != 0.5 : Message
+</failure>   
+            
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=3, j=6)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+ZeroDivisionError: division by zero
+</failure>   
+            
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=5, j=10)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+AssertionError: 1 != 0.5 : Message
+</failure>   
+            
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=6, j=12)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+ZeroDivisionError: division by zero
+</failure>   
+            
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=8, j=16)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+AssertionError: 1 != 0.5 : Message
+</failure>   
+            
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=9, j=18)[49m
+Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+    self.assertEqual(1, 1 / (i % 3) , "Message")
+ZeroDivisionError: division by zero
+</failure>   
+            
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_03_error">
+            <system-out>test_03_error (__main__.TestCase1) ... ERROR
+</system-out>
+
+            
+            <system-err>Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 196, in test_03_error
+    self.assertTrue(1 / 0, "Message")
+ZeroDivisionError: division by zero
+</system-err>
+            
+
+             
+
+             
+
+            
+            
+            <failure>Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 196, in test_03_error
+    self.assertTrue(1 / 0, "Message")
+ZeroDivisionError: division by zero
+</failure>   
+            
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_04_skip">
+            <system-out>test_04_skip (__main__.TestCase1) ... skipped 'Because we can'
+</system-out>
+
+            
+
+            
+            <skipped />
+             
+
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_05_skip_decorator">
+            <system-out>test_05_skip_decorator (__main__.TestCase1) ... skipped 'Because of decorator'
+</system-out>
+
+            
+
+            
+            <skipped />
+             
+
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_06_expected_failure">
+            <system-out>test_06_expected_failure (__main__.TestCase1) ... expected failure
+</system-out>
+
+            
+            <system-err>Traceback (most recent call last):
+  File "c:/Files/BR/br_TestRunner/test.py", line 236, in test_06_expected_failure
+    self.assertTrue(False)
+AssertionError: False is not true
+</system-err>
+            
+
+             
+
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_07_unexpected_sucess">
+            <system-out>test_07_unexpected_sucess (__main__.TestCase1) ... unexpected success
+</system-out>
+
+            
+
+             
+
+             
+
+             
+        </testcase>
+        
+    </testsuite>
+    
+    <testsuite
+        id="1"
+        name="TestCaseA" 
+        errors="0" 
+        skipped="0" 
+        tests="1" 
+        failures="0" 
+        time="0.0006474000000000202"
+        timestamp="2019-12-28 23:16:06.650583">
+      <properties>
+         <property name="python" value="3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 18:11:49) [MSC v.1900 64 bit (AMD64)]" />
+         <property name="system" value="Windows-10-10.0.18362-SP0" />
+      </properties>
+      
+        
+        <testcase classname="TestCaseA" name="TestCaseA:test_0A_pass">
+            <system-out>test_0A_pass (__main__.TestCaseA) ... ok
+</system-out>
+
+            
+
+             
+
+             
+
+             
+        </testcase>
+        
+    </testsuite>
+    
+</testsuites>

@@ -1,0 +1,658 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            html, body, div, span, applet, object, iframe,
+            h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+            a, abbr, acronym, address, big, cite, code,
+            del, dfn, em, img, ins, kbd, q, s, samp,
+            small, strike, strong, sub, sup, tt, var,
+            b, u, i, center,
+            dl, dt, dd, ol, ul, li,
+            fieldset, form, label, legend,
+            table, caption, tbody, tfoot, thead, tr, th, td,
+            article, aside, canvas, details, embed, 
+            figure, figcaption, footer, header, hgroup, 
+            menu, nav, output, ruby, section, summary,
+            time, mark, audio, video {
+                margin: 0;
+                padding: 0;
+                border: 0;
+                font-size: 100%;
+                font: inherit;
+                vertical-align: baseline;
+            }
+            /* HTML5 display-role reset for older browsers */
+            article, aside, details, figcaption, figure, 
+            footer, header, hgroup, menu, nav, section {
+                display: block;
+            }
+            body {
+                line-height: 1;
+            }
+            blockquote, q {
+                quotes: none;
+            }
+            blockquote:before, blockquote:after,
+            q:before, q:after {
+                content: '';
+                content: none;
+            }
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+
+            /**************************************/
+
+            :root {
+                --color--pass: green;
+                --color--pass-bg: rgba(0, 128, 0, 0.2);
+                --color--fail: red;
+                --color--fail-bg: rgba(255, 0, 0, 0.2);
+                --color--error: maroon;
+                --color--error-bg: rgba(128, 0, 0, 0.2);
+                --color--skip: orange;
+                --color--skip-bg: rgba(255, 166, 0, 0.2);
+                --color--expected-failure: rgb(174, 185, 72);
+                --color--expected-failure-bg: rgba(174, 185, 72, 0.2);
+                --color--unexpected-success: rgb(174, 185, 72);
+                --color--unexpected-success-bg: rgba(174, 185, 72, 0.2);
+            }
+
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 14px;
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2em;
+                font-weight: bold;
+                margin: 1.25rem 0;
+            }
+
+            h2 {
+                font-size: 1.75em;
+                font-weight: bold;
+                margin: 1.0rem 0;
+            }
+
+            h3 {
+                font-size: 1.25em;
+                font-weight: bold;
+                margin: 0.5rem 0;
+            }
+
+            h4 {
+                font-size: 1em;
+                font-weight: bold;
+                margin: 0.25rem 0;
+            }
+
+            p, ol, ul {
+                margin-bottom: 0.5em;
+                line-height: 1.25;
+            }
+
+            ol, ul {
+                padding-left: 1rem;
+            }
+
+            li {
+                padding-left: 0.5rem;
+            }
+
+            th {
+                text-align: left;
+                font-weight: bold;
+            }
+
+            th, td {
+                padding: 0.25em;
+                border: 1px solid #a0a0a0;
+            }
+
+            strong {
+                font-weight: bold;
+            }
+
+            em {
+                font-style: italic;
+            }
+
+            tt, pre {
+                font-family: 'Consolas', 'Courier New', Courier, monospace;
+            }
+
+            /**************************************/
+            .testcase {
+                border: 1px solid #a0a0a0;
+            }
+
+            .testcase__name {
+                padding: 0 0.5rem;
+            }
+
+            .testcase__description {
+                padding: 0 0.5rem 0.5rem 0.5rem;
+            }
+
+            .testcase__description h1 { 
+                font-size: 1.2rem;
+                text-transform: uppercase;
+                font-weight: normal;
+                margin: 1.0rem 0;
+            }
+
+            .testcase__description h2 { 
+                font-size: 1.1rem;
+                font-variant: small-caps;
+                font-weight: normal;
+                margin: 1.0rem 0;
+            }
+
+            .testcase__description h3 { 
+                font-size: 1rem;
+                font-style: italic;
+                font-weight: normal;
+                margin: 1.0rem 0;
+            }
+
+            .testcase__description table { 
+                margin: 1.0rem 0;
+            }
+
+            .testcase__description th { 
+                background-color: #c7c7c7;
+            }
+
+            .testcase__header > *{
+                float: left;
+            }
+
+            .testcase__header > *:last-child{
+                float: right;
+            }
+
+            .testcase__summary {
+                margin: 0.5rem;
+                color: #5a5a5a;
+            }
+
+            .testcase__header:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            /**************************************/
+            .test {
+                position: relative;
+            }
+
+            .test + .test {
+                border-top: 1px solid #a0a0a0;
+            }
+
+            .test__header {
+                display: block;
+                padding: 0.25rem 0.5rem 0.25rem 2rem;
+                background-color: #f3f3f3;
+            }
+
+            .test__header span {
+                float: left;
+                display: block;
+                min-height: 1px;
+            }
+
+            .test__header::after {
+                clear: both;
+                display: block;
+                content: " ";
+            }
+
+            .test__result {
+                width: 25%;
+                max-width: 10rem;
+                font-weight: bold;
+            }
+           
+            .test__result:first-letter {
+                text-transform: uppercase;
+            }
+
+            .test__name {
+                width: 50%;
+                max-width: 30rem;
+            }
+
+            .test__time {
+                width: 25%;
+                max-width: 3rem;
+            }
+
+            .test--passed .test__result,
+            .testrun__summary--passed {
+                color: var(--color--pass);
+            }
+
+            .test--skipped .test__result,
+            .testrun__summary--skipped {
+                color: var(--color--skip);
+            }
+
+            .test--errored .test__result,
+            .testrun__summary--errored {
+                color: var(--color--error);
+            }
+
+            .test--failed .test__result,
+            .testrun__summary--failed {
+                color: var(--color--fail);
+            }
+
+            .test--expected-failure .test__result,
+            .testrun__summary--expected-failures {
+                color: var(--color--expected-failure);
+            }
+            
+            .test--unexpected-success .test__result,
+            .testrun__summary--unexpected-success {
+                color: var(--color--unexpected-success);
+            }
+
+            .test__detail { 
+                overflow: hidden;
+                height: 0;
+                box-sizing: border-box;
+                box-shadow: 0px 6px 12px 6px #f3f3f3 inset
+            }
+
+            .test__expander{
+                display: block;
+                position: absolute;
+                top: 2px;
+                left: 0;
+            }
+
+            input.test__expander:checked + .test__detail { 
+                height: auto;
+            }
+
+            .test__description, 
+            .test__skipreason {
+                padding: 0.5rem 1rem 0 1rem;
+            }
+            
+            .test__detail h3 {
+                padding: 0 1rem;
+            }
+
+            .test__console {
+                background-color: #394e4e;
+                color: white; 
+                margin: 0 1rem 0.5rem 1rem;
+                padding: 0.5rem;
+                width: calc(100% - 3rem);
+                line-height: 1.25;
+                font-family: 'Consolas', 'Courier New', Courier, monospace;
+            }
+            
+            .test__console--error{ 
+                color: #e47373;
+                border-top: 1px solid #a53f3f;
+            }
+
+            .test__extra {
+                margin-bottom: 1rem;
+            }
+
+            .subtests {
+                margin: 0 1rem;
+                width: calc(100% - 2rem);
+            }
+
+            .subtest__result {
+                font-weight: bold;
+            }
+
+            .subtest--passed {
+                background-color: var(--color--pass-bg);
+            }
+
+            .subtest--skipped {
+                background-color: var(--color--skip-bg);
+            }
+
+            .subtest--failed {
+                background-color: var(--color--fail-bg);
+            }
+            
+            .subtest--errored {
+                background-color: var(--color--error-bg);
+            }
+
+            /********************************************************/
+            .bar {
+                width: 100%;
+                position: relative;
+                height: 10px;
+                margin: 1rem 0;
+                background-image: linear-gradient(#AAA, #999);
+                box-shadow: 0px 2px 2px 0px #ccc5c5;
+            }
+
+            .bar__line {
+                float: left;
+                height: 100%;
+                position: relative;
+            }
+
+            .bar__line--passed {
+                background-color: var(--color--pass);
+            }
+
+            .bar__line--errored {
+                background-color: var(--color--error);
+            }
+
+            .bar__line--failed {
+                background-color: var(--color--fail);
+            }
+
+            .bar__line--skipped {
+                background-color: var(--color--skip);
+            }
+
+            .bar__line--expected-failure {
+                background-color: var(--color--expected-failure);
+            }
+
+            .bar__line--unexpected-success {
+                background-color: var(--color--unexpected-success);
+            }
+
+            .bar__line span {
+                position: absolute;
+                padding: 0.2rem 0.5rem;
+                top: -0.3rem;
+                background-color: rgba(255, 255, 255, 0.75);
+                text-align: center;
+                left: 50%;
+                transform: translateX(-50%);
+                border: 1px solid rgb(85, 85, 85, 0.75);
+                color: #4d4d4d;
+                border-radius: 0.2rem;
+                
+                opacity: 0;
+            }
+
+            /********************************************************/
+            .fore--black{ color: black; }
+            .fore--red{ color: red; }
+            .fore--green{ color: green; }
+            .fore--yellow{ color: yellow; }
+            .fore--blue{ color: blue; }
+            .fore--magenta{ color: magenta; }
+            .fore--cyan{ color: cyan; }
+            .fore--white{ color: white; }
+            .back--black{ background-color: black; }
+            .back--red{ background-color: red; }
+            .back--green{ background-color: green; }
+            .back--yellow{ background-color: yellow; }
+            .back--blue{ background-color: blue; }
+            .back--magenta{ background-color: magenta; }
+            .back--cyan{ background-color: cyan; }
+            .back--white{ background-color: white; }
+            .style--dim{ opacity: 0.7; }
+            .style--bright{ font-weight: bold;}
+            .style--normal{ font-weight: normal; }
+
+            .log--debug {color: #dedede;}
+            .log--info {color: #73e499;}
+            .log--warning {color: #cfe473;}
+            .log--error {color: #e47373;}
+            .log--critical {color: #e47373; font-weight: bold; background-color: white;}
+
+            /*************************************/
+            ol.arabic      { list-style-type: decimal;}
+            ol.upperalpha  { list-style-type: upper-alpha; }
+            ol.loweralpha  { list-style-type: lower-alpha; }
+            ol.upperroman  { list-style-type: upper-roman; }
+            ol.lowerroman  { list-style-type: lower-roman; }
+        </style>
+    </head>
+    <body>
+        <div class="testrun">
+            <p>Test report {% if data.name %}<strong>{{ data.name }}</strong>{% endif %} generated on <time>{{ now().strftime('%Y-%m-%d %H:%M:%S') }}</time> by BRunhilda</p>
+
+            <h2>Environment</h2>
+            <table class="testrun__environment">
+                <tbody>
+                    <tr>
+                        <th>Executed</th>
+                        <td>{{ data.total.start_datetime.strftime('%Y-%m-%d %H:%M:%S') }} &ndash; 
+                            {{ data.total.end_datetime.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Python</th><td>{{ data.env.pyversion }}</td>
+                    </tr>
+                    <tr>
+                        <th>System</th><td>{{ data.env.system }}</td>
+                    </tr>
+                    <tr>
+                        <th>Hostname</th><td>{{ data.env.hostname }}</td>
+                    </tr>
+                </tbody>
+            </table>
+                        
+            <h2>Summary</h2>
+            <p>Run {{ data.total.tests }} test in {{ '%0.2f'|format(data.total.time|float) }}s</p>
+            <table class="testrun__summary">
+                <tbody>
+                    <tr class="testrun__summary--passed">
+                        <th><input type="checkbox" id="testrun__summary--passed">
+                            <label for="testrun__summary--passed">Passed</label>
+                        </th>
+                        <td>
+                            {{ data.total.passed }}
+                        </td>
+                    </tr>
+                    <tr class="testrun__summary--failed">
+                        <th><input type="checkbox" id="testrun__summary--failed">
+                            <label for="testrun__summary--failed">Failed</label>
+                        </th>
+                        <td>
+                            {{ data.total.failed }}
+                        </td>
+                    </tr>
+                    <tr class="testrun__summary--errored">
+                        <th><input type="checkbox" id="testrun__summary--errored">
+                            <label for="testrun__summary--errored">Errored</label>
+                        </th>
+                        <td>
+                            {{ data.total.errored }}
+                        </td>
+                    </tr>
+                    <tr class="testrun__summary--skipped">
+                        <th><input type="checkbox" id="testrun__summary--skipped">
+                            <label for="testrun__summary--skipped">Skipped</label>
+                        </th>
+                        <td>
+                            {{ data.total.skipped }}
+                        </td>
+                    </tr>
+                    <tr class="testrun__summary--expected-failures">
+                        <th><input type="checkbox" id="testrun__summary--expected-failures">
+                            <label for="testrun__summary--expected-failures">Expected failures</label>
+                        </th>
+                        <td>
+                            {{ data.total.expected_failures }}
+                        </td>
+                    </tr>
+                    <tr class="testrun__summary--unexpected-success">
+                        <th><input type="checkbox" id="testrun__summary--unexpected-success">
+                            <label for="testrun__summary--unexpected-success">Unexpected successes</label>
+                        </th>
+                        <td>
+                            {{ data.total.unexpected_successes }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="bar">
+                {% set total = 0.01 * (data.total.passed + data.total.failed + data.total.errored + data.total.skipped + data.total.expected_failures + data.total.unexpected_successes) %}
+                {% set pct_passed = data.total.passed / total %}
+                {% set pct_failed = data.total.failed / total %}
+                {% set pct_errored = data.total.errored / total %}
+                {% set pct_skipped = data.total.skipped / total %}
+                {% set pct_ef = data.total.expected_failures / total %}
+                {% set pct_us = data.total.unexpected_successes / total %}
+
+                <div class="bar__line bar__line--passed" 
+                     style="width:{{pct_passed}}%;">
+                     <span>{{ data.total.passed }}</span>
+                </div>
+                <div class="bar__line bar__line--failed" 
+                     style="width:{{pct_failed}}%;">
+                     <span>{{ data.total.failed }}</span>
+                </div>
+                <div class="bar__line bar__line--errored" 
+                    style="width:{{pct_errored}}%;">
+                    <span>{{ data.total.errored }}</span>
+                </div>
+                <div class="bar__line bar__line--skipped" 
+                     style="width:{{pct_skipped}}%;">
+                     <span>{{ data.total.skipped }}</span>
+                </div>
+                <div class="bar__line bar__line--expected-failure" 
+                     style="width:{{pct_ef}}%;">
+                     <span>{{ data.total.expected_failures }}</span>
+                </div>
+                <div class="bar__line bar__line--unexpected-success" 
+                     style="width:{{pct_us}}%;">
+                     <span>{{ data.total.unexpected_successes }}</span>
+                </div>
+            </div>
+
+
+            <div class="testsuites">
+                <h2>Results</h2>
+
+                <div class="testsuite_results">
+                    {% for testcase in data.testcases.values() %}
+                    <div class="testcase">
+                        <div class="testcase__header">
+                            <h3 class="testcase__name">{{ testcase.name }}</h3>
+                            <p class="testcase__summary">
+                                <span class="testcase__summary--time">
+                                    Ran in {{ '%0.3f'|format(testcase.time|float) }}s</span>,
+                                <span class="testcase__summary--passed">
+                                    passed: <strong>{{ testcase.passed }}</strong></span>,
+                                <span class="testcase__summary--errored">
+                                    errored: <strong>{{ testcase.errored }}</strong></span>,
+                                <span class="testcase__summary--failed">
+                                    failed: <strong>{{ testcase.failed }}</strong></span>,
+                                <span class="testcase__summary--skipped">
+                                    skipped: <strong>{{ testcase.skipped }}</strong></span>,
+                                <span class="testcase__summary--expected-failures">
+                                    expected failures: <strong>{{ testcase.expected_failures }}</strong></span>,
+                                <span class="testcase__summary--unexpected-success">
+                                    unexpected success: <strong>{{ testcase.unexpected_successes }}</strong></span>.
+                            </p>
+                        </div>
+                        <div class="testcase__description">
+                            {{ testcase.description }}
+                        </div>
+
+                        {% for test in testcase.tests %}
+                        <div class="test test--{{ test.result|lower|replace(' ', '-') }}" id="{{ test.id }}">
+                            <label class="test__header" for="test_expand_{{ test.id }}">
+                                <span class="test__result">{{ test.result|lower }}</span>
+                                <span class="test__name">
+                                    <strong>{{ test.name }}</strong>
+                                    {% if test.subtests %}({{ test.subtests|length }} sub-tests){% endif %}
+                                </span>
+                                <span class="test__time">{{ '%0.3f'|format(test.time|float) }}s</span>
+                            </label>
+                            <input type="checkbox" id="test_expand_{{ test.id }}" class="test__expander">
+                            <div class="test__detail">
+                                {% if test.skip_reason %}
+                                <div class="test__skipreason">
+                                <p>
+                                    <strong>Skipped:</strong> <q>{{ test.skip_reason }}</q>
+                                </p>
+                                </div>
+                                {% endif %}
+
+                                <div class="test__description">
+                                    {{ test.description }}
+                                </div>
+
+                                {% if test.subtests %}
+                                <h3>Sub-tests</h3>
+                                <table class="subtests">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Subtest</th>
+                                            <th>Result</th>
+                                            <th>Detail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for subtest in test.subtests %}
+                                        <tr class="subtest subtest--{{ subtest.result|lower|replace(' ', '-') }}">
+                                            <td class="subtest__id">{{ subtest.id }}</td>
+                                            <td class="subtest__name">{{ subtest.name }}</td>
+                                            <td class="subtest__result">{{ subtest.result }}</td>
+                                            <td class="subtest__detail">
+                                            {% if subtest.error %}
+                                            <pre>{{ subtest.error }}</pre>
+                                            {% elif subtest.reason %}
+                                                {{ subtest.reason }}
+                                            {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% endif %}
+                
+                                {% if test.output %}
+                                <h3>Output</h3>
+                                <div class="test__console">
+                                    <pre>{{ test.output }}</pre>
+                                </div>
+                                {% endif %}
+
+                                {% if test.errors %}
+                                <h3>Errors</h3>
+                                {% for error in test.errors %}
+                                <div class="test__console test__console--error">
+                                    <pre>{{ error }}</pre>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+
+                                {% if 'extra' in test %}
+                                <div class="test__extra">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

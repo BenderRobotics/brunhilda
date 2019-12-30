@@ -1,0 +1,295 @@
+import io
+import os
+import sys
+import time
+import socket
+import datetime
+import platform
+import colorama
+import unittest
+
+__unittest = True
+
+PASSED = 'PASSED'
+FAILED = 'FAILED'
+ERRORED = 'ERRORED'
+SKIPPED = 'SKIPPED'
+EXPECTED_FAILURE = 'EXPECTED FAILURE'
+UNEXPECTED_SUCCESS = 'UNEXPECTED SUCCESS'
+
+
+class CatchedStream():
+    """
+    Adds additional shared buffer stream to the given stream allowing
+    to catched all stream outputs in the chronological order.
+    """
+    
+    def __init__(self, stream, buffer):
+        """
+        :param stream: stream to catch
+        :param buffer: instance of the buffer stream
+        """
+        self._buffer = buffer
+        self.stream = stream
+
+    def __getattr__(self, attr):
+        """
+        Allowes to act transparently as a stream substitution.
+        """
+        if attr in ('stream', '__getstate__'):
+            raise AttributeError(attr)
+        return getattr(self.stream, attr)
+
+    def write(self, arg):
+        """
+        All stream writes are also written to the shared buffer.
+        """
+        self._buffer.write(arg)
+        return self.stream.write(arg)
+
+    def writeln(self, arg=None):
+        """
+        Original test runner uses custom decorator with `writeln` method, 
+        we have to implemented as well to keep compatible interface.
+        """
+        if arg:
+            self._buffer.write(arg)
+        self._buffer.write('\n')
+
+        try:
+            return self.stream.writeln(arg)
+        except Exception:
+            pass
+        
+
+class BRunhildaTestResult(unittest.runner.TextTestResult):
+    """
+    """
+
+    def __init__(self, stream, descriptions, verbosity, name=""):
+        super().__init__(stream, descriptions, verbosity)
+        self.name = name
+        self.stream_buffer = io.StringIO()
+        self.stream = CatchedStream(stream, self.stream_buffer)
+        self._clean()
+
+    def _clean(self):
+        self._stdout_backup = None
+        self._stderr_backup = None
+        self.total_execution_time = 0   # time to execute all tests
+        self.suite_execution_time = 0   # time to execute tests in current test case class
+        self.num_suites = 0
+        self.num_tests = 0
+        self.num_success = 0        
+        self.results = {
+            'name': self.name,
+            'env': {
+                'pyversion': sys.version,
+                'system': platform.platform(),
+                'hostname': socket.gethostname(),
+            },
+            'total': {},
+            'testcases': {}
+        }
+
+    def startTestRun(self):
+        self._clean()
+        self.last_result = ''
+        self.run_start = datetime.datetime.now()
+        super().startTestRun()
+
+    def stopTestRun(self):
+        super().stopTestRun()
+    
+        self.results['total'] = {
+            'tests': self.num_tests,
+            'start_datetime': self.run_start,
+            'end_datetime': datetime.datetime.now(),
+            'timestamp': datetime.datetime.now(),
+            'time': self.total_execution_time,
+            'passed': self.num_success,
+            'skipped':  len(self.skipped),
+            'failed': len(self.failures),
+            'errored': len(self.errors),
+            'expected_failures': len(self.expectedFailures),
+            'unexpected_successes': len(self.unexpectedSuccesses)
+        }
+
+    def startTest(self, test):
+        """
+        This method is called before execution of the given test.
+        """
+        testcase_name = test.__class__.__name__
+        # Check if the test case class name was already here,
+        # if not we are starting execution of the new test case class.
+        if testcase_name not in self.results['testcases']:
+            self.results['testcases'][testcase_name] = {
+                'timestamp': datetime.datetime.now(),
+                'time': 0,
+                'name': testcase_name,
+                'description': test.__class__.__doc__,
+                'id': self.num_suites,
+                'tests': [],
+                'passed': 0,
+                'skipped': 0,
+                'failed': 0,
+                'errored': 0,
+                'expected_failures': 0,
+                'unexpected_successes': 0
+            }
+            self.num_suites += 1
+            self.suite_execution_time = 0
+
+        self.test_start_time = time.perf_counter()  
+        self.errors_strings = []
+        self.subtests = []
+        self.skip_reason = ''
+        self.last_result = PASSED
+        # Hold reference to the stdout and stderr streams,
+        # it has to be done now since super method can change
+        # theses for buffering
+        self._stdout_backup = sys.stdout
+        self._stderr_backup = sys.stderr
+        self.stream_buffer = io.StringIO()
+        sys.stderr = CatchedStream(sys.stderr, self.stream_buffer)
+        sys.stdout = CatchedStream(sys.stdout, self.stream_buffer)
+        self.stream._buffer = self.stream_buffer
+        super().startTest(test)
+
+    def stopTest(self, test):
+        """
+        This method is called after execution of the given test
+        """
+        testcase_name = test.__class__.__name__
+        self.test_execution_time = time.perf_counter() - self.test_start_time
+        self.suite_execution_time += self.test_execution_time
+        self.total_execution_time += self.test_execution_time
+        self.num_tests += 1
+
+        super().stopTest(test)
+
+        self.stream_buffer.seek(0)
+        # and restore original streams
+        sys.stdout = self._stdout_backup
+        sys.stderr = self._stderr_backup
+
+        if self.last_result == PASSED:
+            self.results['testcases'][testcase_name]['passed']  += 1
+        elif self.last_result == SKIPPED:
+            self.results['testcases'][testcase_name]['skipped'] += 1
+        elif self.last_result == FAILED:
+            self.results['testcases'][testcase_name]['failed'] += 1
+        elif self.last_result == ERRORED:
+            self.results['testcases'][testcase_name]['errored'] += 1
+        elif self.last_result == EXPECTED_FAILURE:
+            self.results['testcases'][testcase_name]['expected_failures'] += 1
+        elif self.last_result == UNEXPECTED_SUCCESS:
+            self.results['testcases'][testcase_name]['unexpected_successes'] += 1
+
+        self.results['testcases'][testcase_name]['time'] = self.suite_execution_time
+        self.results['testcases'][testcase_name]['tests'].append({
+            'subtests': self.subtests,
+            'skip_reason': self.skip_reason,
+            'id': self.num_tests,
+            'name': test._testMethodName,
+            'time': self.test_execution_time,
+            'description': test._testMethodDoc,
+            'result': self.last_result,
+            'output': self.stream_buffer.read(),
+            'errors': self.errors_strings
+        })
+
+    def addSuccess(self, test):
+        """
+        This method is called after sucessfull end of the test method.
+        """
+        super().addSuccess(test)
+        if self.last_result == PASSED:
+            self.num_success += 1    
+
+    def addError(self, test, err):
+        """
+        This method is called when rror occures.
+        """
+        super().addError(test, err)
+        self.errors_strings.append(self._exc_info_to_string(err, test))
+        self.last_result = ERRORED  
+
+    def addFailure(self, test, err):
+        """
+        This method is called uppon assertion failure.
+        """
+        super().addFailure(test, err)
+        self.errors_strings.append(self._exc_info_to_string(err, test))
+        self.last_result = FAILED  
+
+    def addSubTest(self, test, subtest, err):
+        """
+        This method is called after sub-test is done.
+        """
+        self.subtests.append({
+            'id': 1+len(self.subtests), 
+            'name': str(dict(subtest.params)), 
+            'result': PASSED
+        })
+
+        # `err` contains info about errors and failures, if `None`, sub-test passed
+        if err is not None:
+            err_str = self._exc_info_to_string(err, test)
+            self.subtests[-1]['error'] = err_str
+            # Append error to list of errors, first line is the subtest name with black background.
+            self.errors_strings.append(f'{colorama.Back.BLACK}{subtest}{colorama.Back.RESET}\n{err_str}')
+
+            if err[0] is not AssertionError:
+                self.subtests[-1]['result'] = ERRORED
+                self.last_result = ERRORED
+            else:
+                self.subtests[-1]['result'] = FAILED
+                # We want to keep overall test result ERRORED if already set, ERRORED means that test is not working.
+                if self.last_result != ERRORED:
+                    self.last_result = FAILED 
+
+        super().addSubTest(test, subtest, err)
+
+    def addSkip(self, test, reason):
+        """
+        This method is called after skip of the test.
+        """
+        super().addSkip(test, reason)
+        # When sub test is skipped, this method is called as well, so only way how to 
+        # detect skipped sub tests is to check the test class.
+        if isinstance(test, unittest.case._SubTest):
+            self.subtests.append({
+                'id': 1+len(self.subtests), 
+                'name': str(dict(test.params)), 
+                'result': SKIPPED, 
+                'reason': reason
+            }) 
+        else:
+            self.last_result = SKIPPED
+            self.skip_reason = reason
+
+    def addExpectedFailure(self, test, err):
+        """
+        This method is called when test marked with @expectedFailure decorator fails.
+        """
+        super().addExpectedFailure(test, err)
+        self.errors_strings.append(self._exc_info_to_string(err, test))
+        self.last_result = EXPECTED_FAILURE
+
+    def addUnexpectedSuccess(self, test):
+        """
+        This method is called when test marked with @expectedFailure decorator succeeds.
+        """
+        super().addUnexpectedSuccess(test)
+        self.last_result = UNEXPECTED_SUCCESS
+        
+    def print(self, output_formater, path):
+        """
+        Prints test results with the given result output.
+        """
+        if path is not None:
+            output = output_formater.print(self.results)
+            
+            with open(path, 'w') as f:
+                f.write(output)
