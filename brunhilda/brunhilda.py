@@ -14,10 +14,10 @@ class BRunhilda(unittest.TextTestRunner):
     occur, and a summary of the results at the end of the test run.
     """
 
-    def __init__(self, stream=sys.stderr, 
+    def __init__(self, stream=sys.stderr,
                        descriptions=True,
                        verbosity=1,
-                       failfast=False, 
+                       failfast=False,
                        buffer=True,
                        warnings=None,
                        name="",
@@ -37,7 +37,7 @@ class BRunhilda(unittest.TextTestRunner):
         return BRunhildaTestResult(self.stream, self.descriptions, self.verbosity, self.name)
 
     def run(self, test):
-        result = super().run(test)     
+        result = super().run(test)
         if hasattr(result, "print"):
             result.print(HtmlResultOutput(), self.html_output)
             result.print(JUnitResultOutput(), self.junit_output)

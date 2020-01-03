@@ -15,8 +15,8 @@
             dl, dt, dd, ol, ul, li,
             fieldset, form, label, legend,
             table, caption, tbody, tfoot, thead, tr, th, td,
-            article, aside, canvas, details, embed, 
-            figure, figcaption, footer, header, hgroup, 
+            article, aside, canvas, details, embed,
+            figure, figcaption, footer, header, hgroup,
             menu, nav, output, ruby, section, summary,
             time, mark, audio, video {
                 margin: 0;
@@ -27,7 +27,7 @@
                 vertical-align: baseline;
             }
             /* HTML5 display-role reset for older browsers */
-            article, aside, details, figcaption, figure, 
+            article, aside, details, figcaption, figure,
             footer, header, hgroup, menu, nav, section {
                 display: block;
             }
@@ -51,17 +51,17 @@
 
             :root {
                 --color--pass: green;
-                --color--pass-bg: rgba(0, 128, 0, 0.2);
-                --color--fail: red;
-                --color--fail-bg: rgba(255, 0, 0, 0.2);
-                --color--error: maroon;
-                --color--error-bg: rgba(128, 0, 0, 0.2);
+                --color--pass-bg: rgba(0, 128, 0, 0.1);
+                --color--fail: rgb(220, 0, 0);
+                --color--fail-bg: rgba(220, 0, 0, 0.1);
+                --color--error: rgb(167, 0, 209);
+                --color--error-bg: rgba(167, 0, 209, 0.1);
                 --color--skip: orange;
-                --color--skip-bg: rgba(255, 166, 0, 0.2);
-                --color--expected-failure: rgb(174, 185, 72);
-                --color--expected-failure-bg: rgba(174, 185, 72, 0.2);
-                --color--unexpected-success: rgb(174, 185, 72);
-                --color--unexpected-success-bg: rgba(174, 185, 72, 0.2);
+                --color--skip-bg: rgba(255, 166, 0, 0.1);
+                --color--expected-failure: rgb(64, 0, 240);
+                --color--expected-failure-bg: rgba(64, 0, 240, 0.1);
+                --color--unexpected-success: rgb(0, 200, 200);
+                --color--unexpected-success-bg: rgba(0, 200, 200, 0.1);
             }
 
             body {
@@ -132,42 +132,76 @@
             /**************************************/
             .testcase {
                 border: 1px solid #a0a0a0;
+                position: relative;
+                margin-bottom: 0.25rem;
+            }
+
+            .testcase--passed {
+            }
+
+            .testcase--failed {
+                border-color: var(--color--fail);
+            }
+
+            .testcase--errored {
+                border-color: var(--color--error);
+            }
+
+            .testcase--empty {
+                border-color: var(--color--skip);
             }
 
             .testcase__name {
-                padding: 0 0.5rem;
+                padding: 0 0.5rem 0 1.5rem;
             }
 
             .testcase__description {
+                overflow: hidden;
+                height: 0;
+                box-sizing: border-box;
+            }
+
+            .testcase__description__content {
                 padding: 0 0.5rem 0.5rem 0.5rem;
             }
 
-            .testcase__description h1 { 
+            .testcase__expander{
+                display: block;
+                position: absolute;
+                top: 9px;
+                left: 0;
+            }
+
+            input.testcase__expander:checked + .testcase__description {
+                height: auto;
+            }
+
+            .testcase__description h1 {
                 font-size: 1.2rem;
                 text-transform: uppercase;
                 font-weight: normal;
-                margin: 1.0rem 0;
+                margin: 1rem 0;
             }
 
-            .testcase__description h2 { 
+            .testcase__description h2 {
                 font-size: 1.1rem;
                 font-variant: small-caps;
                 font-weight: normal;
-                margin: 1.0rem 0;
+                margin: 1rem 0;
             }
 
-            .testcase__description h3 { 
+            .testcase__description h3 {
                 font-size: 1rem;
                 font-style: italic;
                 font-weight: normal;
-                margin: 1.0rem 0;
+                margin: 1rem 0;
             }
 
-            .testcase__description table { 
-                margin: 1.0rem 0;
+            .testcase__description table {
+                margin: 1rem 0;
             }
 
-            .testcase__description th { 
+            .testcase__description th {
                 background-color: #c7c7c7;
             }
 
@@ -199,6 +233,10 @@
                 border-top: 1px solid #a0a0a0;
             }
 
+            .test--current {
+                background-color: rgb(255, 255, 245);
+            }
+
             .test__header {
                 display: block;
                 padding: 0.25rem 0.5rem 0.25rem 2rem;
@@ -222,7 +260,7 @@
                 max-width: 10rem;
                 font-weight: bold;
             }
-           
+
             .test__result:first-letter {
                 text-transform: uppercase;
             }
@@ -235,6 +273,10 @@
             .test__time {
                 width: 25%;
                 max-width: 3rem;
+            }
+
+            .test--hidden {
+                display: none;
             }
 
             .test--passed .test__result,
@@ -258,16 +300,16 @@
             }
 
             .test--expected-failure .test__result,
-            .testrun__summary--expected-failures {
+            .testrun__summary--expected-failure {
                 color: var(--color--expected-failure);
             }
-            
+
             .test--unexpected-success .test__result,
             .testrun__summary--unexpected-success {
                 color: var(--color--unexpected-success);
             }
 
-            .test__detail { 
+            .test__detail {
                 overflow: hidden;
                 height: 0;
                 box-sizing: border-box;
@@ -281,30 +323,30 @@
                 left: 0;
             }
 
-            input.test__expander:checked + .test__detail { 
+            input.test__expander:checked + .test__detail {
                 height: auto;
             }
 
-            .test__description, 
+            .test__description,
             .test__skipreason {
                 padding: 0.5rem 1rem 0 1rem;
             }
-            
+
             .test__detail h3 {
                 padding: 0 1rem;
             }
 
             .test__console {
                 background-color: #394e4e;
-                color: white; 
+                color: white;
                 margin: 0 1rem 0.5rem 1rem;
                 padding: 0.5rem;
                 width: calc(100% - 3rem);
                 line-height: 1.25;
                 font-family: 'Consolas', 'Courier New', Courier, monospace;
             }
-            
-            .test__console--error{ 
+
+            .test__console--error{
                 color: #e47373;
                 border-top: 1px solid #a53f3f;
             }
@@ -333,7 +375,7 @@
             .subtest--failed {
                 background-color: var(--color--fail-bg);
             }
-            
+
             .subtest--errored {
                 background-color: var(--color--error-bg);
             }
@@ -352,6 +394,11 @@
                 float: left;
                 height: 100%;
                 position: relative;
+            }
+
+            .bar__line + .bar__line{
+                border-left: 2px solid white;
+                box-sizing: border-box;
             }
 
             .bar__line--passed {
@@ -382,15 +429,19 @@
                 position: absolute;
                 padding: 0.2rem 0.5rem;
                 top: -0.3rem;
-                background-color: rgba(255, 255, 255, 0.75);
+                background-color: rgba(255, 255, 255, 0.85);
                 text-align: center;
                 left: 50%;
                 transform: translateX(-50%);
-                border: 1px solid rgb(85, 85, 85, 0.75);
-                color: #4d4d4d;
+                border: 1px solid rgb(85, 85, 85, 0.85);
+                color: #252525;
                 border-radius: 0.2rem;
-                
                 opacity: 0;
+                transition: opacity 0.25s;
+            }
+
+            .bar__line:hover span {
+                opacity: 1;
             }
 
             /********************************************************/
@@ -427,37 +478,119 @@
             ol.upperroman  { list-style-type: upper-roman; }
             ol.lowerroman  { list-style-type: lower-roman; }
         </style>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
+        <script>
+            const results = ['passed', 'failed', 'errored', 'skipped', 'expected-failure', 'unexpected-success'];
+
+            $(document).ready(function() {
+                for (const result of results) {
+                    (function(r) {
+                        $("#testrun__summary--" + r).change(function() {
+                            if (this.checked) {
+                                $(".test--" + r).removeClass("test--hidden")
+                            }
+                            else {
+                                $(".test--" + r).addClass("test--hidden")
+                            }
+                        });
+                    })(result);
+                }
+
+                $(window).keypress(function( event ) {
+                    var selector = null;
+
+                    /* E */
+                    if (event.which == 69 || event.which == 101) {
+                        selector = ".test--errored";
+                    }
+                    /* P */
+                    else if (event.which == 80 || event.which == 112) {
+                        selector = ".test--passed";
+                    }
+                    /* F */
+                    else if (event.which == 70 || event.which == 102) {
+                        selector = ".test--failed";
+                    }
+                    /* S */
+                    else if (event.which == 83 || event.which == 115) {
+                        selector = ".test--skipped";
+                    }
+                    /* X */
+                    else if (event.which == 88 || event.which == 120) {
+                        selector = ".test--expected-failure";
+                    }
+                    /* U */
+                    else if (event.which == 85 || event.which == 117) {
+                        selector = ".test--unexpected-success";
+                    }
+
+                    if (selector != null) {
+                        var current = $(".test--current");
+                        var targets = $(selector);
+                        var target = null;
+
+                        if (targets.length == 0) {
+                            return;
+                        }
+                        else if (current.length == 0) {
+                            target = $(targets).first();
+                        }
+                        else {
+                            const n = Number($(current).data("nth"));
+                            var next = false;
+
+                            for (var t of targets) {
+                                var nth = Number($(t).data("nth"));
+                                if (nth > n) {
+                                    target = $(t)
+                                    break;
+                                }
+                            }
+
+                            if (target == null || target.length == 0) {
+                                target = $(targets).first();
+                            }
+                        }
+
+                        if (target.length != 0) {
+                            var y = target.offset().top;
+                            $(current).removeClass("test--current");
+                            $(target).addClass("test--current").find("input").prop("checked", true);
+                            $(document).scrollTop(y);
+                        }
+                    }
+                });
+            });
+        </script>
     </head>
     <body>
         <div class="testrun">
-            <p>Test report  generated on <time>2019-12-28 23:16:07</time> by BRunhilda</p>
-
+            <p>Test report  generated on <time>2020-01-04 21:10:30</time> by Brunhilda</p>
             <h2>Environment</h2>
             <table class="testrun__environment">
                 <tbody>
                     <tr>
                         <th>Executed</th>
-                        <td>2019-12-28 23:16:06 &ndash; 
-                            2019-12-28 23:16:06</td>
+                        <td>2020-01-04 21:10:29 &ndash;
+                            2020-01-04 21:10:29</td>
                     </tr>
                     <tr>
-                        <th>Python</th><td>3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 18:11:49) [MSC v.1900 64 bit (AMD64)]</td>
+                        <th>Python</th><td>3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:21:23) [MSC v.1916 32 bit (Intel)]</td>
                     </tr>
                     <tr>
                         <th>System</th><td>Windows-10-10.0.18362-SP0</td>
                     </tr>
                     <tr>
-                        <th>Hostname</th><td>DESKTOP-EIG79TE</td>
+                        <th>Hostname</th><td>DESKTOP-NP81929</td>
                     </tr>
                 </tbody>
             </table>
-                        
             <h2>Summary</h2>
-            <p>Run 9 test in 0.25s</p>
+            <p>Run 9 test in 0.23s</p>
             <table class="testrun__summary">
                 <tbody>
                     <tr class="testrun__summary--passed">
-                        <th><input type="checkbox" id="testrun__summary--passed">
+                        <th><input type="checkbox" id="testrun__summary--passed" checked>
                             <label for="testrun__summary--passed">Passed</label>
                         </th>
                         <td>
@@ -465,7 +598,7 @@
                         </td>
                     </tr>
                     <tr class="testrun__summary--failed">
-                        <th><input type="checkbox" id="testrun__summary--failed">
+                        <th><input type="checkbox" id="testrun__summary--failed" checked>
                             <label for="testrun__summary--failed">Failed</label>
                         </th>
                         <td>
@@ -473,7 +606,7 @@
                         </td>
                     </tr>
                     <tr class="testrun__summary--errored">
-                        <th><input type="checkbox" id="testrun__summary--errored">
+                        <th><input type="checkbox" id="testrun__summary--errored" checked>
                             <label for="testrun__summary--errored">Errored</label>
                         </th>
                         <td>
@@ -481,23 +614,23 @@
                         </td>
                     </tr>
                     <tr class="testrun__summary--skipped">
-                        <th><input type="checkbox" id="testrun__summary--skipped">
+                        <th><input type="checkbox" id="testrun__summary--skipped" checked>
                             <label for="testrun__summary--skipped">Skipped</label>
                         </th>
                         <td>
                             3
                         </td>
                     </tr>
-                    <tr class="testrun__summary--expected-failures">
-                        <th><input type="checkbox" id="testrun__summary--expected-failures">
-                            <label for="testrun__summary--expected-failures">Expected failures</label>
+                    <tr class="testrun__summary--expected-failure">
+                        <th><input type="checkbox" id="testrun__summary--expected-failure" checked>
+                            <label for="testrun__summary--expected-failure">Expected failures</label>
                         </th>
                         <td>
                             1
                         </td>
                     </tr>
                     <tr class="testrun__summary--unexpected-success">
-                        <th><input type="checkbox" id="testrun__summary--unexpected-success">
+                        <th><input type="checkbox" id="testrun__summary--unexpected-success" checked>
                             <label for="testrun__summary--unexpected-success">Unexpected successes</label>
                         </th>
                         <td>
@@ -516,44 +649,45 @@
                 
                 
 
-                <div class="bar__line bar__line--passed" 
+                <div class="bar__line bar__line--passed"
                      style="width:12.5%;">
-                     <span>2</span>
+                     <span>12.5%</span>
                 </div>
-                <div class="bar__line bar__line--failed" 
+                <div class="bar__line bar__line--failed"
                      style="width:25.0%;">
-                     <span>4</span>
+                     <span>25.0%</span>
                 </div>
-                <div class="bar__line bar__line--errored" 
+                <div class="bar__line bar__line--errored"
                     style="width:31.25%;">
-                    <span>5</span>
+                    <span>31.25%</span>
                 </div>
-                <div class="bar__line bar__line--skipped" 
+                <div class="bar__line bar__line--skipped"
                      style="width:18.75%;">
-                     <span>3</span>
+                     <span>18.75%</span>
                 </div>
-                <div class="bar__line bar__line--expected-failure" 
+                <div class="bar__line bar__line--expected-failure"
                      style="width:6.25%;">
-                     <span>1</span>
+                     <span>6.25%</span>
                 </div>
-                <div class="bar__line bar__line--unexpected-success" 
+                <div class="bar__line bar__line--unexpected-success"
                      style="width:6.25%;">
-                     <span>1</span>
+                     <span>6.25%</span>
                 </div>
             </div>
 
 
             <div class="testsuites">
                 <h2>Results</h2>
+                
 
                 <div class="testsuite_results">
                     
-                    <div class="testcase">
-                        <div class="testcase__header">
+                    <div class="testcase testcase--errored">
+                        <label class="testcase__header" for="testcase_expand_TestCase1">
                             <h3 class="testcase__name">TestCase1</h3>
                             <p class="testcase__summary">
                                 <span class="testcase__summary--time">
-                                    Ran in 0.252s</span>,
+                                    Ran in 0.226s</span>,
                                 <span class="testcase__summary--passed">
                                     passed: <strong>1</strong></span>,
                                 <span class="testcase__summary--errored">
@@ -562,14 +696,15 @@
                                     failed: <strong>1</strong></span>,
                                 <span class="testcase__summary--skipped">
                                     skipped: <strong>2</strong></span>,
-                                <span class="testcase__summary--expected-failures">
+                                <span class="testcase__summary--expected-failure">
                                     expected failures: <strong>1</strong></span>,
                                 <span class="testcase__summary--unexpected-success">
                                     unexpected success: <strong>1</strong></span>.
                             </p>
-                        </div>
+                        </label>
+                        <input type="checkbox" id="testcase_expand_TestCase1" class="testcase__expander" checked>
                         <div class="testcase__description">
-                            <div class="document">
+                            <div class="testcase__description__content"><div class="document">
 <p>This is a test case description. It can contain subset of RST formating.</p>
 <p>Also <em>italics</em>, <strong>bold</strong>, <tt class="docutils literal">monospace</tt> ... inline formating is supported.</p>
 <div class="section" id="lists">
@@ -661,18 +796,19 @@ span rows.</td>
 </div>
 </div>
 </div>
-
+</div>
                         </div>
 
                         
-                        <div class="test test--passed" id="1">
+                        
+                        <div class="test test--passed" id="test-1" data-nth="1">
                             <label class="test__header" for="test_expand_1">
                                 <span class="test__result">passed</span>
                                 <span class="test__name">
                                     <strong>test_00_pass</strong>
                                     
                                 </span>
-                                <span class="test__time">0.204s</span>
+                                <span class="test__time">0.203s</span>
                             </label>
                             <input type="checkbox" id="test_expand_1" class="test__expander">
                             <div class="test__detail">
@@ -696,16 +832,16 @@ span rows.</td>
                                 </div>
 
                                 
-                
+
                                 
                                 <h3>Output</h3>
                                 <div class="test__console">
                                     <pre>test_00_pass (__main__.TestCase1) ... Stupid print
-<span class="log log--debug">2019-12-28 23:16:06,398 - root - DEBUG - debug message</span>
-<span class="log log--info">2019-12-28 23:16:06,398 - root - INFO - info message</span>
-<span class="log log--warning">2019-12-28 23:16:06,399 - root - WARNING - very warning message</span>
-<span class="log log--error">2019-12-28 23:16:06,399 - root - ERROR - error message</span>
-<span class="log log--critical">2019-12-28 23:16:06,400 - root - CRITICAL - critical message</span>
+<span class="log log--debug">2020-01-04 21:10:29,407 - root - DEBUG - debug message</span>
+<span class="log log--info">2020-01-04 21:10:29,407 - root - INFO - info message</span>
+<span class="log log--warning">2020-01-04 21:10:29,408 - root - WARNING - very warning message</span>
+<span class="log log--error">2020-01-04 21:10:29,408 - root - ERROR - error message</span>
+<span class="log log--critical">2020-01-04 21:10:29,408 - root - CRITICAL - critical message</span>
 ok
 </pre>
                                 </div>
@@ -717,14 +853,15 @@ ok
                             </div>
                         </div>
                         
-                        <div class="test test--failed" id="2">
+                        
+                        <div class="test test--failed" id="test-2" data-nth="2">
                             <label class="test__header" for="test_expand_2">
                                 <span class="test__result">failed</span>
                                 <span class="test__name">
                                     <strong>test_01_fail</strong>
                                     
                                 </span>
-                                <span class="test__time">0.029s</span>
+                                <span class="test__time">0.013s</span>
                             </label>
                             <input type="checkbox" id="test_expand_2" class="test__expander">
                             <div class="test__detail">
@@ -753,7 +890,7 @@ ok
                                 </div>
 
                                 
-                
+
                                 
                                 <h3>Output</h3>
                                 <div class="test__console">
@@ -784,7 +921,7 @@ FAIL
                                 
                                 <div class="test__console test__console--error">
                                     <pre>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 157, in test_01_fail
+  File "test.py", line 152, in test_01_fail
     self.assertEqual(1, 2, "Message")
 AssertionError: 1 != 2 : Message
 </pre>
@@ -796,14 +933,15 @@ AssertionError: 1 != 2 : Message
                             </div>
                         </div>
                         
-                        <div class="test test--errored" id="3">
+                        
+                        <div class="test test--errored" id="test-3" data-nth="3">
                             <label class="test__header" for="test_expand_3">
                                 <span class="test__result">errored</span>
                                 <span class="test__name">
                                     <strong>test_02_subtest</strong>
                                     (10 sub-tests)
                                 </span>
-                                <span class="test__time">0.014s</span>
+                                <span class="test__time">0.007s</span>
                             </label>
                             <input type="checkbox" id="test_expand_3" class="test__expander">
                             <div class="test__detail">
@@ -832,7 +970,7 @@ AssertionError: 1 != 2 : Message
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Subtest</th>
+                                            <th>Sub-test</th>
                                             <th>Result</th>
                                             <th>Detail</th>
                                         </tr>
@@ -841,7 +979,7 @@ AssertionError: 1 != 2 : Message
                                         
                                         <tr class="subtest subtest--skipped">
                                             <td class="subtest__id">1</td>
-                                            <td class="subtest__name">{'j': 8, 'i': 4, 'bc': '9.1.2'}</td>
+                                            <td class="subtest__name">{'i': 4, 'j': 8, 'bc': '9.1.2'}</td>
                                             <td class="subtest__result">SKIPPED</td>
                                             <td class="subtest__detail">
                                             
@@ -852,12 +990,12 @@ AssertionError: 1 != 2 : Message
                                         
                                         <tr class="subtest subtest--errored">
                                             <td class="subtest__id">2</td>
-                                            <td class="subtest__name">{'j': 0, 'i': 0, 'bc': '9.1.2'}</td>
+                                            <td class="subtest__name">{'i': 0, 'j': 0, 'bc': '9.1.2'}</td>
                                             <td class="subtest__result">ERRORED</td>
                                             <td class="subtest__detail">
                                             
                                             <pre>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </pre>
@@ -867,7 +1005,7 @@ ZeroDivisionError: division by zero
                                         
                                         <tr class="subtest subtest--passed">
                                             <td class="subtest__id">3</td>
-                                            <td class="subtest__name">{'j': 2, 'i': 1, 'bc': '9.1.2'}</td>
+                                            <td class="subtest__name">{'i': 1, 'j': 2, 'bc': '9.1.2'}</td>
                                             <td class="subtest__result">PASSED</td>
                                             <td class="subtest__detail">
                                             
@@ -876,12 +1014,12 @@ ZeroDivisionError: division by zero
                                         
                                         <tr class="subtest subtest--failed">
                                             <td class="subtest__id">4</td>
-                                            <td class="subtest__name">{'j': 4, 'i': 2, 'bc': '9.1.2'}</td>
+                                            <td class="subtest__name">{'i': 2, 'j': 4, 'bc': '9.1.2'}</td>
                                             <td class="subtest__result">FAILED</td>
                                             <td class="subtest__detail">
                                             
                                             <pre>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </pre>
@@ -891,12 +1029,12 @@ AssertionError: 1 != 0.5 : Message
                                         
                                         <tr class="subtest subtest--errored">
                                             <td class="subtest__id">5</td>
-                                            <td class="subtest__name">{'j': 6, 'i': 3, 'bc': '9.1.2'}</td>
+                                            <td class="subtest__name">{'i': 3, 'j': 6, 'bc': '9.1.2'}</td>
                                             <td class="subtest__result">ERRORED</td>
                                             <td class="subtest__detail">
                                             
                                             <pre>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </pre>
@@ -906,12 +1044,12 @@ ZeroDivisionError: division by zero
                                         
                                         <tr class="subtest subtest--failed">
                                             <td class="subtest__id">6</td>
-                                            <td class="subtest__name">{'j': 10, 'i': 5, 'bc': '9.1.2'}</td>
+                                            <td class="subtest__name">{'i': 5, 'j': 10, 'bc': '9.1.2'}</td>
                                             <td class="subtest__result">FAILED</td>
                                             <td class="subtest__detail">
                                             
                                             <pre>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </pre>
@@ -921,12 +1059,12 @@ AssertionError: 1 != 0.5 : Message
                                         
                                         <tr class="subtest subtest--errored">
                                             <td class="subtest__id">7</td>
-                                            <td class="subtest__name">{'j': 12, 'i': 6, 'bc': '9.1.2'}</td>
+                                            <td class="subtest__name">{'i': 6, 'j': 12, 'bc': '9.1.2'}</td>
                                             <td class="subtest__result">ERRORED</td>
                                             <td class="subtest__detail">
                                             
                                             <pre>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </pre>
@@ -936,7 +1074,7 @@ ZeroDivisionError: division by zero
                                         
                                         <tr class="subtest subtest--passed">
                                             <td class="subtest__id">8</td>
-                                            <td class="subtest__name">{'j': 14, 'i': 7, 'bc': '9.1.2'}</td>
+                                            <td class="subtest__name">{'i': 7, 'j': 14, 'bc': '9.1.2'}</td>
                                             <td class="subtest__result">PASSED</td>
                                             <td class="subtest__detail">
                                             
@@ -945,12 +1083,12 @@ ZeroDivisionError: division by zero
                                         
                                         <tr class="subtest subtest--failed">
                                             <td class="subtest__id">9</td>
-                                            <td class="subtest__name">{'j': 16, 'i': 8, 'bc': '9.1.2'}</td>
+                                            <td class="subtest__name">{'i': 8, 'j': 16, 'bc': '9.1.2'}</td>
                                             <td class="subtest__result">FAILED</td>
                                             <td class="subtest__detail">
                                             
                                             <pre>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </pre>
@@ -960,12 +1098,12 @@ AssertionError: 1 != 0.5 : Message
                                         
                                         <tr class="subtest subtest--errored">
                                             <td class="subtest__id">10</td>
-                                            <td class="subtest__name">{'j': 18, 'i': 9, 'bc': '9.1.2'}</td>
+                                            <td class="subtest__name">{'i': 9, 'j': 18, 'bc': '9.1.2'}</td>
                                             <td class="subtest__result">ERRORED</td>
                                             <td class="subtest__detail">
                                             
                                             <pre>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </pre>
@@ -976,20 +1114,20 @@ ZeroDivisionError: division by zero
                                     </tbody>
                                 </table>
                                 
-                
+
                                 
                                 <h3>Output</h3>
                                 <div class="test__console">
-                                    <pre>test_02_subtest (__main__.TestCase1) ... Dolore modi aliquam ipsum sit dolore velit quisquam.
-Amet etincidunt porro dolorem modi ut.
-Aliquam ut consectetur dolor porro.
-Voluptatem porro ipsum quaerat voluptatem.
-Dolorem voluptatem adipisci sit voluptatem.
-Non sed est voluptatem.
-Dolorem magnam aliquam modi quiquia non.
-Velit eius sit dolorem velit dolorem porro.
-Tempora modi magnam sed quaerat adipisci.
-Eius ut consectetur porro porro.
+                                    <pre>test_02_subtest (__main__.TestCase1) ... Tempora quisquam neque neque.
+Non neque quiquia etincidunt.
+Adipisci tempora est dolor ut adipisci sit.
+Dolore dolore etincidunt quisquam quisquam.
+Velit neque tempora quiquia.
+Labore eius quiquia aliquam amet labore eius.
+Numquam adipisci velit eius quaerat aliquam eius modi.
+Modi quaerat neque amet est quiquia.
+Sed dolore ut amet ut quisquam eius dolor.
+Sed sit dolore dolorem dolore dolore dolore neque.
 skipped 'Because 4'
 </pre>
                                 </div>
@@ -999,63 +1137,63 @@ skipped 'Because 4'
                                 <h3>Errors</h3>
                                 
                                 <div class="test__console test__console--error">
-                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (bc='9.1.2', i=0, j=0)</span>
+                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (i=0, j=0, bc='9.1.2')</span>
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </pre>
                                 </div>
                                 
                                 <div class="test__console test__console--error">
-                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (bc='9.1.2', i=2, j=4)</span>
+                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (i=2, j=4, bc='9.1.2')</span>
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </pre>
                                 </div>
                                 
                                 <div class="test__console test__console--error">
-                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (bc='9.1.2', i=3, j=6)</span>
+                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (i=3, j=6, bc='9.1.2')</span>
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </pre>
                                 </div>
                                 
                                 <div class="test__console test__console--error">
-                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (bc='9.1.2', i=5, j=10)</span>
+                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (i=5, j=10, bc='9.1.2')</span>
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </pre>
                                 </div>
                                 
                                 <div class="test__console test__console--error">
-                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (bc='9.1.2', i=6, j=12)</span>
+                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (i=6, j=12, bc='9.1.2')</span>
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </pre>
                                 </div>
                                 
                                 <div class="test__console test__console--error">
-                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (bc='9.1.2', i=8, j=16)</span>
+                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (i=8, j=16, bc='9.1.2')</span>
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </pre>
                                 </div>
                                 
                                 <div class="test__console test__console--error">
-                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (bc='9.1.2', i=9, j=18)</span>
+                                    <pre><span class="back back--black">test_02_subtest (__main__.TestCase1) (i=9, j=18, bc='9.1.2')</span>
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </pre>
@@ -1067,7 +1205,8 @@ ZeroDivisionError: division by zero
                             </div>
                         </div>
                         
-                        <div class="test test--errored" id="4">
+                        
+                        <div class="test test--errored" id="test-4" data-nth="4">
                             <label class="test__header" for="test_expand_4">
                                 <span class="test__result">errored</span>
                                 <span class="test__name">
@@ -1098,7 +1237,7 @@ ZeroDivisionError: division by zero
                                 </div>
 
                                 
-                
+
                                 
                                 <h3>Output</h3>
                                 <div class="test__console">
@@ -1112,7 +1251,7 @@ ZeroDivisionError: division by zero
                                 
                                 <div class="test__console test__console--error">
                                     <pre>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 196, in test_03_error
+  File "test.py", line 191, in test_03_error
     self.assertTrue(1 / 0, "Message")
 ZeroDivisionError: division by zero
 </pre>
@@ -1124,14 +1263,15 @@ ZeroDivisionError: division by zero
                             </div>
                         </div>
                         
-                        <div class="test test--skipped" id="5">
+                        
+                        <div class="test test--skipped" id="test-5" data-nth="5">
                             <label class="test__header" for="test_expand_5">
                                 <span class="test__result">skipped</span>
                                 <span class="test__name">
                                     <strong>test_04_skip</strong>
                                     
                                 </span>
-                                <span class="test__time">0.001s</span>
+                                <span class="test__time">0.000s</span>
                             </label>
                             <input type="checkbox" id="test_expand_5" class="test__expander">
                             <div class="test__detail">
@@ -1161,7 +1301,7 @@ ZeroDivisionError: division by zero
                                 </div>
 
                                 
-                
+
                                 
                                 <h3>Output</h3>
                                 <div class="test__console">
@@ -1176,7 +1316,8 @@ ZeroDivisionError: division by zero
                             </div>
                         </div>
                         
-                        <div class="test test--skipped" id="6">
+                        
+                        <div class="test test--skipped" id="test-6" data-nth="6">
                             <label class="test__header" for="test_expand_6">
                                 <span class="test__result">skipped</span>
                                 <span class="test__name">
@@ -1213,7 +1354,7 @@ ZeroDivisionError: division by zero
                                 </div>
 
                                 
-                
+
                                 
                                 <h3>Output</h3>
                                 <div class="test__console">
@@ -1228,7 +1369,8 @@ ZeroDivisionError: division by zero
                             </div>
                         </div>
                         
-                        <div class="test test--expected-failure" id="7">
+                        
+                        <div class="test test--expected-failure" id="test-7" data-nth="7">
                             <label class="test__header" for="test_expand_7">
                                 <span class="test__result">expected failure</span>
                                 <span class="test__name">
@@ -1246,7 +1388,7 @@ ZeroDivisionError: division by zero
                                 </div>
 
                                 
-                
+
                                 
                                 <h3>Output</h3>
                                 <div class="test__console">
@@ -1260,7 +1402,7 @@ ZeroDivisionError: division by zero
                                 
                                 <div class="test__console test__console--error">
                                     <pre>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 236, in test_06_expected_failure
+  File "test.py", line 231, in test_06_expected_failure
     self.assertTrue(False)
 AssertionError: False is not true
 </pre>
@@ -1272,14 +1414,15 @@ AssertionError: False is not true
                             </div>
                         </div>
                         
-                        <div class="test test--unexpected-success" id="8">
+                        
+                        <div class="test test--unexpected-success" id="test-8" data-nth="8">
                             <label class="test__header" for="test_expand_8">
                                 <span class="test__result">unexpected success</span>
                                 <span class="test__name">
                                     <strong>test_07_unexpected_sucess</strong>
                                     
                                 </span>
-                                <span class="test__time">0.001s</span>
+                                <span class="test__time">0.000s</span>
                             </label>
                             <input type="checkbox" id="test_expand_8" class="test__expander">
                             <div class="test__detail">
@@ -1290,7 +1433,7 @@ AssertionError: False is not true
                                 </div>
 
                                 
-                
+
                                 
                                 <h3>Output</h3>
                                 <div class="test__console">
@@ -1307,8 +1450,8 @@ AssertionError: False is not true
                         
                     </div>
                     
-                    <div class="testcase">
-                        <div class="testcase__header">
+                    <div class="testcase testcase--passed">
+                        <label class="testcase__header" for="testcase_expand_TestCaseA">
                             <h3 class="testcase__name">TestCaseA</h3>
                             <p class="testcase__summary">
                                 <span class="testcase__summary--time">
@@ -1321,21 +1464,23 @@ AssertionError: False is not true
                                     failed: <strong>0</strong></span>,
                                 <span class="testcase__summary--skipped">
                                     skipped: <strong>0</strong></span>,
-                                <span class="testcase__summary--expected-failures">
+                                <span class="testcase__summary--expected-failure">
                                     expected failures: <strong>0</strong></span>,
                                 <span class="testcase__summary--unexpected-success">
                                     unexpected success: <strong>0</strong></span>.
                             </p>
-                        </div>
+                        </label>
+                        <input type="checkbox" id="testcase_expand_TestCaseA" class="testcase__expander" checked>
                         <div class="testcase__description">
-                            <div class="document">
+                            <div class="testcase__description__content"><div class="document">
 <p>This is a test case description. longish explanation: returns the square of a: <span class="formula"><i>a</i><sup>2</sup></span></p>
 </div>
-
+</div>
                         </div>
 
                         
-                        <div class="test test--passed" id="9">
+                        
+                        <div class="test test--passed" id="test-9" data-nth="9">
                             <label class="test__header" for="test_expand_9">
                                 <span class="test__result">passed</span>
                                 <span class="test__name">
@@ -1356,7 +1501,7 @@ AssertionError: False is not true
                                 </div>
 
                                 
-                
+
                                 
                                 <h3>Output</h3>
                                 <div class="test__console">

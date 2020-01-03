@@ -16,14 +16,15 @@ ERRORED = 'ERRORED'
 SKIPPED = 'SKIPPED'
 EXPECTED_FAILURE = 'EXPECTED FAILURE'
 UNEXPECTED_SUCCESS = 'UNEXPECTED SUCCESS'
+EMPTY = 'EMPTY'    # for test case without test
 
 
 class CatchedStream():
     """
     Adds additional shared buffer stream to the given stream allowing
-    to catched all stream outputs in the chronological order.
+    to catche all stream outputs in the chronological order.
     """
-    
+
     def __init__(self, stream, buffer):
         """
         :param stream: stream to catch
@@ -49,7 +50,7 @@ class CatchedStream():
 
     def writeln(self, arg=None):
         """
-        Original test runner uses custom decorator with `writeln` method, 
+        Original test runner uses custom decorator with `writeln` method,
         we have to implemented as well to keep compatible interface.
         """
         if arg:
@@ -60,7 +61,7 @@ class CatchedStream():
             return self.stream.writeln(arg)
         except Exception:
             pass
-        
+
 
 class BRunhildaTestResult(unittest.runner.TextTestResult):
     """
@@ -80,7 +81,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self.suite_execution_time = 0   # time to execute tests in current test case class
         self.num_suites = 0
         self.num_tests = 0
-        self.num_success = 0        
+        self.num_success = 0
         self.results = {
             'name': self.name,
             'env': {
@@ -100,7 +101,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
     def stopTestRun(self):
         super().stopTestRun()
-    
+
         self.results['total'] = {
             'tests': self.num_tests,
             'start_datetime': self.run_start,
@@ -135,12 +136,13 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'failed': 0,
                 'errored': 0,
                 'expected_failures': 0,
-                'unexpected_successes': 0
+                'unexpected_successes': 0,
+                'result': EMPTY
             }
             self.num_suites += 1
             self.suite_execution_time = 0
 
-        self.test_start_time = time.perf_counter()  
+        self.test_start_time = time.perf_counter()
         self.errors_strings = []
         self.subtests = []
         self.skip_reason = ''
@@ -186,6 +188,14 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         elif self.last_result == UNEXPECTED_SUCCESS:
             self.results['testcases'][testcase_name]['unexpected_successes'] += 1
 
+        # over all test case result
+        if self.results['testcases'][testcase_name]['errored'] != 0:
+            self.results['testcases'][testcase_name]['result'] = ERRORED
+        elif self.results['testcases'][testcase_name]['failed'] != 0:
+            self.results['testcases'][testcase_name]['result'] = FAILED
+        elif self.results['testcases'][testcase_name]['passed'] != 0:
+            self.results['testcases'][testcase_name]['result'] = PASSED
+
         self.results['testcases'][testcase_name]['time'] = self.suite_execution_time
         self.results['testcases'][testcase_name]['tests'].append({
             'subtests': self.subtests,
@@ -205,7 +215,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         super().addSuccess(test)
         if self.last_result == PASSED:
-            self.num_success += 1    
+            self.num_success += 1
 
     def addError(self, test, err):
         """
@@ -213,7 +223,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         super().addError(test, err)
         self.errors_strings.append(self._exc_info_to_string(err, test))
-        self.last_result = ERRORED  
+        self.last_result = ERRORED
 
     def addFailure(self, test, err):
         """
@@ -221,15 +231,15 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         super().addFailure(test, err)
         self.errors_strings.append(self._exc_info_to_string(err, test))
-        self.last_result = FAILED  
+        self.last_result = FAILED
 
     def addSubTest(self, test, subtest, err):
         """
         This method is called after sub-test is done.
         """
         self.subtests.append({
-            'id': 1+len(self.subtests), 
-            'name': str(dict(subtest.params)), 
+            'id': 1+len(self.subtests),
+            'name': str(dict(subtest.params)),
             'result': PASSED
         })
 
@@ -247,7 +257,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 self.subtests[-1]['result'] = FAILED
                 # We want to keep overall test result ERRORED if already set, ERRORED means that test is not working.
                 if self.last_result != ERRORED:
-                    self.last_result = FAILED 
+                    self.last_result = FAILED
 
         super().addSubTest(test, subtest, err)
 
@@ -256,15 +266,15 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         This method is called after skip of the test.
         """
         super().addSkip(test, reason)
-        # When sub test is skipped, this method is called as well, so only way how to 
+        # When sub test is skipped, this method is called as well, so only way how to
         # detect skipped sub tests is to check the test class.
         if isinstance(test, unittest.case._SubTest):
             self.subtests.append({
-                'id': 1+len(self.subtests), 
-                'name': str(dict(test.params)), 
-                'result': SKIPPED, 
+                'id': 1+len(self.subtests),
+                'name': str(dict(test.params)),
+                'result': SKIPPED,
                 'reason': reason
-            }) 
+            })
         else:
             self.last_result = SKIPPED
             self.skip_reason = reason
@@ -283,13 +293,13 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         super().addUnexpectedSuccess(test)
         self.last_result = UNEXPECTED_SUCCESS
-        
+
     def print(self, output_formater, path):
         """
         Prints test results with the given result output.
         """
         if path is not None:
             output = output_formater.print(self.results)
-            
+
             with open(path, 'w') as f:
                 f.write(output)

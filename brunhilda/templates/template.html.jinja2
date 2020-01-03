@@ -15,8 +15,8 @@
             dl, dt, dd, ol, ul, li,
             fieldset, form, label, legend,
             table, caption, tbody, tfoot, thead, tr, th, td,
-            article, aside, canvas, details, embed, 
-            figure, figcaption, footer, header, hgroup, 
+            article, aside, canvas, details, embed,
+            figure, figcaption, footer, header, hgroup,
             menu, nav, output, ruby, section, summary,
             time, mark, audio, video {
                 margin: 0;
@@ -27,7 +27,7 @@
                 vertical-align: baseline;
             }
             /* HTML5 display-role reset for older browsers */
-            article, aside, details, figcaption, figure, 
+            article, aside, details, figcaption, figure,
             footer, header, hgroup, menu, nav, section {
                 display: block;
             }
@@ -51,17 +51,17 @@
 
             :root {
                 --color--pass: green;
-                --color--pass-bg: rgba(0, 128, 0, 0.2);
-                --color--fail: red;
-                --color--fail-bg: rgba(255, 0, 0, 0.2);
-                --color--error: maroon;
-                --color--error-bg: rgba(128, 0, 0, 0.2);
+                --color--pass-bg: rgba(0, 128, 0, 0.1);
+                --color--fail: rgb(220, 0, 0);
+                --color--fail-bg: rgba(220, 0, 0, 0.1);
+                --color--error: rgb(167, 0, 209);
+                --color--error-bg: rgba(167, 0, 209, 0.1);
                 --color--skip: orange;
-                --color--skip-bg: rgba(255, 166, 0, 0.2);
-                --color--expected-failure: rgb(174, 185, 72);
-                --color--expected-failure-bg: rgba(174, 185, 72, 0.2);
-                --color--unexpected-success: rgb(174, 185, 72);
-                --color--unexpected-success-bg: rgba(174, 185, 72, 0.2);
+                --color--skip-bg: rgba(255, 166, 0, 0.1);
+                --color--expected-failure: rgb(64, 0, 240);
+                --color--expected-failure-bg: rgba(64, 0, 240, 0.1);
+                --color--unexpected-success: rgb(0, 200, 200);
+                --color--unexpected-success-bg: rgba(0, 200, 200, 0.1);
             }
 
             body {
@@ -132,42 +132,76 @@
             /**************************************/
             .testcase {
                 border: 1px solid #a0a0a0;
+                position: relative;
+                margin-bottom: 0.25rem;
+            }
+
+            .testcase--passed {
+            }
+
+            .testcase--failed {
+                border-color: var(--color--fail);
+            }
+
+            .testcase--errored {
+                border-color: var(--color--error);
+            }
+
+            .testcase--empty {
+                border-color: var(--color--skip);
             }
 
             .testcase__name {
-                padding: 0 0.5rem;
+                padding: 0 0.5rem 0 1.5rem;
             }
 
             .testcase__description {
+                overflow: hidden;
+                height: 0;
+                box-sizing: border-box;
+            }
+
+            .testcase__description__content {
                 padding: 0 0.5rem 0.5rem 0.5rem;
             }
 
-            .testcase__description h1 { 
+            .testcase__expander{
+                display: block;
+                position: absolute;
+                top: 9px;
+                left: 0;
+            }
+
+            input.testcase__expander:checked + .testcase__description {
+                height: auto;
+            }
+
+            .testcase__description h1 {
                 font-size: 1.2rem;
                 text-transform: uppercase;
                 font-weight: normal;
-                margin: 1.0rem 0;
+                margin: 1rem 0;
             }
 
-            .testcase__description h2 { 
+            .testcase__description h2 {
                 font-size: 1.1rem;
                 font-variant: small-caps;
                 font-weight: normal;
-                margin: 1.0rem 0;
+                margin: 1rem 0;
             }
 
-            .testcase__description h3 { 
+            .testcase__description h3 {
                 font-size: 1rem;
                 font-style: italic;
                 font-weight: normal;
-                margin: 1.0rem 0;
+                margin: 1rem 0;
             }
 
-            .testcase__description table { 
-                margin: 1.0rem 0;
+            .testcase__description table {
+                margin: 1rem 0;
             }
 
-            .testcase__description th { 
+            .testcase__description th {
                 background-color: #c7c7c7;
             }
 
@@ -199,6 +233,10 @@
                 border-top: 1px solid #a0a0a0;
             }
 
+            .test--current {
+                background-color: rgb(255, 255, 245);
+            }
+
             .test__header {
                 display: block;
                 padding: 0.25rem 0.5rem 0.25rem 2rem;
@@ -222,7 +260,7 @@
                 max-width: 10rem;
                 font-weight: bold;
             }
-           
+
             .test__result:first-letter {
                 text-transform: uppercase;
             }
@@ -235,6 +273,10 @@
             .test__time {
                 width: 25%;
                 max-width: 3rem;
+            }
+
+            .test--hidden {
+                display: none;
             }
 
             .test--passed .test__result,
@@ -258,16 +300,16 @@
             }
 
             .test--expected-failure .test__result,
-            .testrun__summary--expected-failures {
+            .testrun__summary--expected-failure {
                 color: var(--color--expected-failure);
             }
-            
+
             .test--unexpected-success .test__result,
             .testrun__summary--unexpected-success {
                 color: var(--color--unexpected-success);
             }
 
-            .test__detail { 
+            .test__detail {
                 overflow: hidden;
                 height: 0;
                 box-sizing: border-box;
@@ -281,30 +323,30 @@
                 left: 0;
             }
 
-            input.test__expander:checked + .test__detail { 
+            input.test__expander:checked + .test__detail {
                 height: auto;
             }
 
-            .test__description, 
+            .test__description,
             .test__skipreason {
                 padding: 0.5rem 1rem 0 1rem;
             }
-            
+
             .test__detail h3 {
                 padding: 0 1rem;
             }
 
             .test__console {
                 background-color: #394e4e;
-                color: white; 
+                color: white;
                 margin: 0 1rem 0.5rem 1rem;
                 padding: 0.5rem;
                 width: calc(100% - 3rem);
                 line-height: 1.25;
                 font-family: 'Consolas', 'Courier New', Courier, monospace;
             }
-            
-            .test__console--error{ 
+
+            .test__console--error{
                 color: #e47373;
                 border-top: 1px solid #a53f3f;
             }
@@ -333,7 +375,7 @@
             .subtest--failed {
                 background-color: var(--color--fail-bg);
             }
-            
+
             .subtest--errored {
                 background-color: var(--color--error-bg);
             }
@@ -352,6 +394,11 @@
                 float: left;
                 height: 100%;
                 position: relative;
+            }
+
+            .bar__line + .bar__line{
+                border-left: 2px solid white;
+                box-sizing: border-box;
             }
 
             .bar__line--passed {
@@ -382,15 +429,19 @@
                 position: absolute;
                 padding: 0.2rem 0.5rem;
                 top: -0.3rem;
-                background-color: rgba(255, 255, 255, 0.75);
+                background-color: rgba(255, 255, 255, 0.85);
                 text-align: center;
                 left: 50%;
                 transform: translateX(-50%);
-                border: 1px solid rgb(85, 85, 85, 0.75);
-                color: #4d4d4d;
+                border: 1px solid rgb(85, 85, 85, 0.85);
+                color: #252525;
                 border-radius: 0.2rem;
-                
                 opacity: 0;
+                transition: opacity 0.25s;
+            }
+
+            .bar__line:hover span {
+                opacity: 1;
             }
 
             /********************************************************/
@@ -427,17 +478,100 @@
             ol.upperroman  { list-style-type: upper-roman; }
             ol.lowerroman  { list-style-type: lower-roman; }
         </style>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
+        <script>
+            const results = ['passed', 'failed', 'errored', 'skipped', 'expected-failure', 'unexpected-success'];
+
+            $(document).ready(function() {
+                for (const result of results) {
+                    (function(r) {
+                        $("#testrun__summary--" + r).change(function() {
+                            if (this.checked) {
+                                $(".test--" + r).removeClass("test--hidden")
+                            }
+                            else {
+                                $(".test--" + r).addClass("test--hidden")
+                            }
+                        });
+                    })(result);
+                }
+
+                $(window).keypress(function( event ) {
+                    var selector = null;
+
+                    /* E */
+                    if (event.which == 69 || event.which == 101) {
+                        selector = ".test--errored";
+                    }
+                    /* P */
+                    else if (event.which == 80 || event.which == 112) {
+                        selector = ".test--passed";
+                    }
+                    /* F */
+                    else if (event.which == 70 || event.which == 102) {
+                        selector = ".test--failed";
+                    }
+                    /* S */
+                    else if (event.which == 83 || event.which == 115) {
+                        selector = ".test--skipped";
+                    }
+                    /* X */
+                    else if (event.which == 88 || event.which == 120) {
+                        selector = ".test--expected-failure";
+                    }
+                    /* U */
+                    else if (event.which == 85 || event.which == 117) {
+                        selector = ".test--unexpected-success";
+                    }
+
+                    if (selector != null) {
+                        var current = $(".test--current");
+                        var targets = $(selector);
+                        var target = null;
+
+                        if (targets.length == 0) {
+                            return;
+                        }
+                        else if (current.length == 0) {
+                            target = $(targets).first();
+                        }
+                        else {
+                            const n = Number($(current).data("nth"));
+                            var next = false;
+
+                            for (var t of targets) {
+                                var nth = Number($(t).data("nth"));
+                                if (nth > n) {
+                                    target = $(t)
+                                    break;
+                                }
+                            }
+
+                            if (target == null || target.length == 0) {
+                                target = $(targets).first();
+                            }
+                        }
+
+                        if (target.length != 0) {
+                            var y = target.offset().top;
+                            $(current).removeClass("test--current");
+                            $(target).addClass("test--current").find("input").prop("checked", true);
+                            $(document).scrollTop(y);
+                        }
+                    }
+                });
+            });
+        </script>
     </head>
     <body>
         <div class="testrun">
-            <p>Test report {% if data.name %}<strong>{{ data.name }}</strong>{% endif %} generated on <time>{{ now().strftime('%Y-%m-%d %H:%M:%S') }}</time> by BRunhilda</p>
-
+            <p>Test report {% if data.name %}<strong>{{ data.name }}</strong>{% endif %} generated on <time>{{ now().strftime('%Y-%m-%d %H:%M:%S') }}</time> by Brunhilda</p>
             <h2>Environment</h2>
             <table class="testrun__environment">
                 <tbody>
                     <tr>
                         <th>Executed</th>
-                        <td>{{ data.total.start_datetime.strftime('%Y-%m-%d %H:%M:%S') }} &ndash; 
+                        <td>{{ data.total.start_datetime.strftime('%Y-%m-%d %H:%M:%S') }} &ndash;
                             {{ data.total.end_datetime.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                     </tr>
                     <tr>
@@ -451,13 +585,12 @@
                     </tr>
                 </tbody>
             </table>
-                        
             <h2>Summary</h2>
             <p>Run {{ data.total.tests }} test in {{ '%0.2f'|format(data.total.time|float) }}s</p>
             <table class="testrun__summary">
                 <tbody>
                     <tr class="testrun__summary--passed">
-                        <th><input type="checkbox" id="testrun__summary--passed">
+                        <th><input type="checkbox" id="testrun__summary--passed" checked>
                             <label for="testrun__summary--passed">Passed</label>
                         </th>
                         <td>
@@ -465,7 +598,7 @@
                         </td>
                     </tr>
                     <tr class="testrun__summary--failed">
-                        <th><input type="checkbox" id="testrun__summary--failed">
+                        <th><input type="checkbox" id="testrun__summary--failed" checked>
                             <label for="testrun__summary--failed">Failed</label>
                         </th>
                         <td>
@@ -473,7 +606,7 @@
                         </td>
                     </tr>
                     <tr class="testrun__summary--errored">
-                        <th><input type="checkbox" id="testrun__summary--errored">
+                        <th><input type="checkbox" id="testrun__summary--errored" checked>
                             <label for="testrun__summary--errored">Errored</label>
                         </th>
                         <td>
@@ -481,23 +614,23 @@
                         </td>
                     </tr>
                     <tr class="testrun__summary--skipped">
-                        <th><input type="checkbox" id="testrun__summary--skipped">
+                        <th><input type="checkbox" id="testrun__summary--skipped" checked>
                             <label for="testrun__summary--skipped">Skipped</label>
                         </th>
                         <td>
                             {{ data.total.skipped }}
                         </td>
                     </tr>
-                    <tr class="testrun__summary--expected-failures">
-                        <th><input type="checkbox" id="testrun__summary--expected-failures">
-                            <label for="testrun__summary--expected-failures">Expected failures</label>
+                    <tr class="testrun__summary--expected-failure">
+                        <th><input type="checkbox" id="testrun__summary--expected-failure" checked>
+                            <label for="testrun__summary--expected-failure">Expected failures</label>
                         </th>
                         <td>
                             {{ data.total.expected_failures }}
                         </td>
                     </tr>
                     <tr class="testrun__summary--unexpected-success">
-                        <th><input type="checkbox" id="testrun__summary--unexpected-success">
+                        <th><input type="checkbox" id="testrun__summary--unexpected-success" checked>
                             <label for="testrun__summary--unexpected-success">Unexpected successes</label>
                         </th>
                         <td>
@@ -516,40 +649,41 @@
                 {% set pct_ef = data.total.expected_failures / total %}
                 {% set pct_us = data.total.unexpected_successes / total %}
 
-                <div class="bar__line bar__line--passed" 
+                <div class="bar__line bar__line--passed"
                      style="width:{{pct_passed}}%;">
-                     <span>{{ data.total.passed }}</span>
+                     <span>{{ pct_passed }}%</span>
                 </div>
-                <div class="bar__line bar__line--failed" 
+                <div class="bar__line bar__line--failed"
                      style="width:{{pct_failed}}%;">
-                     <span>{{ data.total.failed }}</span>
+                     <span>{{ pct_failed }}%</span>
                 </div>
-                <div class="bar__line bar__line--errored" 
+                <div class="bar__line bar__line--errored"
                     style="width:{{pct_errored}}%;">
-                    <span>{{ data.total.errored }}</span>
+                    <span>{{ pct_errored }}%</span>
                 </div>
-                <div class="bar__line bar__line--skipped" 
+                <div class="bar__line bar__line--skipped"
                      style="width:{{pct_skipped}}%;">
-                     <span>{{ data.total.skipped }}</span>
+                     <span>{{ pct_skipped }}%</span>
                 </div>
-                <div class="bar__line bar__line--expected-failure" 
+                <div class="bar__line bar__line--expected-failure"
                      style="width:{{pct_ef}}%;">
-                     <span>{{ data.total.expected_failures }}</span>
+                     <span>{{ pct_ef }}%</span>
                 </div>
-                <div class="bar__line bar__line--unexpected-success" 
+                <div class="bar__line bar__line--unexpected-success"
                      style="width:{{pct_us}}%;">
-                     <span>{{ data.total.unexpected_successes }}</span>
+                     <span>{{ pct_us }}%</span>
                 </div>
             </div>
 
 
             <div class="testsuites">
                 <h2>Results</h2>
+                {% set count = namespace(value=0) %}
 
                 <div class="testsuite_results">
                     {% for testcase in data.testcases.values() %}
-                    <div class="testcase">
-                        <div class="testcase__header">
+                    <div class="testcase testcase--{{ testcase.result|lower|replace(' ', '-') }}">
+                        <label class="testcase__header" for="testcase_expand_{{ testcase.name }}">
                             <h3 class="testcase__name">{{ testcase.name }}</h3>
                             <p class="testcase__summary">
                                 <span class="testcase__summary--time">
@@ -562,19 +696,21 @@
                                     failed: <strong>{{ testcase.failed }}</strong></span>,
                                 <span class="testcase__summary--skipped">
                                     skipped: <strong>{{ testcase.skipped }}</strong></span>,
-                                <span class="testcase__summary--expected-failures">
+                                <span class="testcase__summary--expected-failure">
                                     expected failures: <strong>{{ testcase.expected_failures }}</strong></span>,
                                 <span class="testcase__summary--unexpected-success">
                                     unexpected success: <strong>{{ testcase.unexpected_successes }}</strong></span>.
                             </p>
-                        </div>
+                        </label>
+                        <input type="checkbox" id="testcase_expand_{{ testcase.name }}" class="testcase__expander" checked>
                         <div class="testcase__description">
-                            {{ testcase.description }}
+                            <div class="testcase__description__content">{{ testcase.description }}</div>
                         </div>
 
                         {% for test in testcase.tests %}
-                        <div class="test test--{{ test.result|lower|replace(' ', '-') }}" id="{{ test.id }}">
-                            <label class="test__header" for="test_expand_{{ test.id }}">
+                        {% set count.value = count.value + 1 %}
+                        <div class="test test--{{ test.result|lower|replace(' ', '-') }}" id="test-{{count.value}}" data-nth="{{count.value}}">
+                            <label class="test__header" for="test_expand_{{count.value}}">
                                 <span class="test__result">{{ test.result|lower }}</span>
                                 <span class="test__name">
                                     <strong>{{ test.name }}</strong>
@@ -582,7 +718,7 @@
                                 </span>
                                 <span class="test__time">{{ '%0.3f'|format(test.time|float) }}s</span>
                             </label>
-                            <input type="checkbox" id="test_expand_{{ test.id }}" class="test__expander">
+                            <input type="checkbox" id="test_expand_{{count.value}}" class="test__expander">
                             <div class="test__detail">
                                 {% if test.skip_reason %}
                                 <div class="test__skipreason">
@@ -602,7 +738,7 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Subtest</th>
+                                            <th>Sub-test</th>
                                             <th>Result</th>
                                             <th>Detail</th>
                                         </tr>
@@ -625,7 +761,7 @@
                                     </tbody>
                                 </table>
                                 {% endif %}
-                
+
                                 {% if test.output %}
                                 <h3>Output</h3>
                                 <div class="test__console">

@@ -5,9 +5,9 @@
     skipped="3" 
     tests="9" 
     failures="4" 
-    time="0.2531323000000001"
-    timestamp="2019-12-28 23:16:06.651581"
-    hostname="DESKTOP-EIG79TE">
+    time="0.22670290000000015"
+    timestamp="2020-01-04 21:10:29.633423"
+    hostname="DESKTOP-NP81929">
 
     
     <testsuite
@@ -17,21 +17,21 @@
         skipped="2" 
         tests="8" 
         failures="1" 
-        time="0.25248490000000007"
-        timestamp="2019-12-28 23:16:06.397820">
+        time="0.22616230000000015"
+        timestamp="2020-01-04 21:10:29.406575">
       <properties>
-         <property name="python" value="3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 18:11:49) [MSC v.1900 64 bit (AMD64)]" />
+         <property name="python" value="3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:21:23) [MSC v.1916 32 bit (Intel)]" />
          <property name="system" value="Windows-10-10.0.18362-SP0" />
       </properties>
       
         
         <testcase classname="TestCase1" name="TestCase1:test_00_pass">
             <system-out>test_00_pass (__main__.TestCase1) ... Stupid print
-2019-12-28 23:16:06,398 - root - DEBUG - debug message
-2019-12-28 23:16:06,398 - root - INFO - info message
-2019-12-28 23:16:06,399 - root - WARNING - very warning message
-2019-12-28 23:16:06,399 - root - ERROR - error message
-2019-12-28 23:16:06,400 - root - CRITICAL - critical message
+2020-01-04 21:10:29,407 - root - DEBUG - debug message
+2020-01-04 21:10:29,407 - root - INFO - info message
+2020-01-04 21:10:29,408 - root - WARNING - very warning message
+2020-01-04 21:10:29,408 - root - ERROR - error message
+2020-01-04 21:10:29,408 - root - CRITICAL - critical message
 ok
 </system-out>
 
@@ -67,7 +67,7 @@ FAIL
 
             
             <system-err>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 157, in test_01_fail
+  File "test.py", line 152, in test_01_fail
     self.assertEqual(1, 2, "Message")
 AssertionError: 1 != 2 : Message
 </system-err>
@@ -78,7 +78,7 @@ AssertionError: 1 != 2 : Message
             
             
             <failure>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 157, in test_01_fail
+  File "test.py", line 152, in test_01_fail
     self.assertEqual(1, 2, "Message")
 AssertionError: 1 != 2 : Message
 </failure>
@@ -89,65 +89,65 @@ AssertionError: 1 != 2 : Message
         </testcase>
         
         <testcase classname="TestCase1" name="TestCase1:test_02_subtest">
-            <system-out>test_02_subtest (__main__.TestCase1) ... Dolore modi aliquam ipsum sit dolore velit quisquam.
-Amet etincidunt porro dolorem modi ut.
-Aliquam ut consectetur dolor porro.
-Voluptatem porro ipsum quaerat voluptatem.
-Dolorem voluptatem adipisci sit voluptatem.
-Non sed est voluptatem.
-Dolorem magnam aliquam modi quiquia non.
-Velit eius sit dolorem velit dolorem porro.
-Tempora modi magnam sed quaerat adipisci.
-Eius ut consectetur porro porro.
+            <system-out>test_02_subtest (__main__.TestCase1) ... Tempora quisquam neque neque.
+Non neque quiquia etincidunt.
+Adipisci tempora est dolor ut adipisci sit.
+Dolore dolore etincidunt quisquam quisquam.
+Velit neque tempora quiquia.
+Labore eius quiquia aliquam amet labore eius.
+Numquam adipisci velit eius quaerat aliquam eius modi.
+Modi quaerat neque amet est quiquia.
+Sed dolore ut amet ut quisquam eius dolor.
+Sed sit dolore dolorem dolore dolore dolore neque.
 skipped 'Because 4'
 </system-out>
 
             
-            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=0, j=0)[49m
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=0, j=0, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </system-err>
             
-            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=2, j=4)[49m
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=2, j=4, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </system-err>
             
-            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=3, j=6)[49m
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=3, j=6, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </system-err>
             
-            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=5, j=10)[49m
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=5, j=10, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </system-err>
             
-            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=6, j=12)[49m
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=6, j=12, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </system-err>
             
-            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=8, j=16)[49m
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=8, j=16, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </system-err>
             
-            <system-err>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=9, j=18)[49m
+            <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=9, j=18, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </system-err>
@@ -159,51 +159,51 @@ ZeroDivisionError: division by zero
 
             
             
-            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=0, j=0)[49m
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (i=0, j=0, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </failure>   
             
-            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=2, j=4)[49m
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (i=2, j=4, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </failure>   
             
-            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=3, j=6)[49m
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (i=3, j=6, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </failure>   
             
-            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=5, j=10)[49m
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (i=5, j=10, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </failure>   
             
-            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=6, j=12)[49m
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (i=6, j=12, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </failure>   
             
-            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=8, j=16)[49m
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (i=8, j=16, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </failure>   
             
-            <failure>[40mtest_02_subtest (__main__.TestCase1) (bc='9.1.2', i=9, j=18)[49m
+            <failure>[40mtest_02_subtest (__main__.TestCase1) (i=9, j=18, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 179, in test_02_subtest
+  File "test.py", line 174, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </failure>   
@@ -217,7 +217,7 @@ ZeroDivisionError: division by zero
 
             
             <system-err>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 196, in test_03_error
+  File "test.py", line 191, in test_03_error
     self.assertTrue(1 / 0, "Message")
 ZeroDivisionError: division by zero
 </system-err>
@@ -230,7 +230,7 @@ ZeroDivisionError: division by zero
             
             
             <failure>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 196, in test_03_error
+  File "test.py", line 191, in test_03_error
     self.assertTrue(1 / 0, "Message")
 ZeroDivisionError: division by zero
 </failure>   
@@ -274,7 +274,7 @@ ZeroDivisionError: division by zero
 
             
             <system-err>Traceback (most recent call last):
-  File "c:/Files/BR/br_TestRunner/test.py", line 236, in test_06_expected_failure
+  File "test.py", line 231, in test_06_expected_failure
     self.assertTrue(False)
 AssertionError: False is not true
 </system-err>
@@ -309,10 +309,10 @@ AssertionError: False is not true
         skipped="0" 
         tests="1" 
         failures="0" 
-        time="0.0006474000000000202"
-        timestamp="2019-12-28 23:16:06.650583">
+        time="0.0005406000000000022"
+        timestamp="2020-01-04 21:10:29.633423">
       <properties>
-         <property name="python" value="3.6.3 (v3.6.3:2c5fed8, Oct  3 2017, 18:11:49) [MSC v.1900 64 bit (AMD64)]" />
+         <property name="python" value="3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:21:23) [MSC v.1916 32 bit (Intel)]" />
          <property name="system" value="Windows-10-10.0.18362-SP0" />
       </properties>
       
