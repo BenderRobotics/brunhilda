@@ -2,6 +2,7 @@ import io
 import os
 import sys
 import time
+import base64
 import socket
 import datetime
 import platform
@@ -96,6 +97,96 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'user_data': self.user_data
         }
 
+    @classmethod
+    def _render_img(cls, img, fmt="jpg", height=612):
+        """
+        Tries to create renderers for OpenCV, PIL and PyPlot images.
+        """
+        if not cls._renderers:
+            cls._renderers = []
+            # Try to create OpenCV image renderer
+            try:
+                import cv2
+                import numpy
+
+                def render_opencv(img, fmt="jpg"):
+                    if not isinstance(img, numpy.ndarray):
+                        return None
+
+                    if img.shape[0] > height:
+                        width = int(img.shape[1] * (height / img.shape[0]))
+                        img = cv2.resize(img.copy(), (width, height), interpolation=cv2.INTER_CUBIC)
+
+                    # Remove alpha channel if present and target output is jpeg
+                    if len(img.shape) == 3 and img.shape[2] == 4 and fmt in ("jpeg", "jpg"):
+                        img = img[:, :, :3]
+
+                    retval, buf = cv2.imencode(f".{fmt}", img)
+
+                    if not retval:
+                        return None
+
+                    return buf, f"image/{fmt}"
+
+                cls._renderers.append(render_opencv)
+            except ImportError:
+                pass
+
+            # Try to create PIL image renderer
+            try:
+                from io import BytesIO
+                from PIL import Image
+
+                def render_pil(img, fmt="jpg"):
+                    if not callable(getattr(img, "save", None)):
+                        return None
+
+                    output = BytesIO()
+                    width, height = img.size
+
+                    if height > height:
+                        width = int(width * (height / height))
+                        img = img.resize((width, height))
+
+                    # if format is jpeg, convert to RGB to remove transparency
+                    if fmt in ("jpeg", "jpg"):
+                        img = img.convert('RGB')
+
+                    img.save(output, format=fmt)
+                    contents = output.getvalue()
+                    output.close()
+
+                    return contents, f"image/{fmt}"
+
+                cls._renderers.append(render_pil)
+            except ImportError:
+                pass
+
+            # Try to create PyPlot image renderer
+            try:
+                from io import BytesIO
+
+                def render_pyplot(img, fmt="png"):
+                    if not callable(getattr(img, "savefig", None)):
+                        return None
+
+                    output = BytesIO()
+                    img.savefig(output, format=fmt)
+                    contents = output.getvalue()
+                    output.close()
+
+                    return contents, f"image/{fmt}"
+
+                cls._renderers.append(render_pyplot)
+            except ImportError:
+                pass
+
+        # Trying renderers one by one
+        for renderer in cls._renderers:
+            res = renderer(img, fmt)
+            if res is not None:
+                return res
+
     def startTestRun(self):
         self._clean()
         self.last_result = ''
@@ -159,6 +250,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         sys.stderr = CatchedStream(sys.stderr, self.stream_buffer)
         sys.stdout = CatchedStream(sys.stdout, self.stream_buffer)
         self.stream._buffer = self.stream_buffer
+        test.extra = []
         super().startTest(test)
 
     def stopTest(self, test):
@@ -199,6 +291,23 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         elif self.results['testcases'][testcase_name]['passed'] != 0:
             self.results['testcases'][testcase_name]['result'] = PASSED
 
+        extra = None
+
+        for ex in test.extra:
+            if extra is None:
+                extra = []
+
+            img = self._render_img(ex)
+
+            if isinstance(ex, str):
+                extra.append({'type': 'text', 'value': ex})
+            elif img is not None:
+                extra.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
+            if isinstance(ex, (list, tuple, set, frozenset)):
+                extra.append({'type': 'list', 'value': [str(_) for _ in ex]})
+            else:
+                extra.append({'type': 'text', 'value': str(ex)})
+
         self.results['testcases'][testcase_name]['time'] = self.suite_execution_time
         self.results['testcases'][testcase_name]['tests'].append({
             'subtests': self.subtests,
@@ -209,7 +318,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'description': test._testMethodDoc,
             'result': self.last_result,
             'output': self.stream_buffer.read(),
-            'errors': self.errors_strings
+            'errors': self.errors_strings,
+            'extra': extra
         })
 
     def addSuccess(self, test):
@@ -240,11 +350,32 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         This method is called after sub-test is done.
         """
+        extra = None
+
+        for ex in test.extra:
+            if extra is None:
+                extra = []
+
+            img = self._render_img(ex)
+
+            if isinstance(ex, str):
+                extra.append({'type': 'text', 'value': ex})
+            elif img is not None:
+                extra.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
+            if isinstance(ex, (list, tuple, set, frozenset)):
+                extra.append({'type': 'list', 'value': [str(_) for _ in ex]})
+            else:
+                extra.append({'type': 'text', 'value': str(ex)})
+
         self.subtests.append({
             'id': 1+len(self.subtests),
             'name': str(dict(subtest.params)),
-            'result': PASSED
+            'result': PASSED,
+            'extra': extra
         })
+
+        # clear test extra to have it clean for the next subtest
+        test.extra = []
 
         # `err` contains info about errors and failures, if `None`, sub-test passed
         if err is not None:

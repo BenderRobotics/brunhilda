@@ -799,8 +799,25 @@
                                 {% endfor %}
                                 {% endif %}
 
-                                {% if 'extra' in test %}
+                                {% if test.extra %}
+                                <h3>Additional</h3>
+                                {% for extra in test.extra %}
                                 <div class="test__extra">
+                                    {% if extra.type == "text" %}
+                                    <pre class="test__extra__text">{{ extra.value }}</pre>
+                                    {% elif extra.type.startswith('image') %}
+                                    <img class="test__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" />
+                                    {% elif extra.type == "list" %}
+                                    <ul class="test__extra__list">
+                                        {% for item in extra.value %}
+                                        <li class="test__extra__list__item">
+                                            <pre class="test__extra__list__content">{{ item }}</pre>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
                                 </div>
                                 {% endif %}
                             </div>
