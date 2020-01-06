@@ -539,9 +539,15 @@
                             const n = Number($(current).data("nth"));
                             var next = false;
 
+                            /* Up - reverse order */
+                            if (!event.shiftKey) {
+                                targets = $(targets.get().reverse())
+                            }
+
                             for (var t of targets) {
                                 var nth = Number($(t).data("nth"));
-                                if (nth > n) {
+                                if (((nth > n) && !event.shiftKey) ||
+                                    ((nth < n) && event.shiftKey)) {
                                     target = $(t)
                                     break;
                                 }

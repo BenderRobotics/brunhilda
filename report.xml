@@ -5,8 +5,8 @@
     skipped="3" 
     tests="9" 
     failures="4" 
-    time="0.22670290000000015"
-    timestamp="2020-01-04 21:10:29.633423"
+    time="0.2268197999999999"
+    timestamp="2020-01-06 22:15:41.552138"
     hostname="DESKTOP-NP81929">
 
     
@@ -17,8 +17,8 @@
         skipped="2" 
         tests="8" 
         failures="1" 
-        time="0.22616230000000015"
-        timestamp="2020-01-04 21:10:29.406575">
+        time="0.2264107999999999"
+        timestamp="2020-01-06 22:15:41.324161">
       <properties>
          <property name="python" value="3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:21:23) [MSC v.1916 32 bit (Intel)]" />
          <property name="system" value="Windows-10-10.0.18362-SP0" />
@@ -27,11 +27,11 @@
         
         <testcase classname="TestCase1" name="TestCase1:test_00_pass">
             <system-out>test_00_pass (__main__.TestCase1) ... Stupid print
-2020-01-04 21:10:29,407 - root - DEBUG - debug message
-2020-01-04 21:10:29,407 - root - INFO - info message
-2020-01-04 21:10:29,408 - root - WARNING - very warning message
-2020-01-04 21:10:29,408 - root - ERROR - error message
-2020-01-04 21:10:29,408 - root - CRITICAL - critical message
+2020-01-06 22:15:41,325 - root - DEBUG - debug message
+2020-01-06 22:15:41,325 - root - INFO - info message
+2020-01-06 22:15:41,326 - root - WARNING - very warning message
+2020-01-06 22:15:41,326 - root - ERROR - error message
+2020-01-06 22:15:41,327 - root - CRITICAL - critical message
 ok
 </system-out>
 
@@ -89,16 +89,16 @@ AssertionError: 1 != 2 : Message
         </testcase>
         
         <testcase classname="TestCase1" name="TestCase1:test_02_subtest">
-            <system-out>test_02_subtest (__main__.TestCase1) ... Tempora quisquam neque neque.
-Non neque quiquia etincidunt.
-Adipisci tempora est dolor ut adipisci sit.
-Dolore dolore etincidunt quisquam quisquam.
-Velit neque tempora quiquia.
-Labore eius quiquia aliquam amet labore eius.
-Numquam adipisci velit eius quaerat aliquam eius modi.
-Modi quaerat neque amet est quiquia.
-Sed dolore ut amet ut quisquam eius dolor.
-Sed sit dolore dolorem dolore dolore dolore neque.
+            <system-out>test_02_subtest (__main__.TestCase1) ... Sed eius ut dolor consectetur amet tempora neque.
+Dolore etincidunt voluptatem voluptatem ipsum quisquam consectetur quisquam.
+Quaerat sit magnam consectetur adipisci dolorem quaerat.
+Adipisci est velit dolor tempora porro quaerat.
+Sit est consectetur etincidunt porro numquam neque tempora.
+Sed quaerat quaerat modi consectetur quaerat adipisci quaerat.
+Voluptatem non magnam quisquam ipsum.
+Quiquia sit tempora ut adipisci quaerat velit sed.
+Quaerat quisquam aliquam amet est.
+Magnam sit quisquam porro tempora ipsum ut.
 skipped 'Because 4'
 </system-out>
 
@@ -309,8 +309,8 @@ AssertionError: False is not true
         skipped="0" 
         tests="1" 
         failures="0" 
-        time="0.0005406000000000022"
-        timestamp="2020-01-04 21:10:29.633423">
+        time="0.0004089999999999927"
+        timestamp="2020-01-06 22:15:41.551655">
       <properties>
          <property name="python" value="3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:21:23) [MSC v.1916 32 bit (Intel)]" />
          <property name="system" value="Windows-10-10.0.18362-SP0" />

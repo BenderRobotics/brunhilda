@@ -539,9 +539,15 @@
                             const n = Number($(current).data("nth"));
                             var next = false;
 
+                            /* Up - reverse order */
+                            if (!event.shiftKey) {
+                                targets = $(targets.get().reverse())
+                            }
+
                             for (var t of targets) {
                                 var nth = Number($(t).data("nth"));
-                                if (nth > n) {
+                                if (((nth > n) && !event.shiftKey) ||
+                                    ((nth < n) && event.shiftKey)) {
                                     target = $(t)
                                     break;
                                 }
@@ -565,14 +571,14 @@
     </head>
     <body>
         <div class="testrun">
-            <p>Test report  generated on <time>2020-01-04 21:10:30</time> by Brunhilda</p>
+            <p>Test report  generated on <time>2020-01-06 22:15:42</time> by Brunhilda</p>
             <h2>Environment</h2>
             <table class="testrun__environment">
                 <tbody>
                     <tr>
                         <th>Executed</th>
-                        <td>2020-01-04 21:10:29 &ndash;
-                            2020-01-04 21:10:29</td>
+                        <td>2020-01-06 22:15:41 &ndash;
+                            2020-01-06 22:15:41</td>
                     </tr>
                     <tr>
                         <th>Python</th><td>3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:21:23) [MSC v.1916 32 bit (Intel)]</td>
@@ -837,11 +843,11 @@ span rows.</td>
                                 <h3>Output</h3>
                                 <div class="test__console">
                                     <pre>test_00_pass (__main__.TestCase1) ... Stupid print
-<span class="log log--debug">2020-01-04 21:10:29,407 - root - DEBUG - debug message</span>
-<span class="log log--info">2020-01-04 21:10:29,407 - root - INFO - info message</span>
-<span class="log log--warning">2020-01-04 21:10:29,408 - root - WARNING - very warning message</span>
-<span class="log log--error">2020-01-04 21:10:29,408 - root - ERROR - error message</span>
-<span class="log log--critical">2020-01-04 21:10:29,408 - root - CRITICAL - critical message</span>
+<span class="log log--debug">2020-01-06 22:15:41,325 - root - DEBUG - debug message</span>
+<span class="log log--info">2020-01-06 22:15:41,325 - root - INFO - info message</span>
+<span class="log log--warning">2020-01-06 22:15:41,326 - root - WARNING - very warning message</span>
+<span class="log log--error">2020-01-06 22:15:41,326 - root - ERROR - error message</span>
+<span class="log log--critical">2020-01-06 22:15:41,327 - root - CRITICAL - critical message</span>
 ok
 </pre>
                                 </div>
@@ -1118,16 +1124,16 @@ ZeroDivisionError: division by zero
                                 
                                 <h3>Output</h3>
                                 <div class="test__console">
-                                    <pre>test_02_subtest (__main__.TestCase1) ... Tempora quisquam neque neque.
-Non neque quiquia etincidunt.
-Adipisci tempora est dolor ut adipisci sit.
-Dolore dolore etincidunt quisquam quisquam.
-Velit neque tempora quiquia.
-Labore eius quiquia aliquam amet labore eius.
-Numquam adipisci velit eius quaerat aliquam eius modi.
-Modi quaerat neque amet est quiquia.
-Sed dolore ut amet ut quisquam eius dolor.
-Sed sit dolore dolorem dolore dolore dolore neque.
+                                    <pre>test_02_subtest (__main__.TestCase1) ... Sed eius ut dolor consectetur amet tempora neque.
+Dolore etincidunt voluptatem voluptatem ipsum quisquam consectetur quisquam.
+Quaerat sit magnam consectetur adipisci dolorem quaerat.
+Adipisci est velit dolor tempora porro quaerat.
+Sit est consectetur etincidunt porro numquam neque tempora.
+Sed quaerat quaerat modi consectetur quaerat adipisci quaerat.
+Voluptatem non magnam quisquam ipsum.
+Quiquia sit tempora ut adipisci quaerat velit sed.
+Quaerat quisquam aliquam amet est.
+Magnam sit quisquam porro tempora ipsum ut.
 skipped 'Because 4'
 </pre>
                                 </div>
@@ -1455,7 +1461,7 @@ AssertionError: False is not true
                             <h3 class="testcase__name">TestCaseA</h3>
                             <p class="testcase__summary">
                                 <span class="testcase__summary--time">
-                                    Ran in 0.001s</span>,
+                                    Ran in 0.000s</span>,
                                 <span class="testcase__summary--passed">
                                     passed: <strong>1</strong></span>,
                                 <span class="testcase__summary--errored">
@@ -1487,7 +1493,7 @@ AssertionError: False is not true
                                     <strong>test_0A_pass</strong>
                                     
                                 </span>
-                                <span class="test__time">0.001s</span>
+                                <span class="test__time">0.000s</span>
                             </label>
                             <input type="checkbox" id="test_expand_9" class="test__expander">
                             <div class="test__detail">
