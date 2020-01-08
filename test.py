@@ -7,6 +7,7 @@ import colorama
 import time
 import ddt
 import lorem
+from PIL import Image, ImageDraw, ImageFont
 
 sys.path.insert(0, os.path.abspath('..'))
 colorama.init()
@@ -148,6 +149,24 @@ class TestCase1(unittest.TestCase):
         print('still dim but normal color')
         print(Style.RESET_ALL)
         print('back to normal now')
+
+        img = Image.new('RGB', (1600, 1000), color = (73, 109, 137))
+        d = ImageDraw.Draw(img)
+        d.text((30, 30), "PIL image", fill=(255, 255, 0))
+
+        self.extra.append(img.copy())
+
+        img2 = Image.new('RGB', (1600, 1000), color = (0, 200, 137))
+        d = ImageDraw.Draw(img2)
+        d.text((30, 30), "PIL image 2", fill=(255, 255, 0))
+
+        self.extra.append(img2.copy())
+
+        self.extra.append(lorem.paragraph())
+
+        self.extra.append({"dictionary": 1, "can": "be", "used": {"as": "well"}})
+        self.extra.append(['or', 'list', 'of', 'items'])
+
         self.assertEqual(1, 2, "Message")
 
     def test_02_subtest(self):
@@ -170,6 +189,13 @@ class TestCase1(unittest.TestCase):
                 print(lorem.sentence())
                 if i == 4:
                     self.skipTest("Because 4")
+                elif i % 2 == 0:
+                    img = Image.new('RGB', (1600, 1000), color = (0, 128, 180))
+                    d = ImageDraw.Draw(img)
+                    d.text((30, 30), f"Image {i}", fill=(255, 255, 0))
+                    self.extra.append(img.copy())
+                    raise AssertionError(img.copy())
+
                 self.assertEqual(1, 1 / (i % 3) , "Message")
 
     def test_03_error(self):
@@ -232,8 +258,12 @@ class TestCase1(unittest.TestCase):
     def test_07_unexpected_sucess(self):
         self.assertTrue(True)
 
+    def test_08_exception_args(self):
+        img = Image.new('RGB', (1600, 1000), color = (0, 128, 180))
+        raise AssertionError(img.copy())
+
     @ddt.data(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-    def test_08_ddt(self, param):
+    def test_09_ddt(self, param):
         self.assertIn(param, [2, 5, 7])
 
 class TestCaseA(unittest.TestCase):

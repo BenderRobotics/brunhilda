@@ -352,12 +352,36 @@
             }
 
             .test__extra {
-                margin-bottom: 1rem;
+                margin: 1rem;
+                max-height: 400px;
+            }
+
+            .test__extra > * {
+                border: 1px solid #a0a0a0;
+            }
+
+            .test__extra img {
+                max-height: 400px;
+                max-width: 100%;
+                width: auto;
+            }
+
+            .test__extra__text {
+                white-space: pre-line;
+                background-color: #000000;
+                color: white;
+                padding: 0.5rem;
+                line-height: 1.25;
+                font-family: 'Consolas', 'Courier New', Courier, monospace;
             }
 
             .subtests {
                 margin: 0 1rem;
                 width: calc(100% - 2rem);
+            }
+
+            .subtests td {
+                vertical-align: top;
             }
 
             .subtest__result {
@@ -380,12 +404,18 @@
                 background-color: var(--color--error-bg);
             }
 
+            .subtest__extra__image {
+                max-height: 400px;
+                max-width: 100%;
+                width: auto;
+            }
+
             /********************************************************/
             .bar {
-                width: 100%;
+                width: 95%;
                 position: relative;
                 height: 10px;
-                margin: 1rem 0;
+                margin: 1rem auto;
                 background-image: linear-gradient(#AAA, #999);
                 box-shadow: 0px 2px 2px 0px #ccc5c5;
             }
@@ -672,30 +702,29 @@
 
                 <div class="bar__line bar__line--passed"
                      style="width:{{pct_passed}}%;">
-                     <span>{{ pct_passed }}%</span>
+                     <span>{{ pct_passed|round(1) }}%</span>
                 </div>
                 <div class="bar__line bar__line--failed"
                      style="width:{{pct_failed}}%;">
-                     <span>{{ pct_failed }}%</span>
+                     <span>{{ pct_failed|round(1) }}%</span>
                 </div>
                 <div class="bar__line bar__line--errored"
                     style="width:{{pct_errored}}%;">
-                    <span>{{ pct_errored }}%</span>
+                    <span>{{ pct_errored|round(1) }}%</span>
                 </div>
                 <div class="bar__line bar__line--skipped"
                      style="width:{{pct_skipped}}%;">
-                     <span>{{ pct_skipped }}%</span>
+                     <span>{{ pct_skipped|round(1) }}%</span>
                 </div>
                 <div class="bar__line bar__line--expected-failure"
                      style="width:{{pct_ef}}%;">
-                     <span>{{ pct_ef }}%</span>
+                     <span>{{ pct_ef|round(1) }}%</span>
                 </div>
                 <div class="bar__line bar__line--unexpected-success"
                      style="width:{{pct_us}}%;">
-                     <span>{{ pct_us }}%</span>
+                     <span>{{ pct_us|round(1) }}%</span>
                 </div>
             </div>
-
 
             <div class="testsuites">
                 <h2>Results</h2>
@@ -762,6 +791,7 @@
                                             <th>Sub-test</th>
                                             <th>Result</th>
                                             <th>Detail</th>
+                                            <th>Extra</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -776,6 +806,17 @@
                                             {% elif subtest.reason %}
                                                 {{ subtest.reason }}
                                             {% endif %}
+                                            </td>
+                                            <td class="subtest_extra">
+                                                {% if subtest.extra %}
+                                                {% for extra in subtest.extra %}
+                                                    {% if extra.type.startswith('image') %}
+                                                    <p><img class="subtest__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" /></p>
+                                                    {% else %}
+                                                    <pre class="subtest__extra__text">{{ extra.value }}</pre>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% endif %}
                                             </td>
                                         </tr>
                                         {% endfor %}
@@ -800,25 +841,16 @@
                                 {% endif %}
 
                                 {% if test.extra %}
-                                <h3>Additional</h3>
+                                <h3>Extra</h3>
                                 {% for extra in test.extra %}
                                 <div class="test__extra">
-                                    {% if extra.type == "text" %}
-                                    <pre class="test__extra__text">{{ extra.value }}</pre>
-                                    {% elif extra.type.startswith('image') %}
+                                    {% if extra.type.startswith('image') %}
                                     <img class="test__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" />
-                                    {% elif extra.type == "list" %}
-                                    <ul class="test__extra__list">
-                                        {% for item in extra.value %}
-                                        <li class="test__extra__list__item">
-                                            <pre class="test__extra__list__content">{{ item }}</pre>
-                                        </li>
-                                        {% endfor %}
-                                    </ul>
+                                    {% else %}
+                                    <pre class="test__extra__text">{{ extra.value }}</pre>
                                     {% endif %}
                                 </div>
                                 {% endfor %}
-                                </div>
                                 {% endif %}
                             </div>
                         </div>

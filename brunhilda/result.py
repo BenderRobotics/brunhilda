@@ -4,6 +4,7 @@ import sys
 import time
 import base64
 import socket
+import pprint
 import datetime
 import platform
 import colorama
@@ -68,6 +69,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     """
     Test result class produced by the BRunhilda test runner.
     """
+    _renderers = None
 
     def __init__(self, stream, descriptions, verbosity, name="", user_data=None):
         super().__init__(stream, descriptions, verbosity)
@@ -151,6 +153,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                     # if format is jpeg, convert to RGB to remove transparency
                     if fmt in ("jpeg", "jpg"):
                         img = img.convert('RGB')
+
+                    # PIL needs JPEG, JPG is not enough
+                    if fmt == "jpg":
+                        fmt = "jpeg"
 
                     img.save(output, format=fmt)
                     contents = output.getvalue()
@@ -303,10 +309,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 extra.append({'type': 'text', 'value': ex})
             elif img is not None:
                 extra.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
-            if isinstance(ex, (list, tuple, set, frozenset)):
-                extra.append({'type': 'list', 'value': [str(_) for _ in ex]})
             else:
-                extra.append({'type': 'text', 'value': str(ex)})
+                extra.append({'type': 'text', 'value': pprint.pformat(ex, indent=2, width=120)})
 
         self.results['testcases'][testcase_name]['time'] = self.suite_execution_time
         self.results['testcases'][testcase_name]['tests'].append({
@@ -324,7 +328,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
     def addSuccess(self, test):
         """
-        This method is called after sucessfull end of the test method.
+        This method is called after successfull end of the test method.
         """
         super().addSuccess(test)
         if self.last_result == PASSED:
@@ -332,17 +336,31 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
     def addError(self, test, err):
         """
-        This method is called when rror occures.
+        This method is called when error occurs.
         """
         super().addError(test, err)
+
+        if err is not None:
+            for ex in err[1].args:
+                img = self._render_img(ex)
+                if img is not None:
+                    test.extra.append(ex)
+
         self.errors_strings.append(self._exc_info_to_string(err, test))
         self.last_result = ERRORED
 
     def addFailure(self, test, err):
         """
-        This method is called uppon assertion failure.
+        This method is called upon assertion failure.
         """
         super().addFailure(test, err)
+
+        if err is not None:
+            for ex in err[1].args:
+                img = self._render_img(ex)
+                if img is not None:
+                    test.extra.append(ex)
+
         self.errors_strings.append(self._exc_info_to_string(err, test))
         self.last_result = FAILED
 
@@ -352,20 +370,19 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         extra = None
 
-        for ex in test.extra:
-            if extra is None:
-                extra = []
+        if err is not None:
+            for ex in err[1].args:
+                if extra is None:
+                    extra = []
 
-            img = self._render_img(ex)
+                img = self._render_img(ex)
 
-            if isinstance(ex, str):
-                extra.append({'type': 'text', 'value': ex})
-            elif img is not None:
-                extra.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
-            if isinstance(ex, (list, tuple, set, frozenset)):
-                extra.append({'type': 'list', 'value': [str(_) for _ in ex]})
-            else:
-                extra.append({'type': 'text', 'value': str(ex)})
+                if isinstance(ex, str):
+                    extra.append({'type': 'text', 'value': ex})
+                elif img is not None:
+                    extra.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
+                else:
+                    extra.append({'type': 'text', 'value': pprint.pformat(ex, indent=2, width=120)})
 
         self.subtests.append({
             'id': 1+len(self.subtests),
@@ -373,9 +390,6 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'result': PASSED,
             'extra': extra
         })
-
-        # clear test extra to have it clean for the next subtest
-        test.extra = []
 
         # `err` contains info about errors and failures, if `None`, sub-test passed
         if err is not None:

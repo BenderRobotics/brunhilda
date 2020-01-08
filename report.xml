@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites 
     name=""
-    errors="5" 
+    errors="3" 
     skipped="3" 
     tests="19" 
     failures="11" 
@@ -300,8 +300,35 @@ AssertionError: False is not true
              
         </testcase>
         
-        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_01_1">
-            <system-out>test_08_ddt_01_1 (__main__.TestCase1) ... FAIL
+        <testcase classname="TestCase1" name="TestCase1:test_08_exception_args">
+            <system-out>test_08_exception_args (__main__.TestCase1) ... FAIL
+</system-out>
+
+            
+            <system-err>Traceback (most recent call last):
+  File "test.py", line 263, in test_08_exception_args
+    raise AssertionError(img.copy())
+AssertionError: <PIL.Image.Image image mode=RGB size=1600x1000 at 0x3DD1A60>
+</system-err>
+            
+
+             
+
+            
+            
+            <failure>Traceback (most recent call last):
+  File "test.py", line 263, in test_08_exception_args
+    raise AssertionError(img.copy())
+AssertionError: <PIL.Image.Image image mode=RGB size=1600x1000 at 0x3DD1A60>
+</failure>
+            
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_09_ddt_01_1">
+            <system-out>test_09_ddt_01_1 (__main__.TestCase1) ... FAIL
 </system-out>
 
             
@@ -331,8 +358,8 @@ AssertionError: 1 not found in [2, 5, 7]
              
         </testcase>
         
-        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_02_2">
-            <system-out>test_08_ddt_02_2 (__main__.TestCase1) ... ok
+        <testcase classname="TestCase1" name="TestCase1:test_09_ddt_02_2">
+            <system-out>test_09_ddt_02_2 (__main__.TestCase1) ... ok
 </system-out>
 
             
@@ -344,8 +371,8 @@ AssertionError: 1 not found in [2, 5, 7]
              
         </testcase>
         
-        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_03_3">
-            <system-out>test_08_ddt_03_3 (__main__.TestCase1) ... FAIL
+        <testcase classname="TestCase1" name="TestCase1:test_09_ddt_03_3">
+            <system-out>test_09_ddt_03_3 (__main__.TestCase1) ... FAIL
 </system-out>
 
             
@@ -375,8 +402,8 @@ AssertionError: 3 not found in [2, 5, 7]
              
         </testcase>
         
-        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_04_4">
-            <system-out>test_08_ddt_04_4 (__main__.TestCase1) ... FAIL
+        <testcase classname="TestCase1" name="TestCase1:test_09_ddt_04_4">
+            <system-out>test_09_ddt_04_4 (__main__.TestCase1) ... FAIL
 </system-out>
 
             
@@ -406,8 +433,8 @@ AssertionError: 4 not found in [2, 5, 7]
              
         </testcase>
         
-        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_05_5">
-            <system-out>test_08_ddt_05_5 (__main__.TestCase1) ... ok
+        <testcase classname="TestCase1" name="TestCase1:test_09_ddt_05_5">
+            <system-out>test_09_ddt_05_5 (__main__.TestCase1) ... ok
 </system-out>
 
             
@@ -419,8 +446,8 @@ AssertionError: 4 not found in [2, 5, 7]
              
         </testcase>
         
-        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_06_6">
-            <system-out>test_08_ddt_06_6 (__main__.TestCase1) ... FAIL
+        <testcase classname="TestCase1" name="TestCase1:test_09_ddt_06_6">
+            <system-out>test_09_ddt_06_6 (__main__.TestCase1) ... FAIL
 </system-out>
 
             
@@ -450,8 +477,8 @@ AssertionError: 6 not found in [2, 5, 7]
              
         </testcase>
         
-        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_07_7">
-            <system-out>test_08_ddt_07_7 (__main__.TestCase1) ... ok
+        <testcase classname="TestCase1" name="TestCase1:test_09_ddt_07_7">
+            <system-out>test_09_ddt_07_7 (__main__.TestCase1) ... ok
 </system-out>
 
             
@@ -463,8 +490,8 @@ AssertionError: 6 not found in [2, 5, 7]
              
         </testcase>
         
-        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_08_8">
-            <system-out>test_08_ddt_08_8 (__main__.TestCase1) ... FAIL
+        <testcase classname="TestCase1" name="TestCase1:test_09_ddt_08_8">
+            <system-out>test_09_ddt_08_8 (__main__.TestCase1) ... FAIL
 </system-out>
 
             
@@ -494,8 +521,8 @@ AssertionError: 8 not found in [2, 5, 7]
              
         </testcase>
         
-        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_09_9">
-            <system-out>test_08_ddt_09_9 (__main__.TestCase1) ... FAIL
+        <testcase classname="TestCase1" name="TestCase1:test_09_ddt_09_9">
+            <system-out>test_09_ddt_09_9 (__main__.TestCase1) ... FAIL
 </system-out>
 
             
@@ -525,8 +552,8 @@ AssertionError: 9 not found in [2, 5, 7]
              
         </testcase>
         
-        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_10_10">
-            <system-out>test_08_ddt_10_10 (__main__.TestCase1) ... FAIL
+        <testcase classname="TestCase1" name="TestCase1:test_09_ddt_10_10">
+            <system-out>test_09_ddt_10_10 (__main__.TestCase1) ... FAIL
 </system-out>
 
             
