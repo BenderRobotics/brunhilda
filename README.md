@@ -1,13 +1,13 @@
-**BRunhilda** the test runner
+**Brunhilda** the test runner
 =============================
 
-BRunhilda is a custom test runner supported python unittest test-cases.
+Brunhilda is a custom test runner supported python unittest test-cases.
 
 Main Features
 -------------
 
 - [x] Custom HTML reports
-- [ ] with rich Javascript based tooling,
+- [x] with rich Javascript based tooling,
 - [x] capturing console output in the report,
 - [x] preserving normal behaviour and console output of the standart `TextTestRunner`,
 - [x] support for subtest,

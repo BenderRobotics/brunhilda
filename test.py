@@ -58,7 +58,6 @@ class TestCase1(unittest.TestCase):
     |1                    |        2| 3 |
     +---------------------+---------+---+
 
-    
     +------------+------------+-----------+
     | Header 1   | Header 2   | Header 3  |
     +============+============+===========+
@@ -87,7 +86,7 @@ class TestCase1(unittest.TestCase):
         6) Verify value of the schedule timer action target to be a new scheduled value.
 
         Repeat steps 3 – 6 for entire progam.
-        """     
+        """
         print("Stupid print")
         FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         logging.basicConfig(format=FORMAT)
@@ -118,7 +117,7 @@ class TestCase1(unittest.TestCase):
         - b
         - c
         - d
-        """  
+        """
         import colorama
         from colorama import Fore, Back, Style
         colorama.init()
@@ -165,7 +164,7 @@ class TestCase1(unittest.TestCase):
         6) Verify value of the schedule timer action target to be a new scheduled value.
 
         Repeat steps 3–6 for entire progam.
-        """    
+        """
         for i in range(10):
             with self.subTest(i=i, j=i*2, bc="9.1.2") as subtest:
                 print(lorem.sentence())
@@ -190,7 +189,6 @@ class TestCase1(unittest.TestCase):
         """
         self.assertTrue(1 / 0, "Message")
 
-        
     def test_04_skip(self):
         """
         @ref ST01.1
@@ -205,7 +203,7 @@ class TestCase1(unittest.TestCase):
         6) Verify value of the schedule timer action target to be a new scheduled value.
 
         Repeat steps 3 – 6 for entire progam.
-        """  
+        """
         self.skipTest("Because we can")
 
     @unittest.skip("Because of decorator")
@@ -223,16 +221,20 @@ class TestCase1(unittest.TestCase):
         6) Verify value of the schedule timer action target to be a new scheduled value.
 
         Repeat steps 3 – 6 for entire progam.
-        """  
+        """
         self.assertTrue(True)
 
     @unittest.expectedFailure
     def test_06_expected_failure(self):
         self.assertTrue(False)
-        
+
     @unittest.expectedFailure
     def test_07_unexpected_sucess(self):
         self.assertTrue(True)
+
+    @ddt.data(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    def test_08_ddt(self, param):
+        self.assertIn(param, [2, 5, 7])
 
 class TestCaseA(unittest.TestCase):
     """

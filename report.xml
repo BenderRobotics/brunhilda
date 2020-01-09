@@ -3,10 +3,10 @@
     name=""
     errors="5" 
     skipped="3" 
-    tests="9" 
-    failures="4" 
-    time="0.2268197999999999"
-    timestamp="2020-01-06 22:15:41.552138"
+    tests="19" 
+    failures="11" 
+    time="0.23569899999999983"
+    timestamp="2020-01-09 22:16:16.681150"
     hostname="DESKTOP-NP81929">
 
     
@@ -15,10 +15,10 @@
         name="TestCase1" 
         errors="2" 
         skipped="2" 
-        tests="8" 
-        failures="1" 
-        time="0.2264107999999999"
-        timestamp="2020-01-06 22:15:41.324161">
+        tests="18" 
+        failures="8" 
+        time="0.23532859999999983"
+        timestamp="2020-01-09 22:16:16.445390">
       <properties>
          <property name="python" value="3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:21:23) [MSC v.1916 32 bit (Intel)]" />
          <property name="system" value="Windows-10-10.0.18362-SP0" />
@@ -27,11 +27,11 @@
         
         <testcase classname="TestCase1" name="TestCase1:test_00_pass">
             <system-out>test_00_pass (__main__.TestCase1) ... Stupid print
-2020-01-06 22:15:41,325 - root - DEBUG - debug message
-2020-01-06 22:15:41,325 - root - INFO - info message
-2020-01-06 22:15:41,326 - root - WARNING - very warning message
-2020-01-06 22:15:41,326 - root - ERROR - error message
-2020-01-06 22:15:41,327 - root - CRITICAL - critical message
+2020-01-09 22:16:16,445 - root - DEBUG - debug message
+2020-01-09 22:16:16,446 - root - INFO - info message
+2020-01-09 22:16:16,446 - root - WARNING - very warning message
+2020-01-09 22:16:16,446 - root - ERROR - error message
+2020-01-09 22:16:16,447 - root - CRITICAL - critical message
 ok
 </system-out>
 
@@ -67,7 +67,7 @@ FAIL
 
             
             <system-err>Traceback (most recent call last):
-  File "test.py", line 152, in test_01_fail
+  File "test.py", line 151, in test_01_fail
     self.assertEqual(1, 2, "Message")
 AssertionError: 1 != 2 : Message
 </system-err>
@@ -78,7 +78,7 @@ AssertionError: 1 != 2 : Message
             
             
             <failure>Traceback (most recent call last):
-  File "test.py", line 152, in test_01_fail
+  File "test.py", line 151, in test_01_fail
     self.assertEqual(1, 2, "Message")
 AssertionError: 1 != 2 : Message
 </failure>
@@ -89,65 +89,65 @@ AssertionError: 1 != 2 : Message
         </testcase>
         
         <testcase classname="TestCase1" name="TestCase1:test_02_subtest">
-            <system-out>test_02_subtest (__main__.TestCase1) ... Sed eius ut dolor consectetur amet tempora neque.
-Dolore etincidunt voluptatem voluptatem ipsum quisquam consectetur quisquam.
-Quaerat sit magnam consectetur adipisci dolorem quaerat.
-Adipisci est velit dolor tempora porro quaerat.
-Sit est consectetur etincidunt porro numquam neque tempora.
-Sed quaerat quaerat modi consectetur quaerat adipisci quaerat.
-Voluptatem non magnam quisquam ipsum.
-Quiquia sit tempora ut adipisci quaerat velit sed.
-Quaerat quisquam aliquam amet est.
-Magnam sit quisquam porro tempora ipsum ut.
+            <system-out>test_02_subtest (__main__.TestCase1) ... Labore quaerat consectetur amet tempora est.
+Numquam adipisci aliquam amet.
+Sed ut porro eius.
+Porro eius est voluptatem.
+Porro sit quisquam velit.
+Labore sit tempora aliquam neque consectetur dolore numquam.
+Magnam quaerat ipsum dolor dolorem amet modi porro.
+Est sit dolore neque sit etincidunt consectetur porro.
+Ut sit aliquam neque.
+Modi sit magnam dolore.
 skipped 'Because 4'
 </system-out>
 
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=0, j=0, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </system-err>
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=2, j=4, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </system-err>
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=3, j=6, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </system-err>
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=5, j=10, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </system-err>
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=6, j=12, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </system-err>
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=8, j=16, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </system-err>
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=9, j=18, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </system-err>
@@ -161,49 +161,49 @@ ZeroDivisionError: division by zero
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=0, j=0, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </failure>   
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=2, j=4, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </failure>   
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=3, j=6, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </failure>   
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=5, j=10, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </failure>   
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=6, j=12, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </failure>   
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=8, j=16, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </failure>   
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=9, j=18, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 174, in test_02_subtest
+  File "test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </failure>   
@@ -217,7 +217,7 @@ ZeroDivisionError: division by zero
 
             
             <system-err>Traceback (most recent call last):
-  File "test.py", line 191, in test_03_error
+  File "test.py", line 190, in test_03_error
     self.assertTrue(1 / 0, "Message")
 ZeroDivisionError: division by zero
 </system-err>
@@ -230,7 +230,7 @@ ZeroDivisionError: division by zero
             
             
             <failure>Traceback (most recent call last):
-  File "test.py", line 191, in test_03_error
+  File "test.py", line 190, in test_03_error
     self.assertTrue(1 / 0, "Message")
 ZeroDivisionError: division by zero
 </failure>   
@@ -274,7 +274,7 @@ ZeroDivisionError: division by zero
 
             
             <system-err>Traceback (most recent call last):
-  File "test.py", line 231, in test_06_expected_failure
+  File "test.py", line 229, in test_06_expected_failure
     self.assertTrue(False)
 AssertionError: False is not true
 </system-err>
@@ -300,6 +300,262 @@ AssertionError: False is not true
              
         </testcase>
         
+        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_01_1">
+            <system-out>test_08_ddt_01_1 (__main__.TestCase1) ... FAIL
+</system-out>
+
+            
+            <system-err>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 1 not found in [2, 5, 7]
+</system-err>
+            
+
+             
+
+            
+            
+            <failure>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 1 not found in [2, 5, 7]
+</failure>
+            
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_02_2">
+            <system-out>test_08_ddt_02_2 (__main__.TestCase1) ... ok
+</system-out>
+
+            
+
+             
+
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_03_3">
+            <system-out>test_08_ddt_03_3 (__main__.TestCase1) ... FAIL
+</system-out>
+
+            
+            <system-err>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 3 not found in [2, 5, 7]
+</system-err>
+            
+
+             
+
+            
+            
+            <failure>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 3 not found in [2, 5, 7]
+</failure>
+            
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_04_4">
+            <system-out>test_08_ddt_04_4 (__main__.TestCase1) ... FAIL
+</system-out>
+
+            
+            <system-err>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 4 not found in [2, 5, 7]
+</system-err>
+            
+
+             
+
+            
+            
+            <failure>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 4 not found in [2, 5, 7]
+</failure>
+            
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_05_5">
+            <system-out>test_08_ddt_05_5 (__main__.TestCase1) ... ok
+</system-out>
+
+            
+
+             
+
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_06_6">
+            <system-out>test_08_ddt_06_6 (__main__.TestCase1) ... FAIL
+</system-out>
+
+            
+            <system-err>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 6 not found in [2, 5, 7]
+</system-err>
+            
+
+             
+
+            
+            
+            <failure>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 6 not found in [2, 5, 7]
+</failure>
+            
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_07_7">
+            <system-out>test_08_ddt_07_7 (__main__.TestCase1) ... ok
+</system-out>
+
+            
+
+             
+
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_08_8">
+            <system-out>test_08_ddt_08_8 (__main__.TestCase1) ... FAIL
+</system-out>
+
+            
+            <system-err>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 8 not found in [2, 5, 7]
+</system-err>
+            
+
+             
+
+            
+            
+            <failure>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 8 not found in [2, 5, 7]
+</failure>
+            
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_09_9">
+            <system-out>test_08_ddt_09_9 (__main__.TestCase1) ... FAIL
+</system-out>
+
+            
+            <system-err>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 9 not found in [2, 5, 7]
+</system-err>
+            
+
+             
+
+            
+            
+            <failure>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 9 not found in [2, 5, 7]
+</failure>
+            
+             
+
+             
+        </testcase>
+        
+        <testcase classname="TestCase1" name="TestCase1:test_08_ddt_10_10">
+            <system-out>test_08_ddt_10_10 (__main__.TestCase1) ... FAIL
+</system-out>
+
+            
+            <system-err>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 10 not found in [2, 5, 7]
+</system-err>
+            
+
+             
+
+            
+            
+            <failure>Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
+    return func(self, *args, **kwargs)
+  File "test.py", line 237, in test_08_ddt
+    self.assertIn(param, [2, 5, 7])
+AssertionError: 10 not found in [2, 5, 7]
+</failure>
+            
+             
+
+             
+        </testcase>
+        
     </testsuite>
     
     <testsuite
@@ -309,8 +565,8 @@ AssertionError: False is not true
         skipped="0" 
         tests="1" 
         failures="0" 
-        time="0.0004089999999999927"
-        timestamp="2020-01-06 22:15:41.551655">
+        time="0.00037039999999999296"
+        timestamp="2020-01-09 22:16:16.681150">
       <properties>
          <property name="python" value="3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:21:23) [MSC v.1916 32 bit (Intel)]" />
          <property name="system" value="Windows-10-10.0.18362-SP0" />
