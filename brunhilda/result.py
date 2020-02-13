@@ -303,6 +303,11 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         if path is not None:
             output = output_formater.print(self.results)
+            dir_name = os.path.dirname(os.path.abspath(path))
+
+            if not os.path.exists(dir_name):
+                os.mkdir(dir_name)
 
             with open(path, 'w') as f:
+                print(f"... created report {path}")
                 f.write(output)
