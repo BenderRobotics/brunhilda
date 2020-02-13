@@ -591,6 +591,21 @@
                     </tr>
                 </tbody>
             </table>
+
+            {% if data.user_data %}
+            <h2>User data</h2>
+            <table class="testrun__user_data">
+                <tbody>
+                    {% for key, value in data.user_data.items() %}
+                    <tr>
+                        <th>{{ key }}</th>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+
             <h2>Summary</h2>
             <p>Run {{ data.total.tests }} test in {{ '%0.2f'|format(data.total.time|float) }}s</p>
             <table class="testrun__summary">

@@ -20,7 +20,7 @@ class HtmlResultOutput():
             spaces = ''.join([' '] * padding)                   # left trailing spaces
             lines = [line.lstrip(spaces) for line in lines]     # cut out leading spaces
             description = '\n'.join(lines)                      # join to string again
-            description = description.replace("–", "-")         # TODO 
+            description = description.replace("–", "-")         # TODO
             return publish_parts(description, writer_name='html')['html_body']  # convert from RST to HTML
 
     def _format_logging(self, text):
@@ -38,7 +38,7 @@ class HtmlResultOutput():
         lines = text.split('\n')
         for i in range(len(lines)):
             for f in formatting:
-                # Currently only by te occurance of the keyword in the string, is there a better way?
+                # Currently only by te occurrence of the keyword in the string, is there a better way?
                 if f in lines[i]:
                     lines[i] = f'{formatting[f]}{lines[i]}</span>'
         return '\n'.join(lines)
@@ -77,14 +77,14 @@ class HtmlResultOutput():
             pos = text.find(CSI, start)     # nex loc of the CSI
             end = text.find('m', pos) + 1   # CSI ends with 'm'
             esc = text[pos:end]             # whole escape sequence, e.g. '\033[30m' for BACK
-            
+
             if esc in formatting:
                 opened.append(formatting[esc])
                 text = text.replace(esc, formatting[esc])
             elif esc in (colorama.Style.RESET_ALL, colorama.Fore.RESET, colorama.Back.RESET):
                 n = len(opened) # number of currently opened spans
 
-                # check which spans will be reopend because they are not reset
+                # check which spans will be reopened because they are not reset
                 if esc == colorama.Style.RESET_ALL:
                     opened = []
                 elif esc == colorama.Fore.RESET:
@@ -92,16 +92,23 @@ class HtmlResultOutput():
                 elif esc == colorama.Back.RESET:
                     opened = [op for op in opened if "back" not in op]
 
-                # close all open spans and reopen not reseted spans
+                # close all open spans and reopen not reset spans
                 text = text.replace(esc, ''.join(['</span>'] * n + opened))
             else:
                 # remove unknown formating
                 text = text.replace(esc, '')
 
-            start = pos        
+            start = pos
         return text
 
     def print(self, testresult):
+        """
+        Prints testresult to HTML document.
+
+        :param testresult: BRunhilda test result from the test run,
+        :return: HTML string
+        :rtype: str
+        """
         testresult = copy.deepcopy(testresult)
 
         for case in sorted(testresult['testcases'].values(), key=lambda item: item['id']):

@@ -5,8 +5,8 @@
     skipped="3" 
     tests="19" 
     failures="11" 
-    time="0.23569899999999983"
-    timestamp="2020-01-09 22:16:16.681150"
+    time="0.2651428"
+    timestamp="2020-02-13 20:49:43.682114"
     hostname="DESKTOP-NP81929">
 
     
@@ -17,8 +17,8 @@
         skipped="2" 
         tests="18" 
         failures="8" 
-        time="0.23532859999999983"
-        timestamp="2020-01-09 22:16:16.445390">
+        time="0.26463269999999994"
+        timestamp="2020-02-13 20:49:43.416053">
       <properties>
          <property name="python" value="3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:21:23) [MSC v.1916 32 bit (Intel)]" />
          <property name="system" value="Windows-10-10.0.18362-SP0" />
@@ -27,11 +27,11 @@
         
         <testcase classname="TestCase1" name="TestCase1:test_00_pass">
             <system-out>test_00_pass (__main__.TestCase1) ... Stupid print
-2020-01-09 22:16:16,445 - root - DEBUG - debug message
-2020-01-09 22:16:16,446 - root - INFO - info message
-2020-01-09 22:16:16,446 - root - WARNING - very warning message
-2020-01-09 22:16:16,446 - root - ERROR - error message
-2020-01-09 22:16:16,447 - root - CRITICAL - critical message
+2020-02-13 20:49:43,417 - root - DEBUG - debug message
+2020-02-13 20:49:43,418 - root - INFO - info message
+2020-02-13 20:49:43,418 - root - WARNING - very warning message
+2020-02-13 20:49:43,419 - root - ERROR - error message
+2020-02-13 20:49:43,427 - root - CRITICAL - critical message
 ok
 </system-out>
 
@@ -67,7 +67,7 @@ FAIL
 
             
             <system-err>Traceback (most recent call last):
-  File "test.py", line 151, in test_01_fail
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 151, in test_01_fail
     self.assertEqual(1, 2, "Message")
 AssertionError: 1 != 2 : Message
 </system-err>
@@ -78,7 +78,7 @@ AssertionError: 1 != 2 : Message
             
             
             <failure>Traceback (most recent call last):
-  File "test.py", line 151, in test_01_fail
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 151, in test_01_fail
     self.assertEqual(1, 2, "Message")
 AssertionError: 1 != 2 : Message
 </failure>
@@ -89,65 +89,65 @@ AssertionError: 1 != 2 : Message
         </testcase>
         
         <testcase classname="TestCase1" name="TestCase1:test_02_subtest">
-            <system-out>test_02_subtest (__main__.TestCase1) ... Labore quaerat consectetur amet tempora est.
-Numquam adipisci aliquam amet.
-Sed ut porro eius.
-Porro eius est voluptatem.
-Porro sit quisquam velit.
-Labore sit tempora aliquam neque consectetur dolore numquam.
-Magnam quaerat ipsum dolor dolorem amet modi porro.
-Est sit dolore neque sit etincidunt consectetur porro.
-Ut sit aliquam neque.
-Modi sit magnam dolore.
+            <system-out>test_02_subtest (__main__.TestCase1) ... Ipsum sit dolor quiquia tempora est consectetur.
+Est tempora labore dolore sit magnam dolor velit.
+Non adipisci adipisci velit magnam etincidunt neque velit.
+Dolore quisquam etincidunt ipsum tempora neque ut non.
+Magnam consectetur magnam consectetur sit ipsum quisquam adipisci.
+Dolor sed quaerat quisquam ipsum neque est etincidunt.
+Labore adipisci etincidunt non numquam dolore.
+Dolorem velit etincidunt porro sit dolorem.
+Amet adipisci ut labore ut consectetur eius ut.
+Est modi eius numquam est.
 skipped 'Because 4'
 </system-out>
 
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=0, j=0, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </system-err>
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=2, j=4, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </system-err>
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=3, j=6, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </system-err>
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=5, j=10, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </system-err>
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=6, j=12, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </system-err>
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=8, j=16, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </system-err>
             
             <system-err>[40mtest_02_subtest (__main__.TestCase1) (i=9, j=18, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </system-err>
@@ -161,49 +161,49 @@ ZeroDivisionError: division by zero
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=0, j=0, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </failure>   
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=2, j=4, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </failure>   
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=3, j=6, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </failure>   
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=5, j=10, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </failure>   
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=6, j=12, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </failure>   
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=8, j=16, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 AssertionError: 1 != 0.5 : Message
 </failure>   
             
             <failure>[40mtest_02_subtest (__main__.TestCase1) (i=9, j=18, bc='9.1.2')[49m
 Traceback (most recent call last):
-  File "test.py", line 173, in test_02_subtest
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 173, in test_02_subtest
     self.assertEqual(1, 1 / (i % 3) , "Message")
 ZeroDivisionError: division by zero
 </failure>   
@@ -217,7 +217,7 @@ ZeroDivisionError: division by zero
 
             
             <system-err>Traceback (most recent call last):
-  File "test.py", line 190, in test_03_error
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 190, in test_03_error
     self.assertTrue(1 / 0, "Message")
 ZeroDivisionError: division by zero
 </system-err>
@@ -230,7 +230,7 @@ ZeroDivisionError: division by zero
             
             
             <failure>Traceback (most recent call last):
-  File "test.py", line 190, in test_03_error
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 190, in test_03_error
     self.assertTrue(1 / 0, "Message")
 ZeroDivisionError: division by zero
 </failure>   
@@ -274,7 +274,7 @@ ZeroDivisionError: division by zero
 
             
             <system-err>Traceback (most recent call last):
-  File "test.py", line 229, in test_06_expected_failure
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 229, in test_06_expected_failure
     self.assertTrue(False)
 AssertionError: False is not true
 </system-err>
@@ -308,7 +308,7 @@ AssertionError: False is not true
             <system-err>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 1 not found in [2, 5, 7]
 </system-err>
@@ -321,7 +321,7 @@ AssertionError: 1 not found in [2, 5, 7]
             <failure>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 1 not found in [2, 5, 7]
 </failure>
@@ -352,7 +352,7 @@ AssertionError: 1 not found in [2, 5, 7]
             <system-err>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 3 not found in [2, 5, 7]
 </system-err>
@@ -365,7 +365,7 @@ AssertionError: 3 not found in [2, 5, 7]
             <failure>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 3 not found in [2, 5, 7]
 </failure>
@@ -383,7 +383,7 @@ AssertionError: 3 not found in [2, 5, 7]
             <system-err>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 4 not found in [2, 5, 7]
 </system-err>
@@ -396,7 +396,7 @@ AssertionError: 4 not found in [2, 5, 7]
             <failure>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 4 not found in [2, 5, 7]
 </failure>
@@ -427,7 +427,7 @@ AssertionError: 4 not found in [2, 5, 7]
             <system-err>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 6 not found in [2, 5, 7]
 </system-err>
@@ -440,7 +440,7 @@ AssertionError: 6 not found in [2, 5, 7]
             <failure>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 6 not found in [2, 5, 7]
 </failure>
@@ -471,7 +471,7 @@ AssertionError: 6 not found in [2, 5, 7]
             <system-err>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 8 not found in [2, 5, 7]
 </system-err>
@@ -484,7 +484,7 @@ AssertionError: 8 not found in [2, 5, 7]
             <failure>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 8 not found in [2, 5, 7]
 </failure>
@@ -502,7 +502,7 @@ AssertionError: 8 not found in [2, 5, 7]
             <system-err>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 9 not found in [2, 5, 7]
 </system-err>
@@ -515,7 +515,7 @@ AssertionError: 9 not found in [2, 5, 7]
             <failure>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 9 not found in [2, 5, 7]
 </failure>
@@ -533,7 +533,7 @@ AssertionError: 9 not found in [2, 5, 7]
             <system-err>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 10 not found in [2, 5, 7]
 </system-err>
@@ -546,7 +546,7 @@ AssertionError: 10 not found in [2, 5, 7]
             <failure>Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 145, in wrapper
     return func(self, *args, **kwargs)
-  File "test.py", line 237, in test_08_ddt
+  File "x:/Prace/Bender/Brunhilda/brunhilda/test.py", line 237, in test_08_ddt
     self.assertIn(param, [2, 5, 7])
 AssertionError: 10 not found in [2, 5, 7]
 </failure>
@@ -565,8 +565,8 @@ AssertionError: 10 not found in [2, 5, 7]
         skipped="0" 
         tests="1" 
         failures="0" 
-        time="0.00037039999999999296"
-        timestamp="2020-01-09 22:16:16.681150">
+        time="0.0005101000000000688"
+        timestamp="2020-02-13 20:49:43.682114">
       <properties>
          <property name="python" value="3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:21:23) [MSC v.1916 32 bit (Intel)]" />
          <property name="system" value="Windows-10-10.0.18362-SP0" />

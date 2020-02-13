@@ -65,11 +65,13 @@ class CatchedStream():
 
 class BRunhildaTestResult(unittest.runner.TextTestResult):
     """
+    Test result class produced by the BRunhilda test runner.
     """
 
-    def __init__(self, stream, descriptions, verbosity, name=""):
+    def __init__(self, stream, descriptions, verbosity, name="", user_data=None):
         super().__init__(stream, descriptions, verbosity)
         self.name = name
+        self.user_data = user_data
         self.stream_buffer = io.StringIO()
         self.stream = CatchedStream(stream, self.stream_buffer)
         self._clean()
@@ -90,7 +92,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'hostname': socket.gethostname(),
             },
             'total': {},
-            'testcases': {}
+            'testcases': {},
+            'user_data': self.user_data
         }
 
     def startTestRun(self):
