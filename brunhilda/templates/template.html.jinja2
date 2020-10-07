@@ -426,9 +426,15 @@
                 position: relative;
             }
 
-            .bar__line + .bar__line{
-                border-left: 2px solid white;
-                box-sizing: border-box;
+            .bar__line::before{
+                content: " ";
+                display: block;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: -2px;
+                width: 2px;
+                background-color: #ffff00;
             }
 
             .bar__line--passed {
