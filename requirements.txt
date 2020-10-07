@@ -1,1 +1,6 @@
-Pillow>=6.2.1
+Jinja2>=2.10.3
+numpy>=1.17.3
+ddt>=1.2.2
+colorama>=0.4.1
+docutils>=0.15.2
+Pillow>=7.2.0

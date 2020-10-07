@@ -1,0 +1,1 @@
+include brunhilda/templates/*.jinja2
