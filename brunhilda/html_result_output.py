@@ -132,6 +132,9 @@ class HtmlResultOutput():
 
         path = './' + path
 
+        print(os.listdir('.'))
+        print(os.path.abspath(os.getcwd()))
+
         with open(path) as f:
             template = jinja2.Template(f.read())
 
