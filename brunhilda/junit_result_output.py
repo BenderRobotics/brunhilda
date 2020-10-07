@@ -6,12 +6,7 @@ from docutils.core import publish_parts
 
 class JUnitResultOutput():
     def print(self, testresult):
-        path = 'templates/template.junit.jinja2'
-
-        if os.path.isdir('./brunhilda'):
-            path = 'brunhilda/' + path
-
-        path = './' + path
+        path = os.path.join(os.path.dirname(__file__), 'templates', 'template.junit.jinja2')
 
         with open(path) as f:
             template = jinja2.Template(f.read())

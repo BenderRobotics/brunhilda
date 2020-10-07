@@ -125,15 +125,8 @@ class HtmlResultOutput():
                 if 'errors' in test:
                     test['errors'] = [self._format_terminal(err) for err in test['errors']]
 
-        path = 'templates/template.html.jinja2'
-
-        if os.path.isdir('./brunhilda'):
-            path = 'brunhilda/' + path
-
-        path = './' + path
-
-        print(os.listdir('.'))
-        print(os.path.abspath(os.getcwd()))
+        path = os.path.join(os.path.dirname(__file__), 'templates', 'template.html.jinja2')
+        print(__file__)
 
         with open(path) as f:
             template = jinja2.Template(f.read())
