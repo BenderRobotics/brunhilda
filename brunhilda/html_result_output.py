@@ -126,7 +126,6 @@ class HtmlResultOutput():
                     test['errors'] = [self._format_terminal(err) for err in test['errors']]
 
         path = os.path.join(os.path.dirname(__file__), 'templates', 'template.html.jinja2')
-        print(__file__)
 
         with open(path) as f:
             template = jinja2.Template(f.read())
