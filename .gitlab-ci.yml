@@ -1,0 +1,34 @@
+image: python:3.8
+
+stages:
+  - build
+  - test
+  - deploy
+
+build-wheel:
+  stage: build
+  tags:
+    - docker
+  before_script:
+    - echo
+  script:
+    - make
+  artifacts:
+    paths:
+      - "dist/*.whl"
+    expire_in: 1 week
+  only:
+    - tags
+
+deploy-wheel:
+  stage: deploy
+  tags:
+    - docker
+  script:
+    - python setup.py sdist
+    - cp -r dist/* /opt/brunhilda/bin
+  needs: [build-wheel]
+  dependencies:
+    - build-wheel
+  only:
+    - tags

@@ -1,2 +1,5 @@
-
 brunhilda/__pycache__/
+brunhilda.egg-info/
+dist/
+build/lib/brunhilda/
+.vscode/

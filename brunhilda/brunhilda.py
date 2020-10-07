@@ -1,7 +1,7 @@
 import sys
 import unittest
 
-from .result import *
+from .result import BRunhildaTestResult
 from .html_result_output import HtmlResultOutput
 from .junit_result_output import JUnitResultOutput
 
