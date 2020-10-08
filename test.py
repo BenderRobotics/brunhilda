@@ -19,6 +19,8 @@ class TestCase1(unittest.TestCase):
 
     Also *italics*, **bold**, ``monospace`` ... inline formating is supported.
 
+    But *.bin or *.hex is OK!
+
     Lists
     =========
 
@@ -77,6 +79,7 @@ class TestCase1(unittest.TestCase):
         """
         @ref ST01.1
 
+        But *.bin or *.hex is OK!
         Verifies normal execution of the scheduled program.
 
         1) Generates schedule program with random values and times,

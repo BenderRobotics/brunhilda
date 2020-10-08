@@ -21,7 +21,8 @@ class HtmlResultOutput():
             spaces = ''.join([' '] * padding)                   # left trailing spaces
             lines = [line.lstrip(spaces) for line in lines]     # cut out leading spaces
             description = '\n'.join(lines)                      # join to string again
-            description = description.replace("–", "-")         # TODO
+            description = description.replace("–", "-")         # TODO - use &ndash to be correct
+            description = description.replace(" *.", " \*.")
             return publish_parts(description, writer_name='html')['html_body']  # convert from RST to HTML
 
     def _format_logging(self, text):

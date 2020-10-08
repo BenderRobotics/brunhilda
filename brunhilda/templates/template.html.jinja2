@@ -710,8 +710,6 @@
             <h3>Help</h3>
             <p>
                 Use following keys to quick jump:
-            </p>
-            <ul>
                 <span class="keyboard__key">E</span> &ndash; next error,
                 <span class="keyboard__key">P</span> &ndash; next passed,
                 <span class="keyboard__key">F</span> &ndash; next failure,
@@ -719,6 +717,7 @@
                 <span class="keyboard__key">X</span> &ndash; next expected failure,
                 <span class="keyboard__key">U</span> &ndash; next unexpected success,
                 <span class="keyboard__key">Shift + &hellip;</span> &ndash; previous.
+            </p>
             </div>
 
             <div class="bar">
@@ -732,27 +731,27 @@
 
                 <div class="bar__line bar__line--passed"
                      style="width:{{pct_passed}}%;">
-                     <span>{{ pct_passed|round(1) }}%</span>
+                     <span>{{ pct_passed|round(1) }}% passed</span>
                 </div>
                 <div class="bar__line bar__line--failed"
                      style="width:{{pct_failed}}%;">
-                     <span>{{ pct_failed|round(1) }}%</span>
+                     <span>{{ pct_failed|round(1) }}% failed</span>
                 </div>
                 <div class="bar__line bar__line--errored"
                     style="width:{{pct_errored}}%;">
-                    <span>{{ pct_errored|round(1) }}%</span>
+                    <span>{{ pct_errored|round(1) }}% errored</span>
                 </div>
                 <div class="bar__line bar__line--skipped"
                      style="width:{{pct_skipped}}%;">
-                     <span>{{ pct_skipped|round(1) }}%</span>
+                     <span>{{ pct_skipped|round(1) }}% skipped</span>
                 </div>
                 <div class="bar__line bar__line--expected-failure"
                      style="width:{{pct_ef}}%;">
-                     <span>{{ pct_ef|round(1) }}%</span>
+                     <span>{{ pct_ef|round(1) }}% expected failure</span>
                 </div>
                 <div class="bar__line bar__line--unexpected-success"
                      style="width:{{pct_us}}%;">
-                     <span>{{ pct_us|round(1) }}%</span>
+                     <span>{{ pct_us|round(1) }}% unexpected success</span>
                 </div>
             </div>
 
