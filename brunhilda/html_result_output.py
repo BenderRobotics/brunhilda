@@ -127,7 +127,7 @@ class HtmlResultOutput():
 
         path = os.path.join(os.path.dirname(__file__), 'templates', 'template.html.jinja2')
 
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             template = jinja2.Template(f.read())
 
         template.globals['now'] = datetime.datetime.now
