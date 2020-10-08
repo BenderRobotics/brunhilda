@@ -1,5 +1,6 @@
 import io
 import os
+import re
 import sys
 import time
 import base64
@@ -87,6 +88,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self.num_suites = 0
         self.num_tests = 0
         self.num_success = 0
+        self.trace_matrix = []
         self.results = {
             'name': self.name,
             'env': {
@@ -326,6 +328,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'extra': extra
         })
 
+        self.addToTrace(testcase_name, test._testMethodName, test._testMethodDoc, self.last_result)
+
     def addSuccess(self, test):
         """
         This method is called after successfull end of the test method.
@@ -442,6 +446,23 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         super().addUnexpectedSuccess(test)
         self.last_result = UNEXPECTED_SUCCESS
 
+    def addToTrace(self, testcase_name, test_name, description, result):
+        """
+        Adds executed test to the trace record
+        """
+        refs = None
+
+        if description and isinstance(description, str):
+            refs = re.search(r'@ref[:\s]\s*\w.+\n', description)
+
+        if refs is not None:
+            refs = re.sub(r'@ref[:\s]s*', '', refs.group(0))
+            refs = [' '.join(ref.split()) for ref in refs.split(',')]
+        else:
+            refs = []
+
+        self.trace_matrix.append({'case': testcase_name, 'test': test_name, 'result': result, 'refs': refs})
+
     def print(self, output_formater, path):
         """
         Prints test results with the given result output.
@@ -455,4 +476,33 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
             with open(path, 'w', encoding="utf-8") as f:
                 print(f"... created report {path}")
+                f.write(output)
+
+    def printTraceability(self, output_formater, path):
+        """
+        Prints test results with the given result output.
+        """
+        if path is not None:
+            refs = []
+
+            for test in self.trace_matrix:
+                refs += test['refs']
+
+            refs = list(set(refs))
+            refs.sort()
+
+            for test in self.trace_matrix:
+                test['ref_indexes'] = []
+
+                for test_ref in test['refs']:
+                    test['ref_indexes'].append(refs.index(test_ref))
+
+            output = output_formater.print(refs, self.trace_matrix)
+            dir_name = os.path.dirname(os.path.abspath(path))
+
+            if not os.path.exists(dir_name):
+                os.mkdir(dir_name)
+
+            with open(path, 'w', encoding="utf-8") as f:
+                print(f"... created traceability matrix {path}")
                 f.write(output)

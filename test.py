@@ -77,7 +77,7 @@ class TestCase1(unittest.TestCase):
 
     def test_00_pass(self):
         """
-        @ref ST01.1
+        @ref ST01.0
 
         But *.bin or *.hex is OK!
         Verifies normal execution of the scheduled program.
@@ -174,7 +174,7 @@ class TestCase1(unittest.TestCase):
 
     def test_02_subtest(self):
         """
-        @ref ST01.1
+        @ref ST01.1, ST01.2
 
         Verifies normal execution of the scheduled program.
 
@@ -203,7 +203,7 @@ class TestCase1(unittest.TestCase):
 
     def test_03_error(self):
         """
-        @ref ST01.1
+        @ref ST01.1, ST01.3
 
         Verifies normal execution of the scheduled program.
 
@@ -220,7 +220,7 @@ class TestCase1(unittest.TestCase):
 
     def test_04_skip(self):
         """
-        @ref ST01.1
+        @ref ST01.4
 
         Verifies normal execution of the scheduled program.
 
@@ -255,6 +255,8 @@ class TestCase1(unittest.TestCase):
 
     @unittest.expectedFailure
     def test_06_expected_failure(self):
+        """
+        """
         self.assertTrue(False)
 
     @unittest.expectedFailure
@@ -296,7 +298,7 @@ if __name__ == '__main__':
         "Project": os.getenv('CI_PROJECT_ID', '-'),
         "Project name": os.getenv('CI_PROJECT_NAME', '-')
     }
-    runner = brunhilda.BRunhilda(user_data=information, verbosity=3)
+    runner = brunhilda.BRunhilda(user_data=information, verbosity=3, stream=sys.stdout)
     unittest.main(testRunner=runner)
 
 # @}

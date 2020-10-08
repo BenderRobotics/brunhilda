@@ -4,6 +4,7 @@ import unittest
 from .result import BRunhildaTestResult
 from .html_result_output import HtmlResultOutput
 from .junit_result_output import JUnitResultOutput
+from .html_trace_output import HtmlTraceOutput
 
 __unittest = True
 
@@ -23,6 +24,7 @@ class BRunhilda(unittest.TextTestRunner):
                        name="",
                        html_output="report.html",
                        junit_output="report.xml",
+                       traceability_output="traceability.html",
                        user_data=None):
         super().__init__(stream=stream,
                          descriptions=descriptions,
@@ -34,6 +36,7 @@ class BRunhilda(unittest.TextTestRunner):
         self.user_data = user_data
         self.html_output = html_output
         self.junit_output = junit_output
+        self.traceability_output = traceability_output
 
     def _makeResult(self):
         return BRunhildaTestResult(self.stream, self.descriptions, self.verbosity, self.name, user_data=self.user_data)
@@ -44,5 +47,8 @@ class BRunhilda(unittest.TextTestRunner):
         if hasattr(result, "print"):
             result.print(HtmlResultOutput(), self.html_output)
             result.print(JUnitResultOutput(), self.junit_output)
+
+        if self.traceability_output is not None:
+            result.printTraceability(HtmlTraceOutput(), self.traceability_output)
 
         return result
