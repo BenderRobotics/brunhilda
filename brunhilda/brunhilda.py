@@ -8,6 +8,7 @@ from .html_trace_output import HtmlTraceOutput
 
 __unittest = True
 
+
 class BRunhilda(unittest.TextTestRunner):
     """
     A test runner class that displays results in textual form.

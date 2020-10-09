@@ -402,7 +402,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             # Append error to list of errors, first line is the subtest name with black background.
             self.errors_strings.append(f'{colorama.Back.BLACK}{subtest}{colorama.Back.RESET}\n{err_str}')
 
-            if err[0] is not AssertionError:
+            # Subtest errored if the exception is not a failure or derived exception
+            if not issubclass(err[0], test.failureException):
                 self.subtests[-1]['result'] = ERRORED
                 self.last_result = ERRORED
             else:
