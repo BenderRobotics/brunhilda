@@ -223,7 +223,7 @@
                 <tr>
                     <th>{{ test.case }} {{ test.test }}</th>
                     {% for ref in refs %}
-                    {% if loop.index in test.ref_indexes %}
+                    {% if loop.index0 in test.ref_indexes %}
                     <td class="test--{{ test.result|lower|replace(' ', '-') }}">
                         <span class="test--result--text">{{ test.result }}</span>
                         <span class="test--result--symbol" title="{{ test.result }}"></span>
