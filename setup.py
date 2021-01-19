@@ -5,7 +5,7 @@ import re
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-# Load version from teh module
+# Load version from the module init
 with open("brunhilda/__init__.py", 'r', encoding='utf-8') as fh:
     content = fh.read()
     reg = re.compile(r"__version__\s*=\s*['\"]([\d\.]+)['\"]")
@@ -30,6 +30,11 @@ setuptools.setup(
     ],
     python_requires='>=3.7',
     install_requires=[
-        'Pillow>=6.2.1'
+        'Jinja2>=2.10.3',
+        'numpy>=1.17.3',
+        'ddt>=1.2.2',
+        'colorama>=0.4.1',
+        'docutils>=0.15.2',
+        'Pillow>=7.2.0',
     ]
 )
