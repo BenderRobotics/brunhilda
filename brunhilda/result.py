@@ -88,6 +88,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self.num_suites = 0
         self.num_tests = 0
         self.num_success = 0
+        self.num_skipped = 0
+        self.num_failed = 0
+        self.num_errored = 0
         self.trace_matrix = []
         self.results = {
             'name': self.name,
@@ -211,9 +214,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'timestamp': datetime.datetime.now(),
             'time': self.total_execution_time,
             'passed': self.num_success,
-            'skipped':  len(self.skipped),
-            'failed': len(self.failures),
-            'errored': len(self.errors),
+            'skipped':  self.num_skipped,
+            'failed': self.num_failed,
+            'errored': self.num_errored,
             'expected_failures': len(self.expectedFailures),
             'unexpected_successes': len(self.unexpectedSuccesses)
         }
@@ -279,7 +282,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         sys.stderr = self._stderr_backup
 
         if self.last_result == PASSED:
-            self.results['testcases'][testcase_name]['passed']  += 1
+            self.results['testcases'][testcase_name]['passed'] += 1
         elif self.last_result == SKIPPED:
             self.results['testcases'][testcase_name]['skipped'] += 1
         elif self.last_result == FAILED:
@@ -328,6 +331,13 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'extra': extra
         })
 
+        if self.last_result == PASSED:
+            self.num_success += 1
+        elif self.last_result == FAILED:
+            self.num_failed += 1
+        elif self.last_result == ERRORED:
+            self.num_errored += 1
+
         self.addToTrace(testcase_name, test._testMethodName, test._testMethodDoc, self.last_result)
 
     def addSuccess(self, test):
@@ -335,8 +345,6 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         This method is called after successfull end of the test method.
         """
         super().addSuccess(test)
-        if self.last_result == PASSED:
-            self.num_success += 1
 
     def addError(self, test, err):
         """
@@ -429,6 +437,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'reason': reason
             })
         else:
+            self.num_skipped += 1
             self.last_result = SKIPPED
             self.skip_reason = reason
 
