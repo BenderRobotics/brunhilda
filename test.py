@@ -271,6 +271,7 @@ class TestCase1(unittest.TestCase):
     def test_09_ddt(self, param):
         self.assertIn(param, [2, 5, 7])
 
+
 class TestCaseA(unittest.TestCase):
     """
     This is a test case description. longish explanation: returns the square of a: :math:`a^2`
@@ -280,6 +281,7 @@ class TestCaseA(unittest.TestCase):
         Some test from A
         """
         self.assertTrue(True)
+
 
 if __name__ == '__main__':
     information = {

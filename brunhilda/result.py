@@ -25,7 +25,7 @@ EMPTY = 'EMPTY'    # for test case without test
 class CatchedStream():
     """
     Adds additional shared buffer stream to the given stream allowing
-    to catche all stream outputs in the chronological order.
+    to catch all stream outputs in the chronological order.
     """
 
     def __init__(self, stream, buffer):

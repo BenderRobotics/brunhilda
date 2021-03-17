@@ -5,6 +5,7 @@ import datetime
 import copy
 from docutils.core import publish_parts
 
+
 class HtmlResultOutput():
     def _format_doc(self, description):
         """
@@ -84,7 +85,7 @@ class HtmlResultOutput():
                 opened.append(formatting[esc])
                 text = text.replace(esc, formatting[esc])
             elif esc in (colorama.Style.RESET_ALL, colorama.Fore.RESET, colorama.Back.RESET):
-                n = len(opened) # number of currently opened spans
+                n = len(opened)             # number of currently opened spans
 
                 # check which spans will be reopened because they are not reset
                 if esc == colorama.Style.RESET_ALL:
