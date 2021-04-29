@@ -1,1 +1,2 @@
 include brunhilda/templates/*.jinja2
+include brunhilda/templates/themes/*.css

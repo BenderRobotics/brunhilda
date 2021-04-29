@@ -28,7 +28,7 @@ class HtmlResultOutput():
 
     def _format_logging(self, text):
         """
-        Wraps ouput of the python logging into HTML spans with the severity classes.
+        Wraps output of the python logging into HTML spans with the severity classes.
         """
         formatting = {
             "DEBUG":    '<span class="log log--debug">',
@@ -127,11 +127,13 @@ class HtmlResultOutput():
                 if 'errors' in test:
                     test['errors'] = [self._format_terminal(err) for err in test['errors']]
 
-        path = os.path.join(os.path.dirname(__file__), 'templates', 'template.html.jinja2')
+        template_dir = os.path.join(os.path.dirname(__file__), 'templates')
+        template_path = os.path.join(template_dir, 'template.html.jinja2')
 
-        with open(path, encoding="utf-8") as f:
-            template = jinja2.Template(f.read())
+        with open(template_path, encoding='utf-8') as f:
+            template_str = f.read()
 
+        template = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir)).from_string(template_str)
         template.globals['now'] = datetime.datetime.now
         rendered = template.render(data=testresult)
         return rendered

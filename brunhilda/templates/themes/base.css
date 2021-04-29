@@ -1,0 +1,704 @@
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+
+/* HTML5 display-role reset for older browsers */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+/**************************************/
+
+:root {
+    --color--pass: green;
+    --color--pass-bg: rgba(0, 128, 0, 0.1);
+    --color--fail: rgb(220, 0, 0);
+    --color--fail-bg: rgba(220, 0, 0, 0.1);
+    --color--error: rgb(167, 0, 209);
+    --color--error-bg: rgba(167, 0, 209, 0.1);
+    --color--skip: orange;
+    --color--skip-bg: rgba(255, 166, 0, 0.1);
+    --color--expected-failure: rgb(64, 0, 240);
+    --color--expected-failure-bg: rgba(64, 0, 240, 0.1);
+    --color--unexpected-success: rgb(0, 200, 200);
+    --color--unexpected-success-bg: rgba(0, 200, 200, 0.1);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    padding: 2rem;
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin: 1.25rem 0;
+}
+
+h2 {
+    font-size: 1.75em;
+    font-weight: bold;
+    margin: 1.0rem 0;
+}
+
+h3 {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin: 0.5rem 0;
+}
+
+h4 {
+    font-size: 1em;
+    font-weight: bold;
+    margin: 0.25rem 0;
+}
+
+p,
+ol,
+ul {
+    margin-bottom: 0.5em;
+    line-height: 1.25;
+}
+
+ol,
+ul {
+    padding-left: 1rem;
+}
+
+li {
+    padding-left: 0.5rem;
+}
+
+th {
+    text-align: left;
+    font-weight: bold;
+}
+
+th,
+td {
+    padding: 0.25em;
+    border: 1px solid #a0a0a0;
+}
+
+strong {
+    font-weight: bold;
+}
+
+em {
+    font-style: italic;
+}
+
+tt,
+pre {
+    font-family: 'Consolas', 'Courier New', Courier, monospace;
+}
+
+
+/**************************************/
+
+.testcase {
+    border: 1px solid #a0a0a0;
+    position: relative;
+    margin-bottom: 0.25rem;
+}
+
+.testcase--passed {}
+
+.testcase--failed {
+    border-color: var(--color--fail);
+}
+
+.testcase--errored {
+    border-color: var(--color--error);
+}
+
+.testcase--empty {
+    border-color: var(--color--skip);
+}
+
+.testcase__name {
+    padding: 0 0.5rem 0 1.5rem;
+}
+
+.testcase__description {
+    overflow: hidden;
+    height: 0;
+    box-sizing: border-box;
+}
+
+.testcase__description__content {
+    padding: 0 0.5rem 0.5rem 0.5rem;
+}
+
+.testcase__expander {
+    display: block;
+    position: absolute;
+    top: 9px;
+    left: 0;
+}
+
+input.testcase__expander:checked+.testcase__description {
+    height: auto;
+}
+
+.testcase__description h1 {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    font-weight: normal;
+    margin: 1rem 0;
+}
+
+.testcase__description h2 {
+    font-size: 1.1rem;
+    font-variant: small-caps;
+    font-weight: normal;
+    margin: 1rem 0;
+}
+
+.testcase__description h3 {
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: normal;
+    margin: 1rem 0;
+}
+
+.testcase__description table {
+    margin: 1rem 0;
+}
+
+.testcase__description th {
+    background-color: #c7c7c7;
+}
+
+.testcase__header>* {
+    float: left;
+}
+
+.testcase__header>*:last-child {
+    float: right;
+}
+
+.testcase__summary {
+    margin: 0.5rem;
+    color: #5a5a5a;
+}
+
+.testcase__header:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+/**************************************/
+
+.test {
+    position: relative;
+}
+
+.test+.test {
+    border-top: 1px solid #a0a0a0;
+}
+
+.test--current {
+    background-color: rgb(255, 255, 245);
+}
+
+.test__header {
+    display: block;
+    padding: 0.25rem 0.5rem 0.25rem 2rem;
+    background-color: #f3f3f3;
+}
+
+.test__header span {
+    float: left;
+    display: block;
+    min-height: 1px;
+}
+
+.test__header::after {
+    clear: both;
+    display: block;
+    content: " ";
+}
+
+.test__result {
+    width: 25%;
+    max-width: 10rem;
+    font-weight: bold;
+}
+
+.test__result:first-letter {
+    text-transform: uppercase;
+}
+
+.test__name {
+    width: 50%;
+    max-width: 30rem;
+}
+
+.test__time {
+    width: 25%;
+    max-width: 3rem;
+}
+
+.test--hidden {
+    display: none;
+}
+
+.test--passed .test__result,
+.testrun__summary--passed {
+    color: var(--color--pass);
+}
+
+.test--skipped .test__result,
+.testrun__summary--skipped {
+    color: var(--color--skip);
+}
+
+.test--errored .test__result,
+.testrun__summary--errored {
+    color: var(--color--error);
+}
+
+.test--failed .test__result,
+.testrun__summary--failed {
+    color: var(--color--fail);
+}
+
+.test--expected-failure .test__result,
+.testrun__summary--expected-failure {
+    color: var(--color--expected-failure);
+}
+
+.test--unexpected-success .test__result,
+.testrun__summary--unexpected-success {
+    color: var(--color--unexpected-success);
+}
+
+.test__detail {
+    overflow: hidden;
+    height: 0;
+    box-sizing: border-box;
+    box-shadow: 0px 6px 12px 6px #f3f3f3 inset
+}
+
+.test__expander {
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 0;
+}
+
+input.test__expander:checked+.test__detail {
+    height: auto;
+}
+
+.test__description,
+.test__skipreason {
+    padding: 0.5rem 1rem 0 1rem;
+}
+
+.test__detail h3 {
+    padding: 0 1rem;
+}
+
+.test__console {
+    background-color: #394e4e;
+    color: white;
+    margin: 0 1rem 0.5rem 1rem;
+    padding: 0.5rem;
+    width: calc(100% - 3rem);
+    line-height: 1.25;
+    font-family: 'Consolas', 'Courier New', Courier, monospace;
+}
+
+.test__console--error {
+    color: #e47373;
+    border-top: 1px solid #a53f3f;
+}
+
+.test__extra {
+    margin: 1rem;
+    max-height: 400px;
+}
+
+.test__extra>* {
+    border: 1px solid #a0a0a0;
+}
+
+.test__extra img {
+    max-height: 400px;
+    max-width: 100%;
+    width: auto;
+}
+
+.test__extra__text {
+    white-space: pre-line;
+    background-color: #000000;
+    color: white;
+    padding: 0.5rem;
+    line-height: 1.25;
+    font-family: 'Consolas', 'Courier New', Courier, monospace;
+}
+
+.subtests {
+    margin: 0 1rem;
+    width: calc(100% - 2rem);
+}
+
+.subtests td {
+    vertical-align: top;
+}
+
+.subtest__result {
+    font-weight: bold;
+}
+
+.subtest--passed {
+    background-color: var(--color--pass-bg);
+}
+
+.subtest--skipped {
+    background-color: var(--color--skip-bg);
+}
+
+.subtest--failed {
+    background-color: var(--color--fail-bg);
+}
+
+.subtest--errored {
+    background-color: var(--color--error-bg);
+}
+
+.subtest__extra__image {
+    max-height: 400px;
+    max-width: 100%;
+    width: auto;
+}
+
+
+/********************************************************/
+
+.bar {
+    width: 95%;
+    position: relative;
+    height: 10px;
+    margin: 1rem auto;
+    background-image: linear-gradient(#AAA, #999);
+    box-shadow: 0px 2px 2px 0px #ccc5c5;
+}
+
+.bar__line {
+    float: left;
+    height: 100%;
+    position: relative;
+}
+
+.bar__line::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -2px;
+    width: 2px;
+    background-color: #ffff00;
+}
+
+.bar__line--passed {
+    background-color: var(--color--pass);
+}
+
+.bar__line--errored {
+    background-color: var(--color--error);
+}
+
+.bar__line--failed {
+    background-color: var(--color--fail);
+}
+
+.bar__line--skipped {
+    background-color: var(--color--skip);
+}
+
+.bar__line--expected-failure {
+    background-color: var(--color--expected-failure);
+}
+
+.bar__line--unexpected-success {
+    background-color: var(--color--unexpected-success);
+}
+
+.bar__line span {
+    position: absolute;
+    padding: 0.2rem 0.5rem;
+    top: -0.3rem;
+    background-color: rgba(255, 255, 255, 0.85);
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 1px solid rgb(85, 85, 85, 0.85);
+    color: #252525;
+    border-radius: 0.2rem;
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+.bar__line:hover span {
+    opacity: 1;
+}
+
+.keyboard__key {
+    display: inline-block;
+    border: 1px solid gray;
+    background-color: #F5F5F5;
+    border-radius: 3px;
+    padding: 1px 4px;
+    box-shadow: 1px 1px 0 1px #e0e0e0;
+}
+
+
+/********************************************************/
+
+.fore--black {
+    color: black;
+}
+
+.fore--red {
+    color: red;
+}
+
+.fore--green {
+    color: green;
+}
+
+.fore--yellow {
+    color: yellow;
+}
+
+.fore--blue {
+    color: blue;
+}
+
+.fore--magenta {
+    color: magenta;
+}
+
+.fore--cyan {
+    color: cyan;
+}
+
+.fore--white {
+    color: white;
+}
+
+.back--black {
+    background-color: black;
+}
+
+.back--red {
+    background-color: red;
+}
+
+.back--green {
+    background-color: green;
+}
+
+.back--yellow {
+    background-color: yellow;
+}
+
+.back--blue {
+    background-color: blue;
+}
+
+.back--magenta {
+    background-color: magenta;
+}
+
+.back--cyan {
+    background-color: cyan;
+}
+
+.back--white {
+    background-color: white;
+}
+
+.style--dim {
+    opacity: 0.7;
+}
+
+.style--bright {
+    font-weight: bold;
+}
+
+.style--normal {
+    font-weight: normal;
+}
+
+.log--debug {
+    color: #dedede;
+}
+
+.log--info {
+    color: #73e499;
+}
+
+.log--warning {
+    color: #cfe473;
+}
+
+.log--error {
+    color: #e47373;
+}
+
+.log--critical {
+    color: #e47373;
+    font-weight: bold;
+    background-color: white;
+}
+
+
+/*************************************/
+
+ol.arabic {
+    list-style-type: decimal;
+}
+
+ol.upperalpha {
+    list-style-type: upper-alpha;
+}
+
+ol.loweralpha {
+    list-style-type: lower-alpha;
+}
+
+ol.upperroman {
+    list-style-type: upper-roman;
+}
+
+ol.lowerroman {
+    list-style-type: lower-roman;
+}
