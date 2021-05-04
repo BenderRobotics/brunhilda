@@ -2,7 +2,7 @@
 <html class="no-js" lang="">
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>Test Run Report</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
@@ -15,7 +15,7 @@
             $(document).ready(function() {
                 for (const result of results) {
                     (function(r) {
-                        $("#testrun__summary--" + r).change(function() {
+                        $("#run-summary--" + r).change(function() {
                             if (this.checked) {
                                 $(".test--" + r).removeClass("test--hidden")
                             }
@@ -66,7 +66,7 @@
                             target = $(targets).first();
                         }
                         else {
-                            const n = Number($(current).data("nth"));
+                            const n = Number($(current).result("nth"));
                             var next = false;
 
                             /* Up - reverse order */
@@ -75,7 +75,7 @@
                             }
 
                             for (var t of targets) {
-                                var nth = Number($(t).data("nth"));
+                                var nth = Number($(t).result("nth"));
                                 if (((nth > n) && !event.shiftKey) ||
                                     ((nth < n) && event.shiftKey)) {
                                     target = $(t)
@@ -100,105 +100,74 @@
         </script>
     </head>
     <body>
-        <div class="testrun">
-            <p>Test report {% if data.name %}<strong>{{ data.name }}</strong>{% endif %} generated on <time>{{ now().strftime('%Y-%m-%d %H:%M:%S') }}</time> by Brunhilda</p>
-            <h2>Environment</h2>
-            <table class="testrun__environment">
-                <tbody>
-                    <tr>
-                        <th>Executed</th>
-                        <td>{{ data.total.start_datetime.strftime('%Y-%m-%d %H:%M:%S') }} &ndash;
-                            {{ data.total.end_datetime.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                    </tr>
-                    <tr>
-                        <th>Python</th><td>{{ data.env.pyversion }}</td>
-                    </tr>
-                    <tr>
-                        <th>System</th><td>{{ data.env.system }}</td>
-                    </tr>
-                    <tr>
-                        <th>Hostname</th><td>{{ data.env.hostname }}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            {% if data.user_data %}
-            <h2>User data</h2>
-            <table class="testrun__user_data">
-                <tbody>
-                    {% for key, value in data.user_data.items() %}
-                    <tr>
-                        <th>{{ key }}</th>
-                        <td>{{ value }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% endif %}
-
+        <h1>Test Run Report</h1>
+        <div class="header">
+            {% include "header.html.jinja2" %}
+        </div>
+        <div class="main">
             <h2>Summary</h2>
-            <p>Run {{ data.total.tests }} test in {{ '%0.2f'|format(data.total.time|float) }}s</p>
-            <table class="testrun__summary">
+            <p>Run {{ result.total.tests }} test in {{ '%0.2f'|format(result.total.time|float) }}s</p>
+            <table class="run-summary">
                 <tbody>
-                    <tr class="testrun__summary--passed">
-                        <th><input type="checkbox" id="testrun__summary--passed" checked>
-                            <label for="testrun__summary--passed">Passed</label>
+                    <tr class="run-summary--passed">
+                        <th><input type="checkbox" id="run-summary--passed" checked>
+                            <label for="run-summary--passed">Passed</label>
                         </th>
                         <td>
-                            {{ data.total.passed }}
+                            {{ result.total.passed }}
                         </td>
                     </tr>
-                    <tr class="testrun__summary--failed">
-                        <th><input type="checkbox" id="testrun__summary--failed" checked>
-                            <label for="testrun__summary--failed">Failed</label>
+                    <tr class="run-summary--failed">
+                        <th><input type="checkbox" id="run-summary--failed" checked>
+                            <label for="run-summary--failed">Failed</label>
                         </th>
                         <td>
-                            {{ data.total.failed }}
+                            {{ result.total.failed }}
                         </td>
                     </tr>
-                    <tr class="testrun__summary--errored">
-                        <th><input type="checkbox" id="testrun__summary--errored" checked>
-                            <label for="testrun__summary--errored">Errored</label>
+                    <tr class="run-summary--errored">
+                        <th><input type="checkbox" id="run-summary--errored" checked>
+                            <label for="run-summary--errored">Errored</label>
                         </th>
                         <td>
-                            {{ data.total.errored }}
+                            {{ result.total.errored }}
                         </td>
                     </tr>
-                    <tr class="testrun__summary--skipped">
-                        <th><input type="checkbox" id="testrun__summary--skipped" checked>
-                            <label for="testrun__summary--skipped">Skipped</label>
+                    <tr class="run-summary--skipped">
+                        <th><input type="checkbox" id="run-summary--skipped" checked>
+                            <label for="run-summary--skipped">Skipped</label>
                         </th>
                         <td>
-                            {{ data.total.skipped }}
+                            {{ result.total.skipped }}
                         </td>
                     </tr>
-                    <tr class="testrun__summary--expected-failure">
-                        <th><input type="checkbox" id="testrun__summary--expected-failure" checked>
-                            <label for="testrun__summary--expected-failure">Expected failures</label>
+                    <tr class="run-summary--expected-failure">
+                        <th><input type="checkbox" id="run-summary--expected-failure" checked>
+                            <label for="run-summary--expected-failure">Expected failures</label>
                         </th>
                         <td>
-                            {{ data.total.expected_failures }}
+                            {{ result.total.expected_failures }}
                         </td>
                     </tr>
-                    <tr class="testrun__summary--unexpected-success">
-                        <th><input type="checkbox" id="testrun__summary--unexpected-success" checked>
-                            <label for="testrun__summary--unexpected-success">Unexpected successes</label>
+                    <tr class="run-summary--unexpected-success">
+                        <th><input type="checkbox" id="run-summary--unexpected-success" checked>
+                            <label for="run-summary--unexpected-success">Unexpected successes</label>
                         </th>
                         <td>
-                            {{ data.total.unexpected_successes }}
+                            {{ result.total.unexpected_successes }}
                         </td>
                     </tr>
                 </tbody>
             </table>
 
             <div class="bar">
-                {% set total = 0.01 * (data.total.passed + data.total.failed + data.total.errored + data.total.skipped + data.total.expected_failures + data.total.unexpected_successes) %}
-                {% set pct_passed = data.total.passed / total %}
-                {% set pct_failed = data.total.failed / total %}
-                {% set pct_errored = data.total.errored / total %}
-                {% set pct_skipped = data.total.skipped / total %}
-                {% set pct_ef = data.total.expected_failures / total %}
-                {% set pct_us = data.total.unexpected_successes / total %}
+                {% set total = 0.01 * (result.total.passed + result.total.failed + result.total.errored + result.total.skipped + result.total.expected_failures + result.total.unexpected_successes) %}
+                {% set pct_passed = result.total.passed / total %}
+                {% set pct_failed = result.total.failed / total %}
+                {% set pct_errored = result.total.errored / total %}
+                {% set pct_skipped = result.total.skipped / total %}
+                {% set pct_ef = result.total.expected_failures / total %}
+                {% set pct_us = result.total.unexpected_successes / total %}
 
                 <div class="bar__line bar__line--passed"
                      style="width:{{pct_passed}}%;">
@@ -245,7 +214,7 @@
                 {% set count = namespace(value=0) %}
 
                 <div class="testsuite_results">
-                    {% for testcase in data.testcases.values() %}
+                    {% for testcase in result.testcases.values() %}
                     <div class="testcase testcase--{{ testcase.result|lower|replace(' ', '-') }}">
                         <label class="testcase__header" for="testcase_expand_{{ testcase.name }}">
                             <h3 class="testcase__name">{{ testcase.name }}</h3>
@@ -273,7 +242,7 @@
 
                         {% for test in testcase.tests %}
                         {% set count.value = count.value + 1 %}
-                        <div class="test test--{{ test.result|lower|replace(' ', '-') }}" id="test-{{count.value}}" data-nth="{{count.value}}">
+                        <div class="test test--{{ test.result|lower|replace(' ', '-') }}" id="test-{{count.value}}" result-nth="{{count.value}}">
                             <label class="test__header" for="test_expand_{{count.value}}">
                                 <span class="test__result">{{ test.result|lower }}</span>
                                 <span class="test__name">
@@ -325,7 +294,7 @@
                                                 {% if subtest.extra %}
                                                 {% for extra in subtest.extra %}
                                                     {% if extra.type.startswith('image') %}
-                                                    <p><img class="subtest__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" /></p>
+                                                    <p><img class="subtest__extra__image" src="result:{{extra.type}};base64,{{extra.value}}" /></p>
                                                     {% else %}
                                                     <pre class="subtest__extra__text">{{ extra.value }}</pre>
                                                     {% endif %}
@@ -359,7 +328,7 @@
                                 {% for extra in test.extra %}
                                 <div class="test__extra">
                                     {% if extra.type.startswith('image') %}
-                                    <img class="test__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" />
+                                    <img class="test__extra__image" src="result:{{extra.type}};base64,{{extra.value}}" />
                                     {% else %}
                                     <pre class="test__extra__text">{{ extra.value }}</pre>
                                     {% endif %}

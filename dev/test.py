@@ -77,6 +77,7 @@ class TestCase1(unittest.TestCase):
     def test_00_pass(self):
         """
         @ref ST01.0
+        @spec REQ_SYS_001
 
         But *.bin or *.hex is OK!
         Verifies normal execution of the scheduled program.
@@ -106,6 +107,7 @@ class TestCase1(unittest.TestCase):
     def test_01_fail(self):
         """
         @ref ST01.1
+        @spec REQ_SYS_001, REQ_SYS_002, REQ_SYS_003
 
         Verifies normal execution of the scheduled program.
 
@@ -174,6 +176,7 @@ class TestCase1(unittest.TestCase):
     def test_02_subtest(self):
         """
         @ref ST01.1, ST01.2
+        @spec REQ_SYS_001, REQ_SYS_002, REQ_SYS_003
 
         Verifies normal execution of the scheduled program.
 
@@ -238,6 +241,7 @@ class TestCase1(unittest.TestCase):
     def test_05_skip_decorator(self):
         """
         @ref ST01.1
+        @spec REQ_SYS_004
 
         Verifies normal execution of the scheduled program.
 
@@ -268,6 +272,11 @@ class TestCase1(unittest.TestCase):
 
     @ddt.data(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     def test_09_ddt(self, param):
+        """
+        @ref ST01.1
+        @spec REQ_SYS_004, REQ_SYS_005, REQ_SYS_006, REQ_SYS_007
+
+        """
         self.assertIn(param, [2, 5, 7])
 
 

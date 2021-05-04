@@ -1,0 +1,66 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+            {% include "themes/base.css" %}
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
+</head>
+
+<body>
+    <h1>Test Run Summary</h1>
+    <div class="header">
+        {% include "header.html.jinja2" %}
+    </div>
+    <div class="main">
+        <h2>Tests Summary</h2>
+        <table class="summary table--wide">
+            <thead>
+                <tr>
+                    <th>Test ID</th>
+                    <th>Requirements</th>
+                    <th>Test Result</th>
+                    <th>Bug ID</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+{% for test in tests %}
+    {% for requirement in test.requirements %}
+        {% if loop.first %}
+                <tr class="test--{{ test.result|lower|replace(' ', '-') }}">
+        {% else %}
+                <tr>
+        {% endif %}
+        {% if loop.first %}
+                    <td class="test__id" rowspan="{{ loop.length }}">{{ test.test_id }}</td>
+        {% endif %}
+                    <td class="test__requirement">{{ requirement }}</td>
+        {% if loop.first %}
+                    <td class="test__result" rowspan="{{ loop.length }}">{{ test.result }}</td>
+                    <td class="test__bug-id" rowspan="{{ loop.length }}"><input type="text" name="{{ test.test_id }}--bug" id="{{ test.test_id }}--bug" /></td>
+                    <td class="test__comment" rowspan="{{ loop.length }}"><div contenteditable class="textarea"></div></td>
+        {% endif %}
+                </tr>
+    {% endfor %}
+{% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="test--{{ total.result|lower|replace(' ', '-') }}">
+                    <th>Total tests: {{ total.tests }}</th>
+                    <th>Total requirements: {{ total.requirements }}</th>
+                    <th class="test__result">{{ total.result }}</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</body>
+
+</html>

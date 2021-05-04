@@ -1,0 +1,53 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+            {% include "themes/base.css" %}
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
+</head>
+
+<body>
+    <h1>Requirements Coverage Summary</h1>
+    <div class="header">
+        {% include "header.html.jinja2" %}
+    </div>
+    <div class="main">
+        <h2>Requirements Summary</h2>
+        <table class="summary table--wide">
+            <thead>
+                <tr>
+                    <th>Requirement ID</th>
+                    <th>Test Cases Covering Requirement</th>
+                    <th>Requirement Coverage Percentage/Test Case</th>
+                    <th>Test Result</th>
+                    <th>Requirement Pass Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+{% for requirement in requirements %}
+    {% for test in requirement.tests %}
+                <tr>
+        {% if loop.first %}
+                    <td class="req__id" rowspan="{{ loop.length }}">{{ requirement.requirement_id }}</td>
+        {% endif %}
+                    <td class="req__test-id">{{ test.test_id }}</td>
+                    <td class="req__test-coverage">{{ "%.0f"|format(test.coverage_ratio * 100) }}</td>
+                    <td class="req__test-result test--{{ test.result|lower|replace(' ', '-') }}"><span class="test__result">{{ test.result }}</span></td>
+        {% if loop.first %}
+                    <td class="req__id" rowspan="{{ loop.length }}">{{ "%.0f"|format(requirement.test_pass_ratio * 100) }}</td>
+        {% endif %}
+                </tr>
+    {% endfor %}
+{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

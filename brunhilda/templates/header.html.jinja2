@@ -1,0 +1,34 @@
+<p>Report {% if env_info.name %}<strong>{{ env_info.name }}</strong>{% endif %} generated <time>{{ now().strftime('%Y-%m-%d %H:%M:%S') }}</time> by Brunhilda</p>
+<h2>Environment</h2>
+<table class="testrun__environment">
+    <tbody>
+        <tr>
+            <th>Executed</th>
+            <td>{{ env_info.timestamp_start.strftime('%Y-%m-%d %H:%M:%S') }} &ndash;
+                {{ env_info.timestamp_finish.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        </tr>
+        <tr>
+            <th>Python</th><td>{{ env_info.pyversion }}</td>
+        </tr>
+        <tr>
+            <th>System</th><td>{{ env_info.system }}</td>
+        </tr>
+        <tr>
+            <th>Hostname</th><td>{{ env_info.hostname }}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% if user_data %}
+<h2>User data</h2>
+<table class="testrun__user_data">
+    <tbody>
+        {% for key, value in user_data.items() %}
+        <tr>
+            <th>{{ key }}</th>
+            <td>{{ value }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}

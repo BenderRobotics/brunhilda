@@ -76,6 +76,12 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         super().__init__(stream, descriptions, verbosity)
         self.name = name
         self.user_data = user_data
+        self.env_info = {
+            'pyversion': sys.version,
+            'system': platform.platform(),
+            'hostname': socket.gethostname(),
+            'name': self.name,
+        }
         self.stream_buffer = io.StringIO()
         self.stream = CatchedStream(stream, self.stream_buffer)
         self._clean()
@@ -92,16 +98,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self.num_failed = 0
         self.num_errored = 0
         self.trace_matrix = []
+        self.requirements = set()
         self.results = {
-            'name': self.name,
-            'env': {
-                'pyversion': sys.version,
-                'system': platform.platform(),
-                'hostname': socket.gethostname(),
-            },
             'total': {},
             'testcases': {},
-            'user_data': self.user_data
         }
 
     @classmethod
@@ -198,19 +198,38 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             if res is not None:
                 return res
 
+    @property
+    def result(self):
+        """
+        Returns result of the whole test run.
+        """
+        if self.num_errored > 0:
+            return ERRORED
+        elif self.num_failed > 0:
+            return FAILED
+        elif self.num_success > 0:
+            return PASSED
+        elif self.num_skipped > 0:
+            return SKIPPED
+        elif self.expectedFailures > 0:
+            return EXPECTED_FAILURE
+        else:
+            return EMPTY
+
     def startTestRun(self):
         self._clean()
         self.last_result = ''
-        self.run_start = datetime.datetime.now()
+        self.run_start_timestamp = datetime.datetime.now()
         super().startTestRun()
 
     def stopTestRun(self):
         super().stopTestRun()
+        self.run_finish_timestamp = datetime.datetime.now()
+        self.env_info['timestamp_start'] = self.run_start_timestamp
+        self.env_info['timestamp_finish'] = self.run_finish_timestamp
 
         self.results['total'] = {
             'tests': self.num_tests,
-            'start_datetime': self.run_start,
-            'end_datetime': datetime.datetime.now(),
             'timestamp': datetime.datetime.now(),
             'time': self.total_execution_time,
             'passed': self.num_success,
@@ -218,7 +237,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'failed': self.num_failed,
             'errored': self.num_errored,
             'expected_failures': len(self.expectedFailures),
-            'unexpected_successes': len(self.unexpectedSuccesses)
+            'unexpected_successes': len(self.unexpectedSuccesses),
+            'result': self.result,
+            'requirements': len([req for req in self.requirements if req != '-'])
         }
 
     def startTest(self, test):
@@ -233,7 +254,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'timestamp': datetime.datetime.now(),
                 'time': 0,
                 'name': testcase_name,
-                'description': test.__class__.__doc__,
+                'description': self._parseDescription(test.__class__.__doc__),
                 'id': self.num_suites,
                 'tests': [],
                 'passed': 0,
@@ -324,7 +345,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'id': self.num_tests,
             'name': test._testMethodName,
             'time': self.test_execution_time,
-            'description': test._testMethodDoc,
+            'description': self._parseDescription(test._testMethodDoc),
             'result': self.last_result,
             'output': self.stream_buffer.read(),
             'errors': self.errors_strings,
@@ -456,47 +477,124 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         super().addUnexpectedSuccess(test)
         self.last_result = UNEXPECTED_SUCCESS
 
-    def addToTrace(self, testcase_name, test_name, description, result):
+    def _parseReferences(self, description):
         """
-        Adds executed test to the trace record
+        Extracts references from the test description.
+
+        :param str description: test description (docstring)
         """
         refs = None
 
         if description and isinstance(description, str):
-            refs = re.search(r'@ref[:\s]\s*\w.+\n', description)
+            for line in description.splitlines():
+                refs = re.search(r'@ref[:\s]\s*\w.+', line.strip())
+
+                if refs:
+                    break
 
         if refs is not None:
             refs = re.sub(r'@ref[:\s]s*', '', refs.group(0))
             refs = [' '.join(ref.split()) for ref in refs.split(',')]
         else:
-            refs = []
+            refs = ['-']
 
-        self.trace_matrix.append({'case': testcase_name, 'test': test_name, 'result': result, 'refs': refs})
+        return refs
+
+    def _parseRequirements(self, description):
+        """
+        Extracts requirements from the test description.
+
+        :param str description: test description (docstring)
+        """
+        specs = None
+
+        if description and isinstance(description, str):
+            for line in description.splitlines():
+                specs = re.search(r'@spec[:\s]\s*\w.+', line.strip())
+
+                if specs:
+                    break
+
+        if specs is not None:
+            specs = re.sub(r'@spec[:\s]s*', '', specs.group(0))
+            specs = [' '.join(spec.split()) for spec in specs.split(',')]
+        else:
+            specs = ['-']
+
+        return specs
+
+    def _parseDescription(self, description):
+        """
+        Extracts test description without tags from the docstring.
+
+        :param str description: test description (docstring)
+        """
+        lines = []
+
+        if description and isinstance(description, str):
+            for line in description.splitlines():
+                if not line.strip().startswith('@'):
+                    lines.append(line)
+
+        return '\n'.join(lines)
+
+    def addToTrace(self, testcase_name, test_name, description, result):
+        """
+        Adds executed test to the trace record
+
+        :param str testcase_name: name of the test case class
+        :param str test_name: name of the test method
+        :param description: test docstring
+        :param result: result of the test execution
+        """
+        references = self._parseReferences(description)
+        requirements = self._parseRequirements(description)
+        test_id = f'{testcase_name} {test_name}'
+
+        self.requirements.update(requirements)
+        self.trace_matrix.append({'case': testcase_name,
+                                  'test': test_name,
+                                  'result': result,
+                                  'references': references,
+                                  'requirements': requirements,
+                                  'test_id': test_id})
+
+    def _writeFile(self, filename, content):
+        """
+        Writes content to the given filename
+
+        :param filename: name of the file
+        :param content: content of the file
+        """
+        dir_name = os.path.dirname(os.path.abspath(filename))
+
+        if not os.path.exists(dir_name):
+            os.mkdir(dir_name)
+
+        with open(filename, 'w', encoding="utf-8") as f:
+            f.write(content)
 
     def print(self, output_formater, path):
         """
         Prints test results with the given result output.
         """
         if path is not None:
-            output = output_formater.print(self.results)
-            dir_name = os.path.dirname(os.path.abspath(path))
-
-            if not os.path.exists(dir_name):
-                os.mkdir(dir_name)
-
-            with open(path, 'w', encoding="utf-8") as f:
-                print(f"... created report {path}")
-                f.write(output)
+            output = output_formater.print(self.env_info, self.user_data, self.results)
+            self._writeFile(path, output)
+            print(f"... created report {path}")
 
     def printTraceability(self, output_formater, path):
         """
-        Prints test results with the given result output.
+        Prints test traceability report in a matrix form.
+
+        :param output_formater: format to process the data
+        :param path: where to store the output file
         """
         if path is not None:
             refs = []
 
             for test in self.trace_matrix:
-                refs += test['refs']
+                refs += test['references']
 
             refs = list(set(refs))
             refs.sort()
@@ -504,15 +602,34 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             for test in self.trace_matrix:
                 test['ref_indexes'] = []
 
-                for test_ref in test['refs']:
+                for test_ref in test['references']:
                     test['ref_indexes'].append(refs.index(test_ref))
 
             output = output_formater.print(refs, self.trace_matrix)
-            dir_name = os.path.dirname(os.path.abspath(path))
+            self._writeFile(path, output)
+            print(f"... created traceability matrix {path}")
 
-            if not os.path.exists(dir_name):
-                os.mkdir(dir_name)
+    def printTestSummary(self, output_formater, path):
+        """
+        Prints test summary report.
 
-            with open(path, 'w', encoding="utf-8") as f:
-                print(f"... created traceability matrix {path}")
-                f.write(output)
+        :param output_formater: format to process the data
+        :param path: where to store the output file
+        """
+        if path is not None:
+            output = output_formater.print(self.env_info, self.user_data, self.trace_matrix,
+                                           self.results['total'])
+            self._writeFile(path, output)
+            print(f"... created test summary {path}")
+
+    def printRequirementsSummary(self, output_formater, path):
+        """
+        Prints requirements summary report.
+
+        :param output_formater: format to process the data
+        :param path: where to store the output file
+        """
+        if path is not None:
+            output = output_formater.print(self.env_info, self.user_data, self.trace_matrix)
+            self._writeFile(path, output)
+            print(f"... created test summary {path}")

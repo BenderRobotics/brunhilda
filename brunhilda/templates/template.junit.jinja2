@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites
-    name="{{data.name}}"
-    errors="{{data.total.errored}}"
-    skipped="{{data.total.skipped}}"
-    tests="{{data.total.tests}}"
-    failures="{{data.total.failed}}"
-    time="{{data.total.time}}"
-    timestamp="{{data.total.timestamp}}"
-    hostname="{{data.env.hostname}}">
-{% for suite in data.testcases.values() %}
+    name="{{env_info.name}}"
+    errors="{{result.total.errored}}"
+    skipped="{{result.total.skipped}}"
+    tests="{{result.total.tests}}"
+    failures="{{result.total.failed}}"
+    time="{{result.total.time}}"
+    timestamp="{{result.total.timestamp}}"
+    hostname="{{env_info.hostname}}">
+{% for suite in result.testcases.values() %}
     <testsuite
         id="{{suite.id}}"
         name="{{suite.name}}"
@@ -19,8 +19,8 @@
         time="{{suite.time}}"
         timestamp="{{suite.timestamp}}">
         <properties>
-            <property name="python" value="{{ data.env.pyversion }}" />
-            <property name="system" value="{{ data.env.system }}" />
+            <property name="python" value="{{ env_info.pyversion }}" />
+            <property name="system" value="{{ env_info.system }}" />
         </properties>
     {% for test in suite.tests %}
         <testcase classname="{{suite.name}}" name="{{suite.name}}:{{test.name}}">

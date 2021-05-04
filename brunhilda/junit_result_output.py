@@ -1,16 +1,9 @@
-import os
-import jinja2
-import colorama
-import datetime
-from docutils.core import publish_parts
+from brunhilda.output import Output
+from .output import Output
 
-class JUnitResultOutput():
-    def print(self, testresult):
-        path = os.path.join(os.path.dirname(__file__), 'templates', 'template.junit.jinja2')
 
-        with open(path, encoding="utf-8") as f:
-            template = jinja2.Template(f.read())
-
-        template.globals['now'] = datetime.datetime.utcnow
-        rendered = template.render(data=testresult)
+class JUnitResultOutput(Output):
+   def print(self, env_info, user_data, result):
+        template = self.load_template('template.junit.jinja2')
+        rendered = template.render(env_info=env_info, user_data=user_data, result=result)
         return rendered
