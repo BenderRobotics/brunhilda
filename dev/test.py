@@ -7,10 +7,10 @@ import colorama
 import time
 import ddt
 import lorem
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
-sys.path.insert(0, os.path.abspath('..'))
 colorama.init()
+
 
 @ddt.ddt
 class TestCase1(unittest.TestCase):
@@ -72,7 +72,6 @@ class TestCase1(unittest.TestCase):
     +------------+ span rows. | - contain |
     | body row 4 |            | - blocks. |
     +------------+------------+-----------+
-
     """
 
     def test_00_pass(self):
@@ -300,7 +299,15 @@ if __name__ == '__main__':
         "Project": os.getenv('CI_PROJECT_ID', '-'),
         "Project name": os.getenv('CI_PROJECT_NAME', '-')
     }
-    runner = brunhilda.BRunhilda(user_data=information, verbosity=3, stream=sys.stdout)
+    runner = brunhilda.BRunhilda(user_data=information,
+                                 verbosity=3,
+                                 stream=sys.stdout,
+                                 html_output="dev/report.html",
+                                 junit_output="dev/report.xml",
+                                 traceability_output="dev/traceability.html",
+                                 req_summary_output="dev/req-summary.html",
+                                 test_summary_output="dev/test-summary.html",
+                                 test_plan_output="dev/test-plan.html",)
     unittest.main(testRunner=runner)
 
 # @}

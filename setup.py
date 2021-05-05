@@ -1,16 +1,16 @@
 import setuptools
 import re
+import os
 
 # Load description from the README
-with open("README.md", "r") as fh:
+with open('README.md', "r") as fh:
     long_description = fh.read()
 
 # Load version from the module init
-with open("brunhilda/__init__.py", 'r', encoding='utf-8') as fh:
+with open(os.path.join('brunhilda', '__init__.py'), 'r', encoding='utf-8') as fh:
     content = fh.read()
-    reg = re.compile(r"__version__\s*=\s*['\"]([\d\.]+)['\"]")
+    reg = re.compile(r"__version__\s*=\s*['\"]([\w\d\.\+\-]+)['\"]")
     version = reg.search(content).group(1)
-    print(version)
 
 setuptools.setup(
     name="brunhilda",

@@ -3,3 +3,6 @@ brunhilda.egg-info/
 dist/
 build/lib/brunhilda/
 .vscode/
+
+dev/*.html
+dev/*.xml
