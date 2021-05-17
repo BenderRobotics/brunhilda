@@ -4,17 +4,17 @@ class HtmlTestSummaryOutput(HtmlOutput):
     """
     """
 
-    def print(self, env_info, user_data, trace_matrix, total):
+    def print(self, env_info, user_data, tests, total):
         """
         Prints test summary to HTML document.
 
-        :param trace_matrix: BRunhilda trace matrix from the test run
+        :param tests: BRunhilda tests sequence from the test run
         :return: HTML string
         :rtype: str
         """
         template = self.load_template('summary-test.html.jinja2')
         rendered = template.render(env_info=env_info,
                                    user_data=user_data,
-                                   tests=trace_matrix,
+                                   tests=tests,
                                    total=total)
         return rendered

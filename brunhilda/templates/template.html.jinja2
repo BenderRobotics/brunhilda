@@ -220,7 +220,7 @@
                             <h3 class="testcase__name">{{ testcase.name }}</h3>
                             <p class="testcase__summary">
                                 <span class="testcase__summary--time">
-                                    Ran in {{ '%0.3f'|format(testcase.time|float) }}s</span>,
+                                    Executed in {{ '%0.3f'|format(testcase.time|float) }}s</span>,
                                 <span class="testcase__summary--passed">
                                     passed: <strong>{{ testcase.passed }}</strong></span>,
                                 <span class="testcase__summary--errored">
@@ -253,88 +253,134 @@
                             </label>
                             <input type="checkbox" id="test_expand_{{count.value}}" class="test__expander">
                             <div class="test__detail">
-                                {% if test.skip_reason %}
-                                <div class="test__skipreason">
-                                <p>
-                                    <strong>Skipped:</strong> <q>{{ test.skip_reason }}</q>
-                                </p>
-                                </div>
-                                {% endif %}
+                                <div class="test__detail__content">
+                                    {% if test.skip_reason %}
+                                    <div class="test__skipreason">
+                                    <p>
+                                        <strong>Skipped:</strong> <q>{{ test.skip_reason }}</q>
+                                    </p>
+                                    </div>
+                                    {% endif %}
 
-                                <div class="test__description">
-                                    {{ test.description }}
-                                </div>
+                                    <div class="test__description">
+                                        {{ test.description }}
+                                    </div>
 
-                                {% if test.subtests %}
-                                <h3>Sub-tests</h3>
-                                <table class="subtests">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Sub-test</th>
-                                            <th>Result</th>
-                                            <th>Detail</th>
-                                            <th>Extra</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for subtest in test.subtests %}
-                                        <tr class="subtest subtest--{{ subtest.result|lower|replace(' ', '-') }}">
-                                            <td class="subtest__id">{{ subtest.id }}</td>
-                                            <td class="subtest__name">{{ subtest.name }}</td>
-                                            <td class="subtest__result">{{ subtest.result }}</td>
-                                            <td class="subtest__detail">
-                                            {% if subtest.error %}
-                                            <pre>{{ subtest.error }}</pre>
-                                            {% elif subtest.reason %}
-                                                {{ subtest.reason }}
-                                            {% endif %}
-                                            </td>
-                                            <td class="subtest_extra">
-                                                {% if subtest.extra %}
-                                                {% for extra in subtest.extra %}
-                                                    {% if extra.type.startswith('image') %}
-                                                    <p><img class="subtest__extra__image" src="result:{{extra.type}};base64,{{extra.value}}" /></p>
-                                                    {% else %}
-                                                    <pre class="subtest__extra__text">{{ extra.value }}</pre>
-                                                    {% endif %}
-                                                {% endfor %}
+                                    <div class="test__steps">
+                                        <table>
+                                            <caption>Test Steps</caption>
+                                            <thead>
+                                                <tr>
+                                                    <th class="test__steps__number">Step</th>
+                                                    <th class="test__steps__description">Description</th>
+                                                    <th class="test__steps__expectation">Expectation</th>
+                                                    <th class="test__steps__obtained">Obtained</th>
+                                                    <th class="test__steps__result">Result</th>
+                                                    <th class="test__steps__comments">Comments</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for step in test.steps %}
+                                                        <tr>
+                                                            <td class="test__steps__number">{{ step.number }}</td>
+                                                            <td class="test__steps__description">{{ step.description }}</td>
+                                                            <td class="test__steps__expectation">{{ step.expectation }}</td>
+                                                            <td class="test__steps__obtained">
+                                                {% if manual_execution %}
+                                                                <div class="textarea" contenteditable></div>
                                                 {% endif %}
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                                {% endif %}
+                                                            </td>
+                                                            <td class="test__steps__result">
+                                                {% if manual_execution %}
+                                                                <select>
+                                                                    <option></option>
+                                                                    <option>Pass</option>
+                                                                    <option>Fail</option>
+                                                                </select>
+                                                {% endif %}
+                                                            </td>
+                                                            <td class="test__steps__comments">
+                                                {% if manual_execution %}
+                                                                <div class="textarea" contenteditable></div>
+                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
 
-                                {% if test.output %}
-                                <h3>Output</h3>
-                                <div class="test__console">
-                                    <pre>{{ test.output }}</pre>
-                                </div>
-                                {% endif %}
+                                    {% if test.subtests %}
+                                    <table class="subtests">
+                                        <caption>Sub-tests</caption>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Sub-test</th>
+                                                <th>Result</th>
+                                                <th>Detail</th>
+                                                <th>Extra</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for subtest in test.subtests %}
+                                            <tr class="subtest subtest--{{ subtest.result|lower|replace(' ', '-') }}">
+                                                <td class="subtest__id">{{ subtest.id }}</td>
+                                                <td class="subtest__name">{{ subtest.name }}</td>
+                                                <td class="subtest__result">{{ subtest.result }}</td>
+                                                <td class="subtest__detail">
+                                                {% if subtest.error %}
+                                                <pre>{{ subtest.error }}</pre>
+                                                {% elif subtest.reason %}
+                                                    {{ subtest.reason }}
+                                                {% endif %}
+                                                </td>
+                                                <td class="subtest_extra">
+                                                    {% if subtest.extra %}
+                                                    {% for extra in subtest.extra %}
+                                                        {% if extra.type.startswith('image') %}
+                                                        <p><img class="subtest__extra__image" src="result:{{extra.type}};base64,{{extra.value}}" /></p>
+                                                        {% else %}
+                                                        <pre class="subtest__extra__text">{{ extra.value }}</pre>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endif %}
 
-                                {% if test.errors %}
-                                <h3>Errors</h3>
-                                {% for error in test.errors %}
-                                <div class="test__console test__console--error">
-                                    <pre>{{ error }}</pre>
-                                </div>
-                                {% endfor %}
-                                {% endif %}
+                                    {% if test.output %}
+                                    <h3>Output</h3>
+                                    <div class="test__console">
+                                        <pre>{{ test.output }}</pre>
+                                    </div>
+                                    {% endif %}
 
-                                {% if test.extra %}
-                                <h3>Extra</h3>
-                                {% for extra in test.extra %}
-                                <div class="test__extra">
-                                    {% if extra.type.startswith('image') %}
-                                    <img class="test__extra__image" src="result:{{extra.type}};base64,{{extra.value}}" />
-                                    {% else %}
-                                    <pre class="test__extra__text">{{ extra.value }}</pre>
+                                    {% if test.errors %}
+                                    <h3>Errors</h3>
+                                    {% for error in test.errors %}
+                                    <div class="test__console test__console--error">
+                                        <pre>{{ error }}</pre>
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if test.extra %}
+                                    <h3>Extra</h3>
+                                    {% for extra in test.extra %}
+                                    <div class="test__extra">
+                                        {% if extra.type.startswith('image') %}
+                                        <img class="test__extra__image" src="result:{{extra.type}};base64,{{extra.value}}" />
+                                        {% else %}
+                                        <pre class="test__extra__text">{{ extra.value }}</pre>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
                                     {% endif %}
                                 </div>
-                                {% endfor %}
-                                {% endif %}
                             </div>
                         </div>
                         {% endfor %}

@@ -72,10 +72,17 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     """
     _renderers = None
 
-    def __init__(self, stream, descriptions, verbosity, name="", user_data=None):
+    def __init__(self,
+                 stream,
+                 descriptions,
+                 verbosity,
+                 name='',
+                 user_data=None,
+                 manual_execution=False):
         super().__init__(stream, descriptions, verbosity)
         self.name = name
         self.user_data = user_data
+        self.manual_execution = manual_execution
         self.env_info = {
             'pyversion': sys.version,
             'system': platform.platform(),
@@ -97,7 +104,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self.num_skipped = 0
         self.num_failed = 0
         self.num_errored = 0
-        self.trace_matrix = []
+        self.executed_tests = []
         self.requirements = set()
         self.results = {
             'total': {},
@@ -346,6 +353,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'name': test._testMethodName,
             'time': self.test_execution_time,
             'description': self._parseDescription(test._testMethodDoc),
+            'steps': self._parseSteps(test._testMethodDoc),
             'result': self.last_result,
             'output': self.stream_buffer.read(),
             'errors': self.errors_strings,
@@ -359,7 +367,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         elif self.last_result == ERRORED:
             self.num_errored += 1
 
-        self.addToTrace(testcase_name, test._testMethodName, test._testMethodDoc, self.last_result)
+        self._record(testcase_name, test._testMethodName, test._testMethodDoc, self.last_result)
 
     def addSuccess(self, test):
         """
@@ -477,6 +485,35 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         super().addUnexpectedSuccess(test)
         self.last_result = UNEXPECTED_SUCCESS
 
+    def _parseTags(self, description):
+        """
+        Extracts tags from the test description.
+
+        :param str description: test description (docstring)
+        """
+        excluded_tags = ('steps', 'endsteps')
+        tags = {}
+
+        if description and isinstance(description, str):
+            for line in description.splitlines():
+                line = line.strip()
+
+                if line.startswith('@'):
+                    pair = line.split(' ')
+                    tag = pair[0]
+                    tag = tag.strip('@').strip(':').lower()
+
+                    if tag not in excluded_tags:
+                        if len(pair) > 1:
+                            value = ' '.join(pair[1:])
+                            value = value.split(',')
+                        else:
+                            value = ['']
+
+                        tags[tag] = [v.strip() for v in value]
+
+        return tags
+
     def _parseReferences(self, description):
         """
         Extracts references from the test description.
@@ -523,6 +560,51 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         return specs
 
+    def _parseSteps(self, description):
+        """
+        Extracts test description without tags from the docstring.
+
+        :param str description: test description (docstring)
+        """
+        steps = []
+        steps_active = False
+        step_description_active = False
+        step = None
+        reg_step_description = re.compile(r'^\s*(?P<num>\d+)\)\s*>')
+        reg_step_expectation = re.compile(r'^\s*>')
+        indent_spaces = '            '
+
+        if description and isinstance(description, str):
+            for line in description.splitlines():
+                if line.strip().startswith('@steps'):
+                    steps_active = True
+                elif line.strip().startswith('@endsteps'):
+                    steps_active = False
+                elif steps_active:
+                    # check if line stars with "1) >" (or other number)
+                    if reg_step_description.match(line):
+                        if step:
+                            steps.append(step)
+
+                        step = {'number': 0, 'description': '', 'expectation': ''}
+                        step['number'] = int(reg_step_description.match(line).group('num'))
+                        step['description'] = reg_step_description.sub(indent_spaces, line)
+                        step_description_active = True
+                    # check if line stars with "  >"
+                    elif reg_step_expectation.match(line):
+                        step_description_active = False
+                        step['expectation'] = reg_step_expectation.sub(indent_spaces, line)
+                    # if still in description, append to description
+                    elif step_description_active:
+                        step['description'] += '\n' + line
+                    # otherwise append to expectation
+                    else:
+                        step['expectation'] += '\n' + line
+        if step:
+            steps.append(step)
+
+        return steps
+
     def _parseDescription(self, description):
         """
         Extracts test description without tags from the docstring.
@@ -530,15 +612,21 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param str description: test description (docstring)
         """
         lines = []
+        block_active = False
 
         if description and isinstance(description, str):
             for line in description.splitlines():
-                if not line.strip().startswith('@'):
+                if not line.strip().startswith('@') and not block_active:
                     lines.append(line)
+
+                if line.strip().startswith('@steps'):
+                    block_active = True
+                elif line.strip().startswith('@endsteps'):
+                    block_active = False
 
         return '\n'.join(lines)
 
-    def addToTrace(self, testcase_name, test_name, description, result):
+    def _record(self, testcase_name, test_name, description, result):
         """
         Adds executed test to the trace record
 
@@ -549,15 +637,21 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         references = self._parseReferences(description)
         requirements = self._parseRequirements(description)
-        test_id = f'{testcase_name} {test_name}'
+        tags = self._parseTags(description)
+        steps = self._parseSteps(description)
+        description = self._parseDescription(description)
+        test_id = f'{testcase_name}.{test_name}'
 
         self.requirements.update(requirements)
-        self.trace_matrix.append({'case': testcase_name,
-                                  'test': test_name,
-                                  'result': result,
-                                  'references': references,
-                                  'requirements': requirements,
-                                  'test_id': test_id})
+        self.executed_tests.append({'case': testcase_name,
+                                    'test': test_name,
+                                    'result': result,
+                                    'tags': tags,
+                                    'description': description,
+                                    'references': references,
+                                    'steps': steps,
+                                    'requirements': requirements,
+                                    'test_id': test_id})
 
     def _writeFile(self, filename, content):
         """
@@ -579,7 +673,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         Prints test results with the given result output.
         """
         if path is not None:
-            output = output_formater.print(self.env_info, self.user_data, self.results)
+            output = output_formater.print(self.env_info, self.user_data, self.results,
+                                           self.manual_execution)
             self._writeFile(path, output)
             print(f"... created report {path}")
 
@@ -593,19 +688,19 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         if path is not None:
             refs = []
 
-            for test in self.trace_matrix:
+            for test in self.executed_tests:
                 refs += test['references']
 
             refs = list(set(refs))
             refs.sort()
 
-            for test in self.trace_matrix:
+            for test in self.executed_tests:
                 test['ref_indexes'] = []
 
                 for test_ref in test['references']:
                     test['ref_indexes'].append(refs.index(test_ref))
 
-            output = output_formater.print(refs, self.trace_matrix)
+            output = output_formater.print(refs, self.executed_tests)
             self._writeFile(path, output)
             print(f"... created traceability matrix {path}")
 
@@ -617,7 +712,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param path: where to store the output file
         """
         if path is not None:
-            output = output_formater.print(self.env_info, self.user_data, self.trace_matrix,
+            output = output_formater.print(self.env_info, self.user_data, self.executed_tests,
                                            self.results['total'])
             self._writeFile(path, output)
             print(f"... created test summary {path}")
@@ -630,6 +725,18 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param path: where to store the output file
         """
         if path is not None:
-            output = output_formater.print(self.env_info, self.user_data, self.trace_matrix)
+            output = output_formater.print(self.env_info, self.user_data, self.executed_tests)
             self._writeFile(path, output)
-            print(f"... created test summary {path}")
+            print(f"... created requirements summary {path}")
+
+    def printTestPlan(self, output_formater, path):
+        """
+        Prints test summary plan.
+
+        :param output_formater: format to process the data
+        :param path: where to store the output file
+        """
+        if path is not None:
+            output = output_formater.print(self.env_info, self.user_data, self.executed_tests, self.manual_execution)
+            self._writeFile(path, output)
+            print(f"... created test plan {path}")

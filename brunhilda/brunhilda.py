@@ -7,6 +7,7 @@ from .html_result_output import HtmlResultOutput
 from .junit_result_output import JUnitResultOutput
 from .html_trace_output import HtmlTraceOutput
 from .html_req_summary_output import HtmlReqSummaryOutput
+from .html_test_plan_output import HtmlTestPlanOutput
 
 __unittest = True
 
@@ -30,7 +31,9 @@ class BRunhilda(unittest.TextTestRunner):
                        traceability_output="traceability.html",
                        req_summary_output="req-summary.html",
                        test_summary_output="test-summary.html",
-                       user_data=None):
+                       test_plan_output="test-plan.html",
+                       user_data=None,
+                       manual_execution=False):
         super().__init__(stream=stream,
                          descriptions=descriptions,
                          verbosity=verbosity,
@@ -44,9 +47,16 @@ class BRunhilda(unittest.TextTestRunner):
         self.traceability_output = traceability_output
         self.req_summary_output = req_summary_output
         self.test_summary_output = test_summary_output
+        self.test_plan_output = test_plan_output
+        self.manual_execution = manual_execution
 
     def _makeResult(self):
-        return BRunhildaTestResult(self.stream, self.descriptions, self.verbosity, self.name, user_data=self.user_data)
+        return BRunhildaTestResult(self.stream,
+                                   self.descriptions,
+                                   self.verbosity,
+                                   self.name,
+                                   user_data=self.user_data,
+                                   manual_execution=self.manual_execution)
 
     def run(self, test):
         result = super().run(test)
@@ -63,5 +73,8 @@ class BRunhilda(unittest.TextTestRunner):
 
         if self.req_summary_output is not None:
             result.printRequirementsSummary(HtmlReqSummaryOutput(), self.req_summary_output)
+
+        if self.test_plan_output is not None:
+            result.printTestPlan(HtmlTestPlanOutput(), self.test_plan_output)
 
         return result

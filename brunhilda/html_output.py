@@ -15,9 +15,9 @@ class HtmlOutput(Output):
         else:
             description = description.strip('\n')               # description without first and last new line
             lines = description.split('\n')
-            padding = len(lines[0]) - len(lines[0].lstrip())    # number of spaces from the left
-            spaces = ''.join([' '] * padding)                   # left trailing spaces
-            lines = [line.lstrip(spaces) for line in lines]     # cut out leading spaces
+            indent = len(lines[0]) - len(lines[0].lstrip())     # number of spaces from the left
+            lines = [line.rstrip() for line in lines]           # cut out trailing spaces
+            lines = [line[indent:] for line in lines]           # cut out leading spaces
             description = '\n'.join(lines)                      # join to string again
             description = description.replace("–", "-")         # TODO - use &ndash to be correct
             description = description.replace(" *.", " \*.")

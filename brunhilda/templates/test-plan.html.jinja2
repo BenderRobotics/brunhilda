@@ -1,0 +1,125 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+            {% include "themes/base.css" %}
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
+</head>
+
+<body>
+    <h1>Test Plan</h1>
+    <div class="header">
+        {% include "header.html.jinja2" %}
+        <h2>Execution</h2>
+        {% if manual_execution %}
+        <table class="execution_info">
+        <tbody>
+            <tr>
+                <th>Date, time:</th>
+                <td><input type="datetime-local"></td>
+            </tr><tr>
+                <th>Executed by:</th>
+                <td><input type="text"/></td>
+            </tr><tr>
+                <th>Environment:</th>
+                <td><textarea></textarea></td>
+            </tr><tr>
+                <th>Comments:</th>
+                <td><textarea></textarea></td>
+            </tr>
+        </tbody>
+        </table>
+        {% endif %}
+    </div>
+    <div class="main">
+    <section class="toc">
+        <h2>Table of Contents</h2>
+        <ol class="toc__list">
+{% for test in tests %}
+            <li class="toc__item"><a href="#test--{{ test.test_id }}">{{ test.test_id }}</a></li>
+{% endfor %}
+        </ol>
+    </section>
+{% for test in tests %}
+    <section id="test--{{ test.test_id }}" class="testdef">
+        <h2>{{ test.test_id }}</h2>
+        <div class="test__tags">
+        <table class="test__tags__table">
+    {% for tag_name in test.tags %}
+            <tr>
+                <th class="test__tag__name">{{ tag_name }}</th>
+                <td class="test__tag__value">
+        {% if test.tags[tag_name]|length == 1 %}
+            {% for tag in test.tags[tag_name] %}
+                    {{ tag }}
+            {% endfor %}
+        {% else %}
+                    <ul>
+            {% for tag in test.tags[tag_name] %}
+                        <li>{{ tag }}</li>
+            {% endfor %}
+                    </ul>
+        {% endif %}
+                </td>
+            </tr>
+    {% endfor %}
+        </table>
+        </div>
+        <div class="test__description">
+            {{ test.description }}
+        </div>
+        <div class="test__steps">
+        <table class="test__steps__table">
+            <caption>Test Steps</caption>
+            <thead>
+                <tr>
+                    <th class="test__steps__number">Step</th>
+                    <th class="test__steps__description">Description</th>
+                    <th class="test__steps__expectation">Expectation</th>
+                    <th class="test__steps__obtained">Obtained</th>
+                    <th class="test__steps__result">Result</th>
+                    <th class="test__steps__comments">Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for step in test.steps %}
+                <tr>
+                    <td class="test__steps__number">{{ step.number }}</td>
+                    <td class="test__steps__description">{{ step.description }}</td>
+                    <td class="test__steps__expectation">{{ step.expectation }}</td>
+                    <td class="test__steps__obtained">
+        {% if manual_execution %}
+                        <div class="textarea" contenteditable></div>
+        {% endif %}
+                    </td>
+                    <td class="test__steps__result">
+        {% if manual_execution %}
+                        <select>
+                            <option></option>
+                            <option>Pass</option>
+                            <option>Fail</option>
+                        </select>
+        {% endif %}
+                    </td>
+                    <td class="test__steps__comments">
+        {% if manual_execution %}
+                        <div class="textarea" contenteditable></div>
+        {% endif %}
+                    </td>
+                </tr>
+    {% endfor %}
+            </tbody>
+        </table>
+        </table>
+        </div>
+    </section>
+{% endfor %}
+    </div>
+</body>
+</html>

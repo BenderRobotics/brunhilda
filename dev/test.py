@@ -72,24 +72,71 @@ class TestCase1(unittest.TestCase):
     +------------+ span rows. | - contain |
     | body row 4 |            | - blocks. |
     +------------+------------+-----------+
+
+    .. list-table:: Frozen Delights!
+       :widths: 15 10 30
+       :header-rows: 1
+
+       * - Treat
+         - Quantity
+         - Description
+       * - Albatross
+         - 2.99
+         - On a stick!
+       * - Crunchy Frog
+         - 1.49
+         - If we took the bones out, it wouldn't be
+           crunchy, now would it?
+       * - Gannet Ripple
+         - 1.99
+         - On a stick!
+
+    .. list-table:: Title
+       :widths: 25 25 50
+       :header-rows: 1
+
+       * - Heading row 1, column 1
+         - Heading row 1, column 2
+         - Heading row 1, column 3
+       * - Row 1, column 1
+         -
+         - Row 1, column 3
+       * - Row 2, column 1
+         - Row 2, column 2
+         - Row 2, column 3
     """
 
     def test_00_pass(self):
         """
-        @ref ST01.0
-        @spec REQ_SYS_001
+        @test-id:       ST_FW_002
+        @author:        Jan Hrbacek
+        @execution:     automatic
+        @exec-time:     150s
+        @covering:      REQ_SYS_FW_001, REQ_SYS_FW_002
+        @environment:   ENV_002
+        @priority:      high
+        @variants:      MMI_TGL_001, MMI_TGL_002;
+        @status:        new
+        @spec:          L11 4.4
+        @tp:            TP07.1
 
         But *.bin or *.hex is OK!
         Verifies normal execution of the scheduled program.
 
-        1) Generates schedule program with random values and times,
-        2) Write program to MMI.
-        3) Set MMI date-time before the first program action time.
-        4) Write A
-        5) Verify value of the schedule timer action target to be a previous scheduled value.
-        6) Verify value of the schedule timer action target to be a new scheduled value.
+        @steps
+        1) >  Set ``{user_permission}`` to 3 (installer). When the test step description
+              is too long, it is possible to split in multiple lines. It is possible to
+              use RS inside of these
 
-        Repeat steps 3 – 6 for entire progam.
+              - including
+              - lists
+           > ``{user_permission} == 3``
+        2) > Set {tm_user_permission_user} to 20.
+           > {tm_user_permission} == 20. When the test step description
+             is too long, it is possible to split in multiple lines.
+        3) > Enter and activate test run A.1.1.
+           > A.1.1 BC is active BC
+        @endsteps
         """
         print("Stupid print")
         FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -316,7 +363,8 @@ if __name__ == '__main__':
                                  traceability_output="dev/traceability.html",
                                  req_summary_output="dev/req-summary.html",
                                  test_summary_output="dev/test-summary.html",
-                                 test_plan_output="dev/test-plan.html",)
+                                 test_plan_output="dev/test-plan.html",
+                                 manual_execution=True)
     unittest.main(testRunner=runner)
 
 # @}

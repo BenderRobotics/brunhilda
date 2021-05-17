@@ -1,4 +1,4 @@
-<p>Report {% if env_info.name %}<strong>{{ env_info.name }}</strong>{% endif %} generated <time>{{ now().strftime('%Y-%m-%d %H:%M:%S') }}</time> by Brunhilda</p>
+<p>{% if env_info.name %}<strong>{{ env_info.name }}</strong>{% endif %} generated <time>{{ now().strftime('%Y-%m-%d %H:%M:%S') }}</time> by Brunhilda</p>
 <h2>Environment</h2>
 <table class="testrun__environment">
     <tbody>
