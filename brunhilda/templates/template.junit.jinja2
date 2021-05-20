@@ -23,10 +23,10 @@
             <property name="system" value="{{ env_info.system }}" />
         </properties>
     {% for test in suite.tests %}
-        <testcase classname="{{suite.name}}" name="{{suite.name}}:{{test.name}}">
-            <system-out>{{ test.output }}</system-out>
+        <testcase classname="{{suite.name}}" name="{{test.name}}" time="{{'%0.1f'|format(test.time|float)}}">
+            <system-out>{{ test.output|e }}</system-out>
         {% for error in test.errors %}
-            <system-err>{{ error }}</system-err>
+            <system-err>{{ error|e }}</system-err>
         {% endfor %}
         {% if test.result == "SKIPPED" %}
             <skipped />

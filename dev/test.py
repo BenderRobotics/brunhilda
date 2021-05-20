@@ -138,7 +138,7 @@ class TestCase1(unittest.TestCase):
            > A.1.1 BC is active BC
         @endsteps
         """
-        print("Stupid print")
+        print("Stupid print > > < < & ")
         FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         logging.basicConfig(format=FORMAT)
         log = logging.getLogger("")
