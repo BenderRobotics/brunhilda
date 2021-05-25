@@ -116,6 +116,7 @@
                         <td>
                             {{ result.total.passed }}
                         </td>
+                        <td>Passed tests.</td>
                     </tr>
                     <tr class="run-summary--failed">
                         <th><input type="checkbox" id="run-summary--failed" checked>
@@ -124,6 +125,7 @@
                         <td>
                             {{ result.total.failed }}
                         </td>
+                        <td>Failed tests.</td>
                     </tr>
                     <tr class="run-summary--errored">
                         <th><input type="checkbox" id="run-summary--errored" checked>
@@ -132,6 +134,7 @@
                         <td>
                             {{ result.total.errored }}
                         </td>
+                        <td>Tests that ended with other than assertion failure error.</td>
                     </tr>
                     <tr class="run-summary--skipped">
                         <th><input type="checkbox" id="run-summary--skipped" checked>
@@ -140,6 +143,7 @@
                         <td>
                             {{ result.total.skipped }}
                         </td>
+                        <td>Tests that were skipped and not executed.</td>
                     </tr>
                     <tr class="run-summary--expected-failure">
                         <th><input type="checkbox" id="run-summary--expected-failure" checked>
@@ -148,6 +152,7 @@
                         <td>
                             {{ result.total.expected_failures }}
                         </td>
+                        <td>Tests that are expected to fail during execution (e.g. DUT feature implementation is not yet finished).</td>
                     </tr>
                     <tr class="run-summary--unexpected-success">
                         <th><input type="checkbox" id="run-summary--unexpected-success" checked>
@@ -156,6 +161,7 @@
                         <td>
                             {{ result.total.unexpected_successes }}
                         </td>
+                        <td>Tests marked as <em>expected failure</em> which passed despite expectation.</td>
                     </tr>
                 </tbody>
             </table>
