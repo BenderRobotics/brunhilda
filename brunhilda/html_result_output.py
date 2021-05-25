@@ -3,7 +3,7 @@ import copy
 from .html_output import HtmlOutput
 
 class HtmlResultOutput(HtmlOutput):
-    def print(self, env_info, user_data, result, manual_execution):
+    def print(self, env_info, user_data, result, summary, manual_execution):
         """
         Prints test result to HTML document.
 
@@ -34,5 +34,5 @@ class HtmlResultOutput(HtmlOutput):
 
         template = self.load_template('template.html.jinja2')
         rendered = template.render(env_info=env_info, user_data=user_data, result=result,
-                                   manual_execution=manual_execution)
+                                   summary=summary, manual_execution=manual_execution)
         return rendered

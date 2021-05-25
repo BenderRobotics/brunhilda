@@ -4,7 +4,7 @@ class HtmlTestSummaryOutput(HtmlOutput):
     """
     """
 
-    def print(self, env_info, user_data, tests, total):
+    def print(self, env_info, user_data, tests, summary):
         """
         Prints test summary to HTML document.
 
@@ -16,5 +16,5 @@ class HtmlTestSummaryOutput(HtmlOutput):
         rendered = template.render(env_info=env_info,
                                    user_data=user_data,
                                    tests=tests,
-                                   total=total)
+                                   summary=summary)
         return rendered

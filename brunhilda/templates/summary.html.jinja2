@@ -1,0 +1,93 @@
+            <table class="run-summary">
+                <tbody>
+                    <tr class="run-summary--passed">
+                        <th><input type="checkbox" id="run-summary--passed" checked>
+                            <label for="run-summary--passed">Passed</label>
+                        </th>
+                        <td>
+                            {{ summary.passed }}
+                        </td>
+                        <td>Passed tests.</td>
+                    </tr>
+                    <tr class="run-summary--failed">
+                        <th><input type="checkbox" id="run-summary--failed" checked>
+                            <label for="run-summary--failed">Failed</label>
+                        </th>
+                        <td>
+                            {{ summary.failed }}
+                        </td>
+                        <td>Failed tests.</td>
+                    </tr>
+                    <tr class="run-summary--errored">
+                        <th><input type="checkbox" id="run-summary--errored" checked>
+                            <label for="run-summary--errored">Errored</label>
+                        </th>
+                        <td>
+                            {{ summary.errored }}
+                        </td>
+                        <td>Tests that ended with other than assertion failure error.</td>
+                    </tr>
+                    <tr class="run-summary--skipped">
+                        <th><input type="checkbox" id="run-summary--skipped" checked>
+                            <label for="run-summary--skipped">Skipped</label>
+                        </th>
+                        <td>
+                            {{ summary.skipped }}
+                        </td>
+                        <td>Tests that were skipped and not executed.</td>
+                    </tr>
+                    <tr class="run-summary--expected-failure">
+                        <th><input type="checkbox" id="run-summary--expected-failure" checked>
+                            <label for="run-summary--expected-failure">Expected failures</label>
+                        </th>
+                        <td>
+                            {{ summary.expected_failures }}
+                        </td>
+                        <td>Tests that are expected to fail during execution (e.g. DUT feature implementation is not yet finished).</td>
+                    </tr>
+                    <tr class="run-summary--unexpected-success">
+                        <th><input type="checkbox" id="run-summary--unexpected-success" checked>
+                            <label for="run-summary--unexpected-success">Unexpected successes</label>
+                        </th>
+                        <td>
+                            {{ summary.unexpected_successes }}
+                        </td>
+                        <td>Tests marked as <em>expected failure</em> which passed despite expectation.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="bar">
+                {% set sum = 0.01 * (summary.passed + summary.failed + summary.errored + summary.skipped + summary.expected_failures + summary.unexpected_successes) %}
+                {% set pct_passed = summary.passed / sum %}
+                {% set pct_failed = summary.failed / sum %}
+                {% set pct_errored = summary.errored / sum %}
+                {% set pct_skipped = summary.skipped / sum %}
+                {% set pct_ef = summary.expected_failures / sum %}
+                {% set pct_us = summary.unexpected_successes / sum %}
+
+                <div class="bar__line bar__line--passed"
+                     style="width:{{pct_passed}}%;">
+                     <span>{{ pct_passed|round(1) }}% passed</span>
+                </div>
+                <div class="bar__line bar__line--failed"
+                     style="width:{{pct_failed}}%;">
+                     <span>{{ pct_failed|round(1) }}% failed</span>
+                </div>
+                <div class="bar__line bar__line--errored"
+                    style="width:{{pct_errored}}%;">
+                    <span>{{ pct_errored|round(1) }}% errored</span>
+                </div>
+                <div class="bar__line bar__line--skipped"
+                     style="width:{{pct_skipped}}%;">
+                     <span>{{ pct_skipped|round(1) }}% skipped</span>
+                </div>
+                <div class="bar__line bar__line--expected-failure"
+                     style="width:{{pct_ef}}%;">
+                     <span>{{ pct_ef|round(1) }}% expected failure</span>
+                </div>
+                <div class="bar__line bar__line--unexpected-success"
+                     style="width:{{pct_us}}%;">
+                     <span>{{ pct_us|round(1) }}% unexpected success</span>
+                </div>
+            </div>

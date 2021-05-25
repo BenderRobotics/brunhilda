@@ -20,7 +20,7 @@ class JUnitResultOutput(Output):
 
         return text
 
-   def print(self, env_info, user_data, result, manual_execution):
+   def print(self, env_info, user_data, result, summary, manual_execution):
       result = copy.deepcopy(result)
 
       for case in sorted(result['testcases'].values(), key=lambda item: item['id']):
@@ -32,5 +32,5 @@ class JUnitResultOutput(Output):
 
       template = self.load_template('template.junit.jinja2')
       rendered = template.render(env_info=env_info, user_data=user_data, result=result,
-                                   manual_execution=manual_execution)
+                                 summary=summary, manual_execution=manual_execution)
       return rendered

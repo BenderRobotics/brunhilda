@@ -19,6 +19,9 @@
     </div>
     <div class="main">
         <h2>Tests Summary</h2>
+
+        {% include "summary.html.jinja2" %}
+
         <table class="summary table--wide">
             <thead>
                 <tr>
@@ -51,10 +54,10 @@
 {% endfor %}
             </tbody>
             <tfoot>
-                <tr class="test--{{ total.result|lower|replace(' ', '-') }}">
-                    <th>Total tests: {{ total.tests }}</th>
-                    <th>Total requirements: {{ total.requirements }}</th>
-                    <th class="test__result">{{ total.result }}</th>
+                <tr class="test--{{ summary.result|lower|replace(' ', '-') }}">
+                    <th>Total tests: {{ summary.tests }}</th>
+                    <th>Total requirements: {{ summary.requirements }}</th>
+                    <th class="test__result">{{ summary.result }}</th>
                     <th></th>
                     <th></th>
                 </tr>

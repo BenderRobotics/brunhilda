@@ -674,7 +674,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         if path is not None:
             output = output_formater.print(self.env_info, self.user_data, self.results,
-                                           self.manual_execution)
+                                           self.results['total'], self.manual_execution)
             self._writeFile(path, output)
             print(f"... created report {path}")
 
