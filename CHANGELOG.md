@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 1.1.1 (2021-05-25)
+
+- Added explanation of the test summary test results in the HTML report.
+
 ## 1.1.0 (2021-05-20)
 
 - Fixed JUnit XML output, escaped HTML in JUnit XML output, added test execution time information
