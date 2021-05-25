@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 1.1.2 (2021-05-25)
+
+- Added test execution summary to the Test Summary output ([#4439](https://redmine.benderrobotics.com/issues/4439)).
+
 ## 1.1.1 (2021-05-25)
 
 - Added explanation of the test summary test results in the HTML report.
