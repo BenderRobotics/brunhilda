@@ -44,6 +44,8 @@ class HtmlReqSummaryOutput(HtmlOutput):
             })
 
         template = self.load_template('summary-req.html.jinja2')
-        rendered = template.render(env_info=env_info, user_data=user_data,
+        rendered = template.render(preamble=self._include_preamble,
+                                   env_info=env_info,
+                                   user_data=user_data,
                                    requirements=requirements)
         return rendered

@@ -20,7 +20,8 @@ class HtmlTestPlanOutput(HtmlOutput):
                     test['steps'][i]['description'] = self._format_doc(step['description'])
                     test['steps'][i]['expectation'] = self._format_doc(step['expectation'])
 
-        rendered = template.render(env_info=env_info,
+        rendered = template.render(preamble=self._include_preamble,
+                                   env_info=env_info,
                                    user_data=user_data,
                                    tests=tests,
                                    manual_execution=manual_execution)

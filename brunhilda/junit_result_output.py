@@ -31,6 +31,9 @@ class JUnitResultOutput(Output):
                test['errors'] = [self._format_terminal(err) for err in test['errors']]
 
       template = self.load_template('template.junit.jinja2')
-      rendered = template.render(env_info=env_info, user_data=user_data, result=result,
-                                 summary=summary, manual_execution=manual_execution)
+      rendered = template.render(env_info=env_info,
+                                 user_data=user_data,
+                                 result=result,
+                                 summary=summary,
+                                 manual_execution=manual_execution)
       return rendered

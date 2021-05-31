@@ -26,11 +26,15 @@ class BRunhilda(unittest.TextTestRunner):
                        buffer=False,
                        warnings=None,
                        name="",
+                       html_preamble=None,
                        html_output="report.html",
                        junit_output="report.xml",
                        traceability_output="traceability.html",
+                       req_summary_preamble=None,
                        req_summary_output="req-summary.html",
+                       test_summary_preamble=None,
                        test_summary_output="test-summary.html",
+                       test_plan_preamble=None,
                        test_plan_output="test-plan.html",
                        user_data=None,
                        manual_execution=False):
@@ -42,11 +46,15 @@ class BRunhilda(unittest.TextTestRunner):
                          warnings=warnings)
         self.name = name
         self.user_data = user_data
+        self.html_preamble = html_preamble
         self.html_output = html_output
         self.junit_output = junit_output
         self.traceability_output = traceability_output
+        self.req_summary_preamble = req_summary_preamble
         self.req_summary_output = req_summary_output
+        self.test_summary_preamble = test_summary_preamble
         self.test_summary_output = test_summary_output
+        self.test_plan_preamble = test_plan_preamble
         self.test_plan_output = test_plan_output
         self.manual_execution = manual_execution
 
@@ -62,19 +70,19 @@ class BRunhilda(unittest.TextTestRunner):
         result = super().run(test)
 
         if hasattr(result, "print"):
-            result.print(HtmlResultOutput(), self.html_output)
+            result.print(HtmlResultOutput(preamble=self.html_preamble), self.html_output)
             result.print(JUnitResultOutput(), self.junit_output)
 
         if self.traceability_output is not None:
             result.printTraceability(HtmlTraceOutput(), self.traceability_output)
 
         if self.test_summary_output is not None:
-            result.printTestSummary(HtmlTestSummaryOutput(), self.test_summary_output)
+            result.printTestSummary(HtmlTestSummaryOutput(preamble=self.test_summary_preamble), self.test_summary_output)
 
         if self.req_summary_output is not None:
-            result.printRequirementsSummary(HtmlReqSummaryOutput(), self.req_summary_output)
+            result.printRequirementsSummary(HtmlReqSummaryOutput(preamble=self.req_summary_preamble), self.req_summary_output)
 
         if self.test_plan_output is not None:
-            result.printTestPlan(HtmlTestPlanOutput(), self.test_plan_output)
+            result.printTestPlan(HtmlTestPlanOutput(preamble=self.test_plan_preamble), self.test_plan_output)
 
         return result

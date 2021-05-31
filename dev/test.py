@@ -358,11 +358,14 @@ if __name__ == '__main__':
     runner = brunhilda.BRunhilda(user_data=information,
                                  verbosity=3,
                                  stream=sys.stdout,
+                                 html_preamble="dev/report.intro.html",
                                  html_output="dev/report.html",
                                  junit_output="dev/report.xml",
                                  traceability_output="dev/traceability.html",
                                  req_summary_output="dev/req-summary.html",
+                                 test_summary_preamble="dev/test-summary.intro.html",
                                  test_summary_output="dev/test-summary.html",
+                                 test_plan_preamble="dev/test-plan.intro.html",
                                  test_plan_output="dev/test-plan.html",
                                  manual_execution=True)
     unittest.main(testRunner=runner)

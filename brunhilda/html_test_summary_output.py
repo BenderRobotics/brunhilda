@@ -13,7 +13,8 @@ class HtmlTestSummaryOutput(HtmlOutput):
         :rtype: str
         """
         template = self.load_template('summary-test.html.jinja2')
-        rendered = template.render(env_info=env_info,
+        rendered = template.render(preamble=self._include_preamble,
+                                   env_info=env_info,
                                    user_data=user_data,
                                    tests=tests,
                                    summary=summary)

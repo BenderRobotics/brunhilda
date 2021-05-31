@@ -4,6 +4,19 @@ from docutils.core import publish_parts
 from .output import Output
 
 class HtmlOutput(Output):
+    def __init__(self, preamble=None):
+        """
+        :param preamble: path to file to include as a preamble
+        """
+        self._include_preamble = None
+
+        if preamble is not None:
+            try:
+                with open(preamble, encoding='utf-8') as f:
+                    self._include_preamble = f.read()
+            except Exception as ex:
+                self._include_preamble = f'<p style="color: red; font-weight: bold;>Preamble not loaded. <tt>{ex}</tt></p>'
+
     def _format_doc(self, description):
         """
         This method formats python docstring to HTML.

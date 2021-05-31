@@ -33,6 +33,10 @@ class HtmlResultOutput(HtmlOutput):
                         test['steps'][i]['expectation'] = self._format_doc(step['expectation'])
 
         template = self.load_template('template.html.jinja2')
-        rendered = template.render(env_info=env_info, user_data=user_data, result=result,
-                                   summary=summary, manual_execution=manual_execution)
+        rendered = template.render(preamble=self._include_preamble,
+                                   env_info=env_info,
+                                   user_data=user_data,
+                                   result=result,
+                                   summary=summary,
+                                   manual_execution=manual_execution)
         return rendered

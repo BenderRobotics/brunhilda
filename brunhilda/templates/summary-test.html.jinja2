@@ -18,21 +18,27 @@
         {% include "header.html.jinja2" %}
     </div>
     <div class="main">
-        <h2>Tests Summary</h2>
+{% if preamble %}
+        <section class="preamble">
+            {{ preamble }}
+        </section>
+{% endif %}
+        <section>
+            <h2>Tests Summary</h2>
 
-        {% include "summary.html.jinja2" %}
+            {% include "summary.html.jinja2" %}
 
-        <table class="summary table--wide">
-            <thead>
-                <tr>
-                    <th>Test ID</th>
-                    <th>Requirements</th>
-                    <th>Test Result</th>
-                    <th>Bug ID</th>
-                    <th>Comment</th>
-                </tr>
-            </thead>
-            <tbody>
+            <table class="summary table--wide">
+                <thead>
+                    <tr>
+                        <th>Test ID</th>
+                        <th>Requirements</th>
+                        <th>Test Result</th>
+                        <th>Bug ID</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
 {% for test in tests %}
     {% for requirement in test.requirements %}
         {% if loop.first %}
@@ -52,17 +58,18 @@
                 </tr>
     {% endfor %}
 {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr class="test--{{ summary.result|lower|replace(' ', '-') }}">
-                    <th>Total tests: {{ summary.tests }}</th>
-                    <th>Total requirements: {{ summary.requirements }}</th>
-                    <th class="test__result">{{ summary.result }}</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tfoot>
-        </table>
+                </tbody>
+                <tfoot>
+                    <tr class="test--{{ summary.result|lower|replace(' ', '-') }}">
+                        <th>Total tests: {{ summary.tests }}</th>
+                        <th>Total requirements: {{ summary.requirements }}</th>
+                        <th class="test__result">{{ summary.result }}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
     </div>
 </body>
 

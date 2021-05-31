@@ -18,18 +18,24 @@
         {% include "header.html.jinja2" %}
     </div>
     <div class="main">
-        <h2>Requirements Summary</h2>
-        <table class="summary table--wide">
-            <thead>
-                <tr>
-                    <th>Requirement ID</th>
-                    <th>Test Cases Covering Requirement</th>
-                    <th>Requirement Coverage Percentage/Test Case</th>
-                    <th>Test Result</th>
-                    <th>Requirement Pass Percentage</th>
-                </tr>
-            </thead>
-            <tbody>
+{% if preamble %}
+        <section class="preamble">
+            {{ preamble }}
+        </section>
+{% endif %}
+        <section>
+            <h2>Requirements Summary</h2>
+            <table class="summary table--wide">
+                <thead>
+                    <tr>
+                        <th>Requirement ID</th>
+                        <th>Test Cases Covering Requirement</th>
+                        <th>Requirement Coverage Percentage/Test Case</th>
+                        <th>Test Result</th>
+                        <th>Requirement Pass Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
 {% for requirement in requirements %}
     {% for test in requirement.tests %}
                 <tr>
@@ -45,9 +51,10 @@
                 </tr>
     {% endfor %}
 {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
+    </section>
 </body>
 
 </html>
