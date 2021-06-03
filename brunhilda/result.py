@@ -218,8 +218,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             return PASSED
         elif self.num_skipped > 0:
             return SKIPPED
-        elif self.expectedFailures > 0:
+        elif len(self.expectedFailures) > 0:
             return EXPECTED_FAILURE
+        elif len(self.unexpectedSuccesses) > 0:
+            return UNEXPECTED_SUCCESS
         else:
             return EMPTY
 
