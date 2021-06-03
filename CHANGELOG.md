@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 1.1.3 (2021-07-29)
+
+- Added option to include static preambles ([#4602](https://redmine.benderrobotics.com/issues/4602)).
+
 ## 1.1.2 (2021-05-25)
 
 - Added test execution summary to the Test Summary output ([#4439](https://redmine.benderrobotics.com/issues/4439)).
