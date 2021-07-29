@@ -369,7 +369,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         elif self.last_result == ERRORED:
             self.num_errored += 1
 
-        self._record(testcase_name, test._testMethodName, test._testMethodDoc, self.last_result)
+        self._record(testcase_name, test._testMethodName, test._testMethodDoc, self.last_result, self.skip_reason)
 
     def addSuccess(self, test):
         """
@@ -628,7 +628,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         return '\n'.join(lines)
 
-    def _record(self, testcase_name, test_name, description, result):
+    def _record(self, testcase_name, test_name, description, result, comment=''):
         """
         Adds executed test to the trace record
 
@@ -653,7 +653,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                                     'references': references,
                                     'steps': steps,
                                     'requirements': requirements,
-                                    'test_id': test_id})
+                                    'test_id': test_id,
+                                    'comment': comment})
 
     def _writeFile(self, filename, content):
         """

@@ -53,7 +53,7 @@
         {% if loop.first %}
                     <td class="test__result" rowspan="{{ loop.length }}">{{ test.result }}</td>
                     <td class="test__bug-id" rowspan="{{ loop.length }}"><input type="text" name="{{ test.test_id }}--bug" id="{{ test.test_id }}--bug" /></td>
-                    <td class="test__comment" rowspan="{{ loop.length }}"><div contenteditable class="textarea"></div></td>
+                    <td class="test__comment" rowspan="{{ loop.length }}"><div contenteditable class="textarea">{{ test.comment }}</div></td>
         {% endif %}
                 </tr>
     {% endfor %}
