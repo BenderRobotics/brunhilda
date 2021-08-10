@@ -592,6 +592,15 @@ input.test__expander:checked+.test__detail {
 
 .test__steps__result {
     width: 3em;
+    font-weight: bold;
+}
+
+.test__steps__result--passed {
+    color: var(--color--pass);
+}
+
+.test__steps__result--failed {
+    color: var(--color--fail);
 }
 
 .test__steps__comments {

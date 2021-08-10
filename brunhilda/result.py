@@ -202,8 +202,11 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         # Trying renderers one by one
         for renderer in cls._renderers:
             res = renderer(img, fmt)
+
             if res is not None:
                 return res
+
+        return None
 
     @property
     def result(self):
@@ -292,6 +295,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         sys.stdout = CatchedStream(sys.stdout, self.stream_buffer)
         self.stream._buffer = self.stream_buffer
         test.extra = []
+        test.steps = []
         super().startTest(test)
 
     def stopTest(self, test):
@@ -355,7 +359,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'name': test._testMethodName,
             'time': self.test_execution_time,
             'description': self._parseDescription(test._testMethodDoc),
-            'steps': self._parseSteps(test._testMethodDoc),
+            'steps': self._parseSteps(test.steps, test._testMethodDoc),
             'result': self.last_result,
             'output': self.stream_buffer.read(),
             'errors': self.errors_strings,
@@ -369,7 +373,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         elif self.last_result == ERRORED:
             self.num_errored += 1
 
-        self._record(testcase_name, test._testMethodName, test._testMethodDoc, self.last_result, self.skip_reason)
+        self._record(testcase_name, test._testMethodName, test.steps, test._testMethodDoc,
+                     self.last_result, self.skip_reason)
 
     def addSuccess(self, test):
         """
@@ -562,7 +567,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         return specs
 
-    def _parseSteps(self, description):
+    def _parseSteps(self, test_steps, description):
         """
         Extracts test description without tags from the docstring.
 
@@ -591,6 +596,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                         step = {'number': 0, 'description': '', 'expectation': ''}
                         step['number'] = int(reg_step_description.match(line).group('num'))
                         step['description'] = reg_step_description.sub(indent_spaces, line)
+                        step['expectation'] = ''
+                        step['result'] = ''
+                        step['comment'] = ''
+                        step['obtained'] = ''
                         step_description_active = True
                     # check if line stars with "  >"
                     elif reg_step_expectation.match(line):
@@ -604,6 +613,13 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                         step['expectation'] += '\n' + line
         if step:
             steps.append(step)
+
+        for test_step in test_steps:
+            for i in range(len(steps)):
+                if steps[i]['number'] == test_step['number']:
+                    steps[i]['result'] = test_step['result']
+                    steps[i]['comment'] = test_step['comment']
+                    steps[i]['obtained'] = test_step['obtained']
 
         return steps
 
@@ -628,7 +644,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         return '\n'.join(lines)
 
-    def _record(self, testcase_name, test_name, description, result, comment=''):
+    def _record(self, testcase_name, test_name, test_steps, description, result, comment=''):
         """
         Adds executed test to the trace record
 
@@ -640,7 +656,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         references = self._parseReferences(description)
         requirements = self._parseRequirements(description)
         tags = self._parseTags(description)
-        steps = self._parseSteps(description)
+        steps = self._parseSteps(test_steps, description)
         description = self._parseDescription(description)
         test_id = f'{testcase_name}.{test_name}'
 

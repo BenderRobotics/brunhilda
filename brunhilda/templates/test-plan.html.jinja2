@@ -100,20 +100,26 @@
                     <td class="test__steps__obtained">
         {% if manual_execution %}
                         <div class="textarea" contenteditable></div>
+        {% else %}
+                        {{ step.obtained }}
         {% endif %}
                     </td>
-                    <td class="test__steps__result">
+                    <td class="test__steps__result test__steps__result--{{ step.result|lower|replace(' ', '-') }}">
         {% if manual_execution %}
                         <select>
                             <option></option>
                             <option>Pass</option>
                             <option>Fail</option>
                         </select>
+        {% else %}
+                        {{ step.result }}
         {% endif %}
                     </td>
                     <td class="test__steps__comments">
         {% if manual_execution %}
                         <div class="textarea" contenteditable></div>
+        {% else %}
+                        {{ step.comment }}
         {% endif %}
                     </td>
                 </tr>
