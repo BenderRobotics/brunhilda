@@ -523,29 +523,6 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         return tags
 
-    def _parseReferences(self, description):
-        """
-        Extracts references from the test description.
-
-        :param str description: test description (docstring)
-        """
-        refs = None
-
-        if description and isinstance(description, str):
-            for line in description.splitlines():
-                refs = re.search(r'@ref[:\s]\s*\w.+', line.strip())
-
-                if refs:
-                    break
-
-        if refs is not None:
-            refs = re.sub(r'@ref[:\s]s*', '', refs.group(0))
-            refs = [' '.join(ref.split()) for ref in refs.split(',')]
-        else:
-            refs = ['-']
-
-        return refs
-
     def _parseRequirements(self, description):
         """
         Extracts requirements from the test description.
@@ -655,7 +632,6 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param description: test docstring
         :param result: result of the test execution
         """
-        references = self._parseReferences(description)
         requirements = self._parseRequirements(description)
         tags = self._parseTags(description)
         steps = self._parseSteps(test_steps, description)
@@ -668,7 +644,6 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                                     'result': result,
                                     'tags': tags,
                                     'description': description,
-                                    'references': references,
                                     'steps': steps,
                                     'requirements': requirements,
                                     'test_id': test_id,
@@ -714,7 +689,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             refs = []
 
             for test in self.executed_tests:
-                refs += test['references']
+                refs += test['requirements']
 
             refs = list(set(refs))
             refs.sort()
@@ -722,7 +697,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             for test in self.executed_tests:
                 test['ref_indexes'] = []
 
-                for test_ref in test['references']:
+                for test_ref in test['requirements']:
                     test['ref_indexes'].append(refs.index(test_ref))
 
             output = output_formater.print(refs, self.executed_tests)
