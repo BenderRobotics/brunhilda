@@ -66,7 +66,7 @@
                             target = $(targets).first();
                         }
                         else {
-                            const n = Number($(current).result("nth"));
+                            const n = $(current).prevAll(selector).length;
                             var next = false;
 
                             /* Up - reverse order */
@@ -75,7 +75,7 @@
                             }
 
                             for (var t of targets) {
-                                var nth = Number($(t).result("nth"));
+                                var nth = $(t).prevAll(selector).length;
                                 if (((nth > n) && !event.shiftKey) ||
                                     ((nth < n) && event.shiftKey)) {
                                     target = $(t)
