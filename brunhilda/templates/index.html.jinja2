@@ -1,0 +1,23 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+            {% include "themes/base.css" %}
+    </style>
+</head>
+
+<body>
+    <h1>Index</h1>
+
+    <ol>
+        {% for output in outputs %}
+        <li><a href="{{ output.path }}">{{ output.name }}</a></li>
+        {% endfor %}
+    </ol>
+</body>
+</html>

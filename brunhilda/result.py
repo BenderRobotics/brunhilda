@@ -80,6 +80,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                  user_data=None,
                  manual_execution=False):
         super().__init__(stream, descriptions, verbosity)
+        self._outputs = []
         self.name = name
         self.user_data = user_data
         self.manual_execution = manual_execution
@@ -96,6 +97,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def _clean(self):
         self._stdout_backup = None
         self._stderr_backup = None
+        self._outputs.clear()
         self.total_execution_time = 0   # time to execute all tests
         self.suite_execution_time = 0   # time to execute tests in current test case class
         self.num_suites = 0
@@ -672,7 +674,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                                     'test_id': test_id,
                                     'comment': comment})
 
-    def _writeFile(self, filename, content):
+    def _writeFile(self, document_name, filename, content):
         """
         Writes content to the given filename
 
@@ -687,6 +689,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         with open(filename, 'w', encoding="utf-8") as f:
             f.write(content)
 
+        # keep track about created HTML files
+        if '.htm' in filename:
+            self._outputs.append({'name': document_name, 'path': os.path.split(filename)[-1]})
+
     def print(self, output_formater, path):
         """
         Prints test results with the given result output.
@@ -694,7 +700,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         if path is not None:
             output = output_formater.print(self.env_info, self.user_data, self.results,
                                            self.results['total'], self.manual_execution)
-            self._writeFile(path, output)
+            self._writeFile('Test report', path, output)
             print(f"... created report {path}")
 
     def printTraceability(self, output_formater, path):
@@ -720,7 +726,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                     test['ref_indexes'].append(refs.index(test_ref))
 
             output = output_formater.print(refs, self.executed_tests)
-            self._writeFile(path, output)
+            self._writeFile('Traceability matrix', path, output)
             print(f"... created traceability matrix {path}")
 
     def printTestSummary(self, output_formater, path):
@@ -733,7 +739,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         if path is not None:
             output = output_formater.print(self.env_info, self.user_data, self.executed_tests,
                                            self.results['total'])
-            self._writeFile(path, output)
+            self._writeFile('Test summary report', path, output)
             print(f"... created test summary {path}")
 
     def printRequirementsSummary(self, output_formater, path):
@@ -745,7 +751,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         if path is not None:
             output = output_formater.print(self.env_info, self.user_data, self.executed_tests)
-            self._writeFile(path, output)
+            self._writeFile('Requirements summary report', path, output)
             print(f"... created requirements summary {path}")
 
     def printTestPlan(self, output_formater, path):
@@ -757,5 +763,13 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         if path is not None:
             output = output_formater.print(self.env_info, self.user_data, self.executed_tests, self.manual_execution)
-            self._writeFile(path, output)
+            self._writeFile('Test plan', path, output)
             print(f"... created test plan {path}")
+
+    def printIndex(self, output_formater, path):
+        """
+        Prints index file for the generated files
+        """
+        output = output_formater.print(self._outputs)
+        self._writeFile('.', path, output)
+        print(f"... created index file {path}")

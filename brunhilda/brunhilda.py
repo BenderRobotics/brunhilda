@@ -1,4 +1,4 @@
-from brunhilda.html_test_summary_output import HtmlTestSummaryOutput
+import os
 import sys
 import unittest
 
@@ -6,8 +6,10 @@ from .result import BRunhildaTestResult
 from .html_result_output import HtmlResultOutput
 from .junit_result_output import JUnitResultOutput
 from .html_trace_output import HtmlTraceOutput
+from .html_test_summary_output import HtmlTestSummaryOutput
 from .html_req_summary_output import HtmlReqSummaryOutput
 from .html_test_plan_output import HtmlTestPlanOutput
+from .html_index_output import HtmlIndexOutput
 
 __unittest = True
 
@@ -69,6 +71,9 @@ class BRunhilda(unittest.TextTestRunner):
     def run(self, test):
         result = super().run(test)
 
+        if self.test_plan_output is not None:
+            result.printTestPlan(HtmlTestPlanOutput(preamble=self.test_plan_preamble), self.test_plan_output)
+
         if hasattr(result, "print"):
             result.print(HtmlResultOutput(preamble=self.html_preamble), self.html_output)
             result.print(JUnitResultOutput(), self.junit_output)
@@ -82,7 +87,7 @@ class BRunhilda(unittest.TextTestRunner):
         if self.req_summary_output is not None:
             result.printRequirementsSummary(HtmlReqSummaryOutput(preamble=self.req_summary_preamble), self.req_summary_output)
 
-        if self.test_plan_output is not None:
-            result.printTestPlan(HtmlTestPlanOutput(preamble=self.test_plan_preamble), self.test_plan_output)
+        index_path = os.path.join(os.path.dirname(self.html_output), 'index.html')
+        result.printIndex(HtmlIndexOutput(), index_path)
 
         return result
