@@ -206,31 +206,12 @@
                                                                 <td class="test__steps__number">{{ step.number }}</td>
                                                                 <td class="test__steps__description">{{ step.description }}</td>
                                                                 <td class="test__steps__expectation">{{ step.expectation }}</td>
-                                                                <td class="test__steps__obtained">
-                                                    {% if manual_execution %}
-                                                                    <div class="textarea" contenteditable></div>
-                                                    {% else %}
-                                                        {{ step.obtained }}
-                                                    {% endif %}
-                                                                </td>
-                                                    {% if manual_execution %}
-                                                                <td class="test__steps__result">
-                                                                    <select>
-                                                                        <option></option>
-                                                                        <option>Pass</option>
-                                                                        <option>Fail</option>
-                                                                    </select>
-                                                    {% else %}
+                                                                <td class="test__steps__obtained">{{ step.obtained }}</td>
                                                                 <td class="test__steps__result test__steps__result--{{ step.result|lower|replace(' ', '-') }}">
-                                                        {{ step.result }}
-                                                    {% endif %}
+                                                                    {{ step.result }}
                                                                 </td>
                                                                 <td class="test__steps__comments">
-                                                    {% if manual_execution %}
-                                                                    <div class="textarea" contenteditable></div>
-                                                    {% else %}
                                                                     {{ step.comment }}
-                                                    {% endif %}
                                                                 </td>
                                                             </tr>
                                                 {% endfor %}

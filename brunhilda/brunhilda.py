@@ -38,8 +38,7 @@ class BRunhilda(unittest.TextTestRunner):
                        test_summary_output="test-summary.html",
                        test_plan_preamble=None,
                        test_plan_output="test-plan.html",
-                       user_data=None,
-                       manual_execution=False):
+                       user_data=None):
         super().__init__(stream=stream,
                          descriptions=descriptions,
                          verbosity=verbosity,
@@ -58,15 +57,13 @@ class BRunhilda(unittest.TextTestRunner):
         self.test_summary_output = test_summary_output
         self.test_plan_preamble = test_plan_preamble
         self.test_plan_output = test_plan_output
-        self.manual_execution = manual_execution
 
     def _makeResult(self):
         return BRunhildaTestResult(self.stream,
                                    self.descriptions,
                                    self.verbosity,
                                    self.name,
-                                   user_data=self.user_data,
-                                   manual_execution=self.manual_execution)
+                                   user_data=self.user_data)
 
     def run(self, test):
         result = super().run(test)

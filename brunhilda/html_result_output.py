@@ -3,13 +3,11 @@ import copy
 from .html_output import HtmlOutput
 
 class HtmlResultOutput(HtmlOutput):
-    def print(self, env_info, user_data, result, summary, manual_execution):
+    def print(self, env_info, user_data, result, summary):
         """
         Prints test result to HTML document.
 
         :param result: BRunhilda test result from the test run,
-        :param manual_execution: True - tests are executed manually and the report is filled by
-                                 tester.
         :return: HTML string
         :rtype: str
         """
@@ -37,6 +35,5 @@ class HtmlResultOutput(HtmlOutput):
                                    env_info=env_info,
                                    user_data=user_data,
                                    result=result,
-                                   summary=summary,
-                                   manual_execution=manual_execution)
+                                   summary=summary)
         return rendered

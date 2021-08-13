@@ -579,11 +579,11 @@ input.test__expander:checked+.test__detail {
 }
 
 .test__steps__description {
-    width: 25%;
+    width: auto;
 }
 
 .test__steps__expectation {
-    width: 25%;
+    width: auto;
 }
 
 .test__steps__obtained {

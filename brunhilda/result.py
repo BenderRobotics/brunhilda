@@ -77,13 +77,11 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                  descriptions,
                  verbosity,
                  name='',
-                 user_data=None,
-                 manual_execution=False):
+                 user_data=None):
         super().__init__(stream, descriptions, verbosity)
         self._outputs = []
         self.name = name
         self.user_data = user_data
-        self.manual_execution = manual_execution
         self.env_info = {
             'pyversion': sys.version,
             'system': platform.platform(),
@@ -674,7 +672,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         if path is not None:
             output = output_formater.print(self.env_info, self.user_data, self.results,
-                                           self.results['total'], self.manual_execution)
+                                           self.results['total'])
             self._writeFile('Test report', path, output)
             print(f"... created report {path}")
 
@@ -737,7 +735,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param path: where to store the output file
         """
         if path is not None:
-            output = output_formater.print(self.env_info, self.user_data, self.executed_tests, self.manual_execution)
+            output = output_formater.print(self.env_info, self.user_data, self.executed_tests)
             self._writeFile('Test plan', path, output)
             print(f"... created test plan {path}")
 

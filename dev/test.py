@@ -366,8 +366,7 @@ if __name__ == '__main__':
                                  test_summary_preamble="dev/test-summary.intro.html",
                                  test_summary_output="dev/test-summary.html",
                                  test_plan_preamble="dev/test-plan.intro.html",
-                                 test_plan_output="dev/test-plan.html",
-                                 manual_execution=True)
+                                 test_plan_output="dev/test-plan.html")
     unittest.main(testRunner=runner)
 
 # @}
