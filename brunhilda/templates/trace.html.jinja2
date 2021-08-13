@@ -221,7 +221,7 @@
             <tbody>
                 {% for test in tests %}
                 <tr>
-                    <th>{{ test.case }} {{ test.test }}</th>
+                    <th><a href="{{ paths.test_plan }}#test--{{ test.test_id }}">{{ test.case }} {{ test.test }}</a></th>
                     {% for ref in refs %}
                     {% if loop.index0 in test.ref_indexes %}
                     <td class="test--{{ test.result|lower|replace(' ', '-') }}">

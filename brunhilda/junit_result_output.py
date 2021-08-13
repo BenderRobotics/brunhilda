@@ -20,7 +20,7 @@ class JUnitResultOutput(Output):
 
         return text
 
-   def print(self, env_info, user_data, result, summary):
+   def print(self, env_info, user_data, result, summary, paths):
       result = copy.deepcopy(result)
 
       for case in sorted(result['testcases'].values(), key=lambda item: item['id']):
@@ -34,5 +34,6 @@ class JUnitResultOutput(Output):
       rendered = template.render(env_info=env_info,
                                  user_data=user_data,
                                  result=result,
-                                 summary=summary)
+                                 summary=summary,
+                                 paths=paths)
       return rendered

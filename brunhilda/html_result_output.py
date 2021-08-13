@@ -3,7 +3,7 @@ import copy
 from .html_output import HtmlOutput
 
 class HtmlResultOutput(HtmlOutput):
-    def print(self, env_info, user_data, result, summary):
+    def print(self, env_info, user_data, result, summary, paths):
         """
         Prints test result to HTML document.
 
@@ -35,5 +35,6 @@ class HtmlResultOutput(HtmlOutput):
                                    env_info=env_info,
                                    user_data=user_data,
                                    result=result,
-                                   summary=summary)
+                                   summary=summary,
+                                   paths=paths)
         return rendered

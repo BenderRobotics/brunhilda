@@ -46,11 +46,11 @@
                 <tr>
         {% endif %}
         {% if loop.first %}
-                    <td class="test__id" rowspan="{{ loop.length }}">{{ test.test_id }}</td>
+                    <td class="test__id" rowspan="{{ loop.length }}"><a href="{{ paths.test_plan }}#test--{{ test.test_id }}">{{ test.test_id }}</a></td>
         {% endif %}
                     <td class="test__requirement">{{ requirement }}</td>
         {% if loop.first %}
-                    <td class="test__result" rowspan="{{ loop.length }}">{{ test.result }}</td>
+                    <td class="test__result" rowspan="{{ loop.length }}"><a href="{{ paths.test_record }}#test--{{ test.test_id }}">{{ test.result }}</a></td>
                     <td class="test__bug-id" rowspan="{{ loop.length }}"><input type="text" name="{{ test.test_id }}--bug" id="{{ test.test_id }}--bug" /></td>
                     <td class="test__comment" rowspan="{{ loop.length }}"><div contenteditable class="textarea">{{ test.comment }}</div></td>
         {% endif %}

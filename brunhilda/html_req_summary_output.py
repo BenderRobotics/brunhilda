@@ -6,7 +6,7 @@ class HtmlReqSummaryOutput(HtmlOutput):
     """
     """
 
-    def print(self, env_info, user_data, trace_matrix):
+    def print(self, env_info, user_data, trace_matrix, paths):
         """
         Prints requirements summary to HTML document.
 
@@ -47,5 +47,6 @@ class HtmlReqSummaryOutput(HtmlOutput):
         rendered = template.render(preamble=self._include_preamble,
                                    env_info=env_info,
                                    user_data=user_data,
-                                   requirements=requirements)
+                                   requirements=requirements,
+                                   paths=paths)
         return rendered

@@ -460,31 +460,37 @@ input.testcase__expander:checked+.testcase__description {
 }
 
 .test--passed .test__result,
+.test--passed .test__result a,
 .run-summary--passed {
     color: var(--color--pass);
 }
 
 .test--skipped .test__result,
+.test--skipped .test__result a,
 .run-summary--skipped {
     color: var(--color--skip);
 }
 
 .test--errored .test__result,
+.test--errored .test__result a,
 .run-summary--errored {
     color: var(--color--error);
 }
 
 .test--failed .test__result,
+.test--failed .test__result a,
 .run-summary--failed {
     color: var(--color--fail);
 }
 
 .test--expected-failure .test__result,
+.test--expected-failure .test__result a,
 .run-summary--expected-failure {
     color: var(--color--expected-failure);
 }
 
 .test--unexpected-success .test__result,
+.test--unexpected-success .test__result a,
 .run-summary--unexpected-success {
     color: var(--color--unexpected-success);
 }

@@ -4,7 +4,7 @@ class HtmlTraceOutput(HtmlOutput):
     """
     """
 
-    def print(self, refs, trace_matrix):
+    def print(self, refs, trace_matrix, paths):
         """
         Prints test trace matrix to HTML document.
 
@@ -13,5 +13,5 @@ class HtmlTraceOutput(HtmlOutput):
         :rtype: str
         """
         template = self.load_template('trace.html.jinja2')
-        rendered = template.render(refs=refs, tests=trace_matrix)
+        rendered = template.render(refs=refs, tests=trace_matrix, paths=paths)
         return rendered

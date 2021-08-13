@@ -672,7 +672,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         if path is not None:
             output = output_formater.print(self.env_info, self.user_data, self.results,
-                                           self.results['total'])
+                                           self.results['total'], self.paths)
             self._writeFile('Test report', path, output)
             print(f"... created report {path}")
 
@@ -698,7 +698,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 for test_ref in test['requirements']:
                     test['ref_indexes'].append(refs.index(test_ref))
 
-            output = output_formater.print(refs, self.executed_tests)
+            output = output_formater.print(refs, self.executed_tests, self.paths)
             self._writeFile('Traceability matrix', path, output)
             print(f"... created traceability matrix {path}")
 
@@ -711,7 +711,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         if path is not None:
             output = output_formater.print(self.env_info, self.user_data, self.executed_tests,
-                                           self.results['total'])
+                                           self.results['total'], self.paths)
             self._writeFile('Test summary report', path, output)
             print(f"... created test summary {path}")
 
@@ -723,7 +723,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param path: where to store the output file
         """
         if path is not None:
-            output = output_formater.print(self.env_info, self.user_data, self.executed_tests)
+            output = output_formater.print(self.env_info, self.user_data, self.executed_tests, self.paths)
             self._writeFile('Requirements summary report', path, output)
             print(f"... created requirements summary {path}")
 
@@ -735,7 +735,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param path: where to store the output file
         """
         if path is not None:
-            output = output_formater.print(self.env_info, self.user_data, self.executed_tests)
+            output = output_formater.print(self.env_info, self.user_data, self.executed_tests, self.paths)
             self._writeFile('Test plan', path, output)
             print(f"... created test plan {path}")
 
@@ -743,6 +743,6 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         Prints index file for the generated files
         """
-        output = output_formater.print(self._outputs)
+        output = output_formater.print(self._outputs, self.paths)
         self._writeFile('.', path, output)
         print(f"... created index file {path}")

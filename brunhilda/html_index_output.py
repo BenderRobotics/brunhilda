@@ -4,7 +4,7 @@ class HtmlIndexOutput(HtmlOutput):
     """
     """
 
-    def print(self, outputs):
+    def print(self, outputs, paths):
         """
         Prints index with all outputs
 
@@ -13,5 +13,5 @@ class HtmlIndexOutput(HtmlOutput):
         :rtype: str
         """
         template = self.load_template('index.html.jinja2')
-        rendered = template.render(outputs=outputs)
+        rendered = template.render(outputs=outputs, paths=paths)
         return rendered

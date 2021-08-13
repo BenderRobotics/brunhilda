@@ -4,7 +4,7 @@ class HtmlTestSummaryOutput(HtmlOutput):
     """
     """
 
-    def print(self, env_info, user_data, tests, summary):
+    def print(self, env_info, user_data, tests, summary, paths):
         """
         Prints test summary to HTML document.
 
@@ -17,5 +17,6 @@ class HtmlTestSummaryOutput(HtmlOutput):
                                    env_info=env_info,
                                    user_data=user_data,
                                    tests=tests,
-                                   summary=summary)
+                                   summary=summary,
+                                   paths=paths)
         return rendered

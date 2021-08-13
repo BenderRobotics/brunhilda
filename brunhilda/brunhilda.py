@@ -68,6 +68,13 @@ class BRunhilda(unittest.TextTestRunner):
     def run(self, test):
         result = super().run(test)
 
+        result.paths = {
+            'test_record': os.path.split(self.html_output)[-1],
+            'requirements_summary': os.path.split(self.req_summary_output)[-1],
+            'test_summary': os.path.split(self.test_summary_output)[-1],
+            'test_plan': os.path.split(self.test_plan_output)[-1]
+        }
+
         if self.test_plan_output is not None:
             result.printTestPlan(HtmlTestPlanOutput(preamble=self.test_plan_preamble), self.test_plan_output)
 
