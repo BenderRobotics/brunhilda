@@ -1,5 +1,16 @@
 # Brunhilda project changelog
 
+## 1.2.0 (2021-08-18)
+
+- Removed dependency to jQuery from static HTML reports.
+- Added filling of test procedure steps ([#4814](https://redmine.benderrobotics.com/issues/4814)).
+- Fixed key-press navigation in the test report.
+- Generated index.html file for the created outputs.
+- Fixed using spec tag instead of ref tag for the traceability generator.
+- Removed manual execution option ([#4828](https://redmine.benderrobotics.com/issues/4828)).
+- Added links from the summary report to the test plan ([#4828](https://redmine.benderrobotics.com/issues/4828)).
+- Prevented division by zero in the template of the pass percentage.
+
 ## 1.1.3 (2021-07-29)
 
 - Added option to include static preambles ([#4602](https://redmine.benderrobotics.com/issues/4602)).
