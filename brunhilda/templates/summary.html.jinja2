@@ -57,8 +57,9 @@
                 </tbody>
             </table>
 
+            {% set sum = 0.01 * (summary.passed + summary.failed + summary.errored + summary.skipped + summary.expected_failures + summary.unexpected_successes) %}
+            {% if sum > 0 %}
             <div class="bar">
-                {% set sum = 0.01 * (summary.passed + summary.failed + summary.errored + summary.skipped + summary.expected_failures + summary.unexpected_successes) %}
                 {% set pct_passed = summary.passed / sum %}
                 {% set pct_failed = summary.failed / sum %}
                 {% set pct_errored = summary.errored / sum %}
@@ -91,3 +92,4 @@
                      <span>{{ pct_us|round(1) }}% unexpected success</span>
                 </div>
             </div>
+            {% endif %}
