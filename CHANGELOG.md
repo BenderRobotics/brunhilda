@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 1.2.1 (2021-08-30)
+
+- Added full list of requirements to the requirements summary report ([#4828](https://redmine.benderrobotics.com/issues/4828)).
+
 ## 1.2.0 (2021-08-18)
 
 - Removed dependency to jQuery from static HTML reports.
