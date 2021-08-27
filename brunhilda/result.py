@@ -715,15 +715,16 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             self._writeFile('Test summary report', path, output)
             print(f"... created test summary {path}")
 
-    def printRequirementsSummary(self, output_formater, path):
+    def printRequirementsSummary(self, output_formater, path, requirements_list=[]):
         """
         Prints requirements summary report.
 
         :param output_formater: format to process the data
         :param path: where to store the output file
+        :param requirements_list: additional list of requirements
         """
         if path is not None:
-            output = output_formater.print(self.env_info, self.user_data, self.executed_tests, self.paths)
+            output = output_formater.print(self.env_info, self.user_data, self.executed_tests, self.paths, requirements_list)
             self._writeFile('Requirements summary report', path, output)
             print(f"... created requirements summary {path}")
 

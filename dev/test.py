@@ -154,7 +154,7 @@ class TestCase1(unittest.TestCase):
     def test_01_fail(self):
         """
         @ref ST01.1
-        @spec REQ_SYS_001, REQ_SYS_002, REQ_SYS_003
+        @spec REQ_SYS_001, REQ_SYS_002, REQ_SYS_003, L11 14.1
 
         Verifies normal execution of the scheduled program.
 
@@ -222,8 +222,8 @@ class TestCase1(unittest.TestCase):
 
     def test_02_subtest(self):
         """
-        @ref ST01.1, ST01.2
-        @spec REQ_SYS_001, REQ_SYS_002, REQ_SYS_003
+        @ref ST01.1, ST01.12
+        @spec REQ_SYS_001, REQ_SYS_002, REQ_SYS_003, L11 14.11
 
         Verifies normal execution of the scheduled program.
 
@@ -253,6 +253,7 @@ class TestCase1(unittest.TestCase):
     def test_03_error(self):
         """
         @ref ST01.1, ST01.3
+        @spec L11 4.11, C05-5, C05-6, C04, C06
 
         Verifies normal execution of the scheduled program.
 
@@ -270,6 +271,7 @@ class TestCase1(unittest.TestCase):
     def test_04_skip(self):
         """
         @ref ST01.4
+        @spec L11 4.2
 
         Verifies normal execution of the scheduled program.
 
@@ -366,7 +368,8 @@ if __name__ == '__main__':
                                  test_summary_preamble="dev/test-summary.intro.html",
                                  test_summary_output="dev/test-summary.html",
                                  test_plan_preamble="dev/test-plan.intro.html",
-                                 test_plan_output="dev/test-plan.html")
+                                 test_plan_output="dev/test-plan.html",
+                                 requirements_list=['L10', 'L11', 'L12', 'C05'])
     unittest.main(testRunner=runner)
 
 # @}

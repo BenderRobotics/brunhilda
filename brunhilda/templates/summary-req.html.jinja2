@@ -36,19 +36,29 @@
                 </thead>
                 <tbody>
 {% for requirement in requirements %}
-    {% for test in requirement.tests %}
+    {% if not requirement.tests %}
                 <tr>
-        {% if loop.first %}
+                    <td class="req__id">{{ requirement.requirement_id }}</td>
+                    <td class="req__test-id">Not covered</td>
+                    <td class="req__test-coverage">0</td>
+                    <td class="req__test-result">-</td>
+                    <td class="req__coverage">0</td>
+                </tr>
+    {% else %}
+        {% for test in requirement.tests %}
+                <tr>
+            {% if loop.first %}
                     <td class="req__id" rowspan="{{ loop.length }}">{{ requirement.requirement_id }}</td>
-        {% endif %}
+            {% endif %}
                     <td class="req__test-id"><a href="{{ paths.test_plan }}#test--{{ test.test_id }}">{{ test.test_id }}</a></td>
                     <td class="req__test-coverage">{{ "%.0f"|format(test.coverage_ratio * 100) }}</td>
                     <td class="req__test-result test--{{ test.result|lower|replace(' ', '-') }}"><span class="test__result">{{ test.result }}</span></td>
-        {% if loop.first %}
-                    <td class="req__id" rowspan="{{ loop.length }}">{{ "%.0f"|format(requirement.test_pass_ratio * 100) }}</td>
-        {% endif %}
+            {% if loop.first %}
+                    <td class="req__coverage" rowspan="{{ loop.length }}">{{ "%.0f"|format(requirement.test_pass_ratio * 100) }}</td>
+            {% endif %}
                 </tr>
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
 {% endfor %}
                 </tbody>
             </table>

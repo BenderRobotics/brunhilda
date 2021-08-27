@@ -38,7 +38,8 @@ class BRunhilda(unittest.TextTestRunner):
                        test_summary_output="test-summary.html",
                        test_plan_preamble=None,
                        test_plan_output="test-plan.html",
-                       user_data=None):
+                       user_data=None,
+                       requirements_list=[]):
         super().__init__(stream=stream,
                          descriptions=descriptions,
                          verbosity=verbosity,
@@ -57,6 +58,7 @@ class BRunhilda(unittest.TextTestRunner):
         self.test_summary_output = test_summary_output
         self.test_plan_preamble = test_plan_preamble
         self.test_plan_output = test_plan_output
+        self.requirements_list = requirements_list
 
     def _makeResult(self):
         return BRunhildaTestResult(self.stream,
@@ -89,7 +91,8 @@ class BRunhilda(unittest.TextTestRunner):
             result.printTestSummary(HtmlTestSummaryOutput(preamble=self.test_summary_preamble), self.test_summary_output)
 
         if self.req_summary_output is not None:
-            result.printRequirementsSummary(HtmlReqSummaryOutput(preamble=self.req_summary_preamble), self.req_summary_output)
+            result.printRequirementsSummary(HtmlReqSummaryOutput(preamble=self.req_summary_preamble),
+                                            self.req_summary_output, self.requirements_list)
 
         index_path = os.path.join(os.path.dirname(self.html_output), 'index.html')
         result.printIndex(HtmlIndexOutput(), index_path)
