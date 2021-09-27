@@ -24,6 +24,11 @@
         </properties>
     {% for test in suite.tests %}
         <testcase classname="{{suite.name}}" name="{{test.name}}" time="{{'%0.1f'|format(test.time|float)}}">
+            <properties>
+        {% for tag, value in test.tags.items() %}
+                <property name="{{ tag }}" value="{{ value|join(';') }}" />
+        {% endfor %}
+            </properties>
             <system-out>{{ test.output|e }}</system-out>
         {% for error in test.errors %}
             <system-err>{{ error|e }}</system-err>

@@ -360,6 +360,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'time': self.test_execution_time,
             'description': self._parseDescription(test._testMethodDoc),
             'steps': self._parseSteps(test.steps, test._testMethodDoc),
+            'tags': self._parseTags(test._testMethodDoc),
             'result': self.last_result,
             'output': self.stream_buffer.read(),
             'errors': self.errors_strings,
@@ -497,6 +498,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         Extracts tags from the test description.
 
         :param str description: test description (docstring)
+        :return: dictionary of tags, key is the tag name, value is the tag value
+        :rtype: Dict[str, str]
         """
         excluded_tags = ('steps', 'endsteps')
         tags = {}
@@ -517,7 +520,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                         else:
                             value = ['']
 
-                        tags[tag] = [v.strip() for v in value]
+                        tags[tag] = [v.strip('; ') for v in value]  # strip ; and space
 
         return tags
 
