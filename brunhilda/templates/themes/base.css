@@ -253,10 +253,10 @@ pre {
     font-family: 'Consolas', 'Courier New', Courier, monospace;
 }
 
-@media print {
-    pre {
-        white-space: normal;
-    }
+pre {
+    line-height: 1.1;
+    white-space: pre-wrap;
+    overflow: auto;
 }
 
 textarea,
@@ -526,6 +526,7 @@ input.test__expander:checked+.test__detail {
     width: 100%;
     line-height: 1.25;
     font-family: 'Consolas', 'Courier New', Courier, monospace;
+    overflow: scroll;
 }
 
 .test__console--error {
@@ -619,6 +620,10 @@ input.test__expander:checked+.test__detail {
 
 .subtests td {
     vertical-align: top;
+}
+
+.subtest__extra {
+    max-width: 33vw;
 }
 
 .subtest__result {
