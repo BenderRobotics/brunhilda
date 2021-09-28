@@ -26,7 +26,7 @@
         <testcase classname="{{suite.name}}" name="{{test.name}}" time="{{'%0.1f'|format(test.time|float)}}">
             <properties>
         {% for tag, value in test.tags.items() %}
-                <property name="{{ tag }}" value="{{ value|join(';') }}" />
+                <property name="{{ tag }}" value="{{ value|join(';')|replace('"', "'") }}" />
         {% endfor %}
             </properties>
             <system-out>{{ test.output|e }}</system-out>
