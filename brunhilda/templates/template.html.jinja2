@@ -2,7 +2,7 @@
 <html class="no-js" lang="">
     <head>
         <meta charset="utf-8">
-        <title>Test Run Report</title>
+        <title>Test Run Report {% if env_info.name %}[{{ env_info.name }}]{% endif %}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
@@ -100,7 +100,7 @@
         </script>
     </head>
     <body>
-        <h1>Test Run Report</h1>
+        <h1>Test Run Report {% if env_info.name %}<strong>[{{ env_info.name }}]</strong>{% endif %}</h1>
         <div class="header">
             {% include "header.html.jinja2" %}
         </div>
