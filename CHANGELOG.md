@@ -1,5 +1,13 @@
 # Brunhilda project changelog
 
+## 1.2.2 (2021-09-30)
+
+- Improved readability of the report pre-formatted text by enabled scroll bars in HTML reports.
+- Added tags to the JUnit XML report ([#5043](https://redmine.benderrobotics.com/issues/5043)).
+- Sanitize quotes in JUnit XML report tag values ([#5043](https://redmine.benderrobotics.com/issues/5043)).
+- Sanitize invalid chars for the XML report ([#5043](https://redmine.benderrobotics.com/issues/5043)).
+- Added suite names to the reports ([#5043](https://redmine.benderrobotics.com/issues/5043)).
+
 ## 1.2.1 (2021-08-30)
 
 - Added full list of requirements to the requirements summary report ([#4828](https://redmine.benderrobotics.com/issues/4828)).
