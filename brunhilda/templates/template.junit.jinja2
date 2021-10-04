@@ -25,6 +25,7 @@
     {% for test in suite.tests %}
         <testcase classname="{{suite.name}}" name="{{test.name}}" time="{{'%0.1f'|format(test.time|float)}}">
             <properties>
+                <property name="result" value="{{ test.result|lower }}" />
         {% for tag, value in test.tags.items() %}
                 <property name="{{ tag }}" value="{{ value|join(';')|replace('"', "'") }}" />
         {% endfor %}
