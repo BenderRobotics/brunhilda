@@ -35,16 +35,14 @@
         {% endfor %}
         {% if test.result == "SKIPPED" %}
             <skipped />
-        {% endif %}
-        {% if test.result == "FAILED" %}
-        {% for error in test.errors %}
+        {% elif test.result == "FAILED" %}
+            {% for error in test.errors %}
             <failure>{{ error }}</failure>
-        {% endfor %}
-        {% endif %}
-        {% if test.result == "ERRORED" %}
-        {% for error in test.errors %}
-            <failure>{{ error }}</failure>
-        {% endfor %}
+            {% endfor %}
+        {% elif test.result == "ERRORED" %}
+            {% for error in test.errors %}
+            <error>{{ error }}</error>
+            {% endfor %}
         {% endif %}
         </testcase>
     {% endfor %}
