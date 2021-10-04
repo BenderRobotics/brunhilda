@@ -1,5 +1,10 @@
 # Brunhilda project changelog
 
+## 1.2.3 (2021-10-04)
+
+- Distinguished between failure and error in JUnit report ([#5043](https://redmine.benderrobotics.com/issues/5043)).
+- Added meta property with the test result to JUnit report ([#5043](https://redmine.benderrobotics.com/issues/5043)).
+
 ## 1.2.2 (2021-09-30)
 
 - Improved readability of the report pre-formatted text by enabled scroll bars in HTML reports.
