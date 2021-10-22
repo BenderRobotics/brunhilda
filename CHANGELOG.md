@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 1.2.5 (2021-10-22)
+
+- Unified ID's of the tests in all generated HTML files.
+
 ## 1.2.4 (2021-10-22)
 
 - Fixed issues in the test plan generated HTML code.
