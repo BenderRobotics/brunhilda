@@ -163,7 +163,7 @@
 
                             {% for test in testcase.tests %}
                             {% set count.value = count.value + 1 %}
-                            <div class="test test--{{ test.result|lower|replace(' ', '-') }}" id="test--{{ testcase.name }}.{{ test.name }}" result-nth="{{count.value}}">
+                            <div class="test test--{{ test.result|lower|replace(' ', '-') }}" id="{{ testcase.name }}.{{ test.name }}" result-nth="{{count.value}}">
                                 <label class="test__header" for="test_expand_{{count.value}}">
                                     <span class="test__result">{{ test.result|lower }}</span>
                                     <span class="test__name">

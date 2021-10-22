@@ -50,7 +50,7 @@
             {% if loop.first %}
                     <td class="req__id" rowspan="{{ loop.length }}">{{ requirement.requirement_id }}</td>
             {% endif %}
-                    <td class="req__test-id"><a href="{{ paths.test_plan }}#test--{{ test.test_id }}">{{ test.test_id }}</a></td>
+                    <td class="req__test-id"><a href="{{ paths.test_plan }}#{{ test.test_id }}">{{ test.test_id }}</a></td>
                     <td class="req__test-coverage">{{ "%.0f"|format(test.coverage_ratio * 100) }}</td>
                     <td class="req__test-result test--{{ test.result|lower|replace(' ', '-') }}"><span class="test__result">{{ test.result }}</span></td>
             {% if loop.first %}
