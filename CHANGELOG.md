@@ -1,5 +1,10 @@
 # Brunhilda project changelog
 
+## 1.2.4 (2021-10-22)
+
+- Fixed issues in the test plan generated HTML code.
+- Unified ID's of the test-plan test sections, added anchors for the test cases.
+
 ## 1.2.3 (2021-10-04)
 
 - Distinguished between failure and error in JUnit report ([#5043](https://redmine.benderrobotics.com/issues/5043)).
