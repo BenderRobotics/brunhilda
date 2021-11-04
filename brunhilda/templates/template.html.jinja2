@@ -249,7 +249,7 @@
                                                         {% if subtest.extra %}
                                                         {% for extra in subtest.extra %}
                                                             {% if extra.type.startswith('image') %}
-                                                            <p><img class="subtest__extra__image" src="result:{{extra.type}};base64,{{extra.value}}" /></p>
+                                                            <p><img class="subtest__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" /></p>
                                                             {% else %}
                                                             <pre class="subtest__extra__text">{{ extra.value }}</pre>
                                                             {% endif %}
@@ -283,7 +283,7 @@
                                         {% for extra in test.extra %}
                                         <div class="test__extra">
                                             {% if extra.type.startswith('image') %}
-                                            <img class="test__extra__image" src="result:{{extra.type}};base64,{{extra.value}}" />
+                                            <img class="test__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" />
                                             {% else %}
                                             <pre class="test__extra__text">{{ extra.value }}</pre>
                                             {% endif %}
