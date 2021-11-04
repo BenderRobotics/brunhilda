@@ -434,7 +434,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                     extra.append({'type': 'text', 'value': pprint.pformat(ex, indent=2, width=120)})
 
         self.subtests.append({
-            'id': 1+len(self.subtests),
+            'num': 1+len(self.subtests),
+            'id': subtest.id(),
             'name': str(dict(subtest.params)),
             'result': PASSED,
             'extra': extra
