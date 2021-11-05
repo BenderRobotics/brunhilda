@@ -417,21 +417,24 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         This method is called after sub-test is done.
         """
-        extra = None
+        extra = []
+        subtest_extra = []
+
+        if hasattr(subtest, 'extra'):
+            subtest_extra += subtest.extra
 
         if err is not None:
-            for ex in err[1].args:
-                if extra is None:
-                    extra = []
+            subtest_extra += list(err[1].args)
 
-                img = self._render_img(ex)
+        for ex in subtest_extra:
+            img = self._render_img(ex)
 
-                if isinstance(ex, str):
-                    extra.append({'type': 'text', 'value': ex})
-                elif img is not None:
-                    extra.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
-                else:
-                    extra.append({'type': 'text', 'value': pprint.pformat(ex, indent=2, width=120)})
+            if isinstance(ex, str):
+                extra.append({'type': 'text', 'value': ex})
+            elif img is not None:
+                extra.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
+            else:
+                extra.append({'type': 'text', 'value': pprint.pformat(ex, indent=2, width=120)})
 
         self.subtests.append({
             'num': 1+len(self.subtests),

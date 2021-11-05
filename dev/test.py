@@ -245,7 +245,7 @@ class TestCase1(unittest.TestCase):
                     img = Image.new('RGB', (1600, 1000), color = (0, 128, 180))
                     d = ImageDraw.Draw(img)
                     d.text((30, 30), f"Image {i}", fill=(255, 255, 0))
-                    self.extra.append(img.copy())
+                    self._subtest.extra = [img.copy()]
                     raise AssertionError(img.copy())
 
                 self.assertEqual(1, 1 / (i % 3) , "Message")
