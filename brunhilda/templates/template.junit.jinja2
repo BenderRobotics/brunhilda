@@ -38,11 +38,11 @@
             <skipped />
         {% elif test.result == "FAILED" %}
             {% for error in test.errors %}
-            <failure>{{ error }}</failure>
+            <failure>{{ error|e }}</failure>
             {% endfor %}
         {% elif test.result == "ERRORED" %}
             {% for error in test.errors %}
-            <error>{{ error }}</error>
+            <error>{{ error|e }}</error>
             {% endfor %}
         {% endif %}
         </testcase>

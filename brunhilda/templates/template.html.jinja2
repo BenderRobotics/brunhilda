@@ -273,7 +273,7 @@
                                         <h3>Errors</h3>
                                         {% for error in test.errors %}
                                         <div class="test__console test__console--error">
-                                            <pre>{{ error }}</pre>
+                                            <pre>{{ error|e }}</pre>
                                         </div>
                                         {% endfor %}
                                         {% endif %}
