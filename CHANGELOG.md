@@ -1,5 +1,11 @@
 # Brunhilda project changelog
 
+## 1.2.6 (2021-11-08)
+
+- Change to use sub-test ID instead of the number in the reports for IDs.
+- Fixed base64 image encoding in the HTML test report.
+- Added support for the sub-test extra data including images.
+
 ## 1.2.5 (2021-10-22)
 
 - Unified ID's of the tests in all generated HTML files.
