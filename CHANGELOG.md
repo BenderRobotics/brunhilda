@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 1.2.7 (2021-11-09)
+
+- Fixed missing escaping of the failure text in JUnit output.
+
 ## 1.2.6 (2021-11-08)
 
 - Change to use sub-test ID instead of the number in the reports for IDs.
