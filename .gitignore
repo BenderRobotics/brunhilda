@@ -6,3 +6,4 @@ build/lib/brunhilda/
 
 dev/*.html
 dev/*.xml
+dev/__pycache__/

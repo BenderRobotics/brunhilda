@@ -266,7 +266,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'timestamp': datetime.datetime.now(),
                 'time': 0,
                 'name': testcase_name,
-                'description': self._parseDescription(test.__class__.__doc__),
+                'description': self.parseDescription(test.__class__.__doc__),
                 'id': self.num_suites,
                 'tests': [],
                 'passed': 0,
@@ -358,9 +358,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'id': self.num_tests,
             'name': test._testMethodName,
             'time': self.test_execution_time,
-            'description': self._parseDescription(test._testMethodDoc),
-            'steps': self._parseSteps(test.steps, test._testMethodDoc),
-            'tags': self._parseTags(test._testMethodDoc),
+            'description': self.parseDescription(test._testMethodDoc),
+            'steps': self.parseSteps(test.steps, test._testMethodDoc),
+            'tags': self.parseTags(test._testMethodDoc),
             'result': self.last_result,
             'output': self.stream_buffer.read(),
             'errors': self.errors_strings,
@@ -497,7 +497,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         super().addUnexpectedSuccess(test)
         self.last_result = UNEXPECTED_SUCCESS
 
-    def _parseTags(self, description):
+    @staticmethod
+    def parseTags(description):
         """
         Extracts tags from the test description.
 
@@ -551,7 +552,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         return specs
 
-    def _parseSteps(self, test_steps, description):
+    @staticmethod
+    def parseSteps(test_steps, description):
         """
         Extracts test description without tags from the docstring.
 
@@ -607,7 +609,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         return steps
 
-    def _parseDescription(self, description):
+    @staticmethod
+    def parseDescription(description):
         """
         Extracts test description without tags from the docstring.
 
@@ -638,9 +641,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param result: result of the test execution
         """
         requirements = self._parseRequirements(description)
-        tags = self._parseTags(description)
-        steps = self._parseSteps(test_steps, description)
-        description = self._parseDescription(description)
+        tags = self.parseTags(description)
+        steps = self.parseSteps(test_steps, description)
+        description = self.parseDescription(description)
         test_id = f'{testcase_name}.{test_name}'
 
         self.requirements.update(requirements)

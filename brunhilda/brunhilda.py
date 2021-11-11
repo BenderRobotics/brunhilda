@@ -39,7 +39,8 @@ class BRunhilda(unittest.TextTestRunner):
                        test_plan_preamble=None,
                        test_plan_output="test-plan.html",
                        user_data=None,
-                       requirements_list=[]):
+                       requirements_list=[],
+                       tag_filter={}):
         super().__init__(stream=stream,
                          descriptions=descriptions,
                          verbosity=verbosity,
@@ -59,6 +60,7 @@ class BRunhilda(unittest.TextTestRunner):
         self.test_plan_preamble = test_plan_preamble
         self.test_plan_output = test_plan_output
         self.requirements_list = requirements_list
+        self.tag_filter = tag_filter
 
     def _makeResult(self):
         return BRunhildaTestResult(self.stream,
@@ -67,8 +69,53 @@ class BRunhilda(unittest.TextTestRunner):
                                    self.name,
                                    user_data=self.user_data)
 
-    def run(self, test):
-        result = super().run(test)
+    @classmethod
+    def test_iter(cls, suite):
+        """
+        Iterate through test suites, and yield individual tests
+        """
+        for test in suite:
+            if isinstance(test, unittest.TestSuite):
+                for t in cls.test_iter(test):
+                    yield t
+            else:
+                yield test
+
+    def filter_by_tags(self, tags):
+        """
+        Checks if given tags matches the set tag_filter
+
+        :param dict tags: parsed tags from the description
+        :return: True if the tags matching filter, False if not
+        """
+        if self.tag_filter is not None:
+            for tag, value in self.tag_filter.items():
+                if (tag not in tags) or ((tag in tags) and (value not in tags[tag])):
+                    return False
+
+        return True
+
+    def filter_tests(self, testlist):
+        """
+        Filters tests based on the _tag_filter
+
+        :param testlist: list of tests
+        :return: filtered test suite
+        """
+        suite = unittest.TestSuite()
+
+        for test in self.test_iter(testlist):
+            docstring = getattr(test, test._testMethodName).__doc__
+            tags = BRunhildaTestResult.parseTags(docstring)
+
+            if self.filter_by_tags(tags):
+                suite.addTest(test)
+
+        return suite
+
+    def run(self, testlist):
+        suite = self.filter_tests(testlist)
+        result = super().run(suite)
 
         result.paths = {
             'test_record': os.path.split(self.html_output)[-1],

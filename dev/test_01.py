@@ -1,7 +1,4 @@
 import unittest
-import brunhilda
-import os
-import sys
 import logging
 import colorama
 import time
@@ -108,17 +105,18 @@ class TestCase1(unittest.TestCase):
 
     def test_00_pass(self):
         """
-        @test-id:       ST_FW_002
-        @author:        Jan Hrbacek
-        @execution:     automatic
-        @exec-time:     150s
-        @covering:      REQ_SYS_FW_001, REQ_SYS_FW_002
-        @environment:   ENV_002
-        @priority:      high
-        @variants:      MMI_TGL_001, MMI_TGL_002;
-        @status:        new
-        @spec:          L11 4.4
-        @tp:            TP07.1
+        @test-id:
+        @name: Verification of logic values related to the main zone
+        @maintainer: Pavel Kumpan
+        @execution: automatic
+        @exec-time: 1
+        @covering:
+        @environment: INT_ENV_MMI1, INT_ENV_MMI2, VIRT
+        @priority: mid
+        @variants:
+        @status:
+        @spec: MMI_PGF_L02_4.1
+        @disabled-modules: P1P2
 
         But *.bin or *.hex is OK!
         Verifies normal execution of the scheduled program.
@@ -153,8 +151,18 @@ class TestCase1(unittest.TestCase):
 
     def test_01_fail(self):
         """
-        @ref ST01.1
-        @spec REQ_SYS_001, REQ_SYS_002, REQ_SYS_003, L11 14.1
+        @test-id:
+        @name: Verification of logic values related to the main zone
+        @maintainer: Pavel Kumpan
+        @execution: automatic
+        @exec-time: 1
+        @covering:
+        @environment: INT_ENV_MMI1, INT_ENV_MMI2
+        @priority: mid
+        @variants:
+        @status:
+        @spec: MMI_PGF_L02_4.1
+        @disabled-modules: P1P2
 
         Verifies normal execution of the scheduled program.
 
@@ -222,8 +230,18 @@ class TestCase1(unittest.TestCase):
 
     def test_02_subtest(self):
         """
-        @ref ST01.1, ST01.12
-        @spec REQ_SYS_001, REQ_SYS_002, REQ_SYS_003, L11 14.11
+        @test-id:
+        @name: Verification of logic values related to the main zone
+        @maintainer: Pavel Kumpan
+        @execution: automatic
+        @exec-time: 1
+        @covering:
+        @environment: INT_ENV_MMI1, INT_ENV_MMI2
+        @priority: mid
+        @variants:
+        @status:
+        @spec: MMI_PGF_L02_4.1
+        @disabled-modules: P1P2
 
         Verifies normal execution of the scheduled program.
 
@@ -252,8 +270,18 @@ class TestCase1(unittest.TestCase):
 
     def test_03_error(self):
         """
-        @ref ST01.1, ST01.3
-        @spec L11 4.11, C05-5, C05-6, C04, C06
+        @test-id:       ST_FW_002
+        @author:        Jan Hrbacek
+        @execution:     automatic
+        @exec-time:     150s
+        @covering:      REQ_SYS_FW_001, REQ_SYS_FW_002
+        @environment:   ENV_002
+        @priority:      high
+        @variants:      MMI_TGL_001, MMI_TGL_002;
+        @status:        new
+        @spec:          L11 4.4
+        @tp:            TP07.1
+        @env:           PHY1; PHY2; VIRT
 
         Verifies normal execution of the scheduled program.
 
@@ -270,8 +298,18 @@ class TestCase1(unittest.TestCase):
 
     def test_04_skip(self):
         """
-        @ref ST01.4
-        @spec L11 4.2
+        @test-id:
+        @name: Verification of logic values related to the main zone
+        @maintainer: Pavel Kumpan
+        @execution: automatic
+        @exec-time: 1
+        @covering:
+        @environment: INT_ENV_MMI1, INT_ENV_MMI2
+        @priority: mid
+        @variants:
+        @status:
+        @spec: MMI_PGF_L02_4.1
+        @disabled-modules: P1P2
 
         Verifies normal execution of the scheduled program.
 
@@ -289,8 +327,18 @@ class TestCase1(unittest.TestCase):
     @unittest.skip("Because of decorator")
     def test_05_skip_decorator(self):
         """
-        @ref ST01.1
-        @spec REQ_SYS_004
+        @test-id:
+        @name: Verification of logic values related to the main zone
+        @maintainer: Pavel Kumpan
+        @execution: automatic
+        @exec-time: 1
+        @covering:
+        @environment: INT_ENV_MMI1, INT_ENV_MMI2
+        @priority: mid
+        @variants:
+        @status:
+        @spec: MMI_PGF_L02_4.1
+        @disabled-modules: P1P2
 
         Verifies normal execution of the scheduled program.
 
@@ -322,9 +370,18 @@ class TestCase1(unittest.TestCase):
     @ddt.data(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     def test_09_ddt(self, param):
         """
-        @ref ST01.1
-        @spec REQ_SYS_004, REQ_SYS_005, REQ_SYS_006, REQ_SYS_007
-
+        @test-id:
+        @name: Verification of logic values related to the main zone
+        @maintainer: Pavel Kumpan
+        @execution: automatic
+        @exec-time: 1
+        @covering:
+        @environment: INT_ENV_MMI1, INT_ENV_MMI2
+        @priority: mid
+        @variants:
+        @status:
+        @spec: MMI_PGF_L02_4.1
+        @disabled-modules: P1P2
         """
         self.assertIn(param, [2, 5, 7])
 
@@ -340,36 +397,6 @@ class TestCaseA(unittest.TestCase):
         self.assertTrue(True)
 
 
-if __name__ == '__main__':
-    information = {
-        "Firmware version": os.getenv('VER_FW', '-') + " (bootloader " + os.getenv('VER_BL', '-') + ")",
-        "Tag": os.getenv('CI_COMMIT_TAG', '-'),
-        "Branch": os.getenv('CI_COMMIT_BRANCH', '-'),
-        "Commit ID": os.getenv('CI_COMMIT_SHA', '-'),
-        "Execution": "automated" if 'CI' in os.environ else "manual",
-        "Triggered by": os.getenv('CI_PIPELINE_SOURCE', '-'),
-        "Runner": os.getenv('CI_RUNNER_DESCRIPTION', '-'),
-        "Runner ID": os.getenv('CI_RUNNER_ID', '-'),
-        "Job ID": os.getenv('CI_JOB_ID', '-'),
-        "Job name": os.getenv('CI_JOB_NAME', '-'),
-        "Job stage": os.getenv('CI_JOB_STAGE', '-'),
-        "Pipeline": os.getenv('CI_PIPELINE_IID', '-'),
-        "Project": os.getenv('CI_PROJECT_ID', '-'),
-        "Project name": os.getenv('CI_PROJECT_NAME', '-')
-    }
-    runner = brunhilda.BRunhilda(user_data=information,
-                                 verbosity=3,
-                                 stream=sys.stdout,
-                                 html_preamble="dev/report.intro.html",
-                                 html_output="dev/report.html",
-                                 junit_output="dev/report.xml",
-                                 traceability_output="dev/traceability.html",
-                                 req_summary_output="dev/req-summary.html",
-                                 test_summary_preamble="dev/test-summary.intro.html",
-                                 test_summary_output="dev/test-summary.html",
-                                 test_plan_preamble="dev/test-plan.intro.html",
-                                 test_plan_output="dev/test-plan.html",
-                                 requirements_list=['L10', 'L11', 'L12', 'C05'])
-    unittest.main(testRunner=runner)
+
 
 # @}
