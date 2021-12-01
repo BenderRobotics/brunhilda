@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 1.3.0 (2021-12-01)
+
+- Added BRunhilda loader with support to filter tests by tags (refs [#5175](https://redmine.benderrobotics.com/issues/5175)).
+
 ## 1.2.7 (2021-11-09)
 
 - Fixed missing escaping of the failure text in JUnit output.
