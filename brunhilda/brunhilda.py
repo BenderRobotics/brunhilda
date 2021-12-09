@@ -30,6 +30,7 @@ class BRunhilda(unittest.TextTestRunner):
                        junit_output="report.xml",
                        issues_output="issues.yaml",
                        tests_output="tests.yaml",
+                       extra_data_output="extra",
                        user_data=None):
         super().__init__(stream=stream,
                          descriptions=descriptions,
@@ -44,6 +45,7 @@ class BRunhilda(unittest.TextTestRunner):
         self.junit_output = junit_output
         self.issues_output = issues_output
         self.tests_output = tests_output
+        self.extra_data_output = extra_data_output
 
     def _makeResult(self):
         return BRunhildaTestResult(self.stream,
@@ -51,6 +53,7 @@ class BRunhilda(unittest.TextTestRunner):
                                    self.verbosity,
                                    self.name,
                                    self.dut,
+                                   extra_data_path=self.extra_data_output,
                                    user_data=self.user_data)
 
     def run(self, suite: TestSuite):

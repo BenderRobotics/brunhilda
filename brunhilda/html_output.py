@@ -4,11 +4,12 @@ from docutils.core import publish_parts
 from .output import Output
 
 class HtmlOutput(Output):
-    def __init__(self, preamble=None):
+    def __init__(self, preamble=None, path='output.html'):
         """
         :param preamble: path to file to include as a preamble
         """
         self._include_preamble = None
+        self.path = path
 
         if preamble is not None:
             try:

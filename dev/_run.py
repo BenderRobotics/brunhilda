@@ -27,7 +27,8 @@ if __name__ == '__main__':
                                  html_output="dev/report.html",
                                  junit_output="dev/report.xml",
                                  issues_output="dev/issues.yaml",
-                                 tests_output="dev/tests.yaml")
+                                 tests_output="dev/tests.yaml",
+                                 extra_data_output="dev/extra")
 
     loader = brunhilda.BRunhildaTestLoader()
     suite = loader.discover('dev')

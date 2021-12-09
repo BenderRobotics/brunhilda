@@ -17,5 +17,6 @@ class HtmlIssueListOutput(HtmlOutput):
         rendered = template.render(name=name,
                                    preamble=self._include_preamble,
                                    reports=issues,
-                                   user_data=user_data)
+                                   user_data=user_data,
+                                   document_path=self.path)
         return rendered

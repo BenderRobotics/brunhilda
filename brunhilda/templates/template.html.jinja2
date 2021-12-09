@@ -244,8 +244,10 @@
                                                     <td class="subtest__extra">
                                                         {% if subtest.extra %}
                                                         {% for extra in subtest.extra %}
-                                                            {% if extra.type.startswith('image') %}
+                                                            {% if extra.type.startswith('image/') %}
                                                             <p><img class="subtest__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" /></p>
+                                                            {% elif extra.type == 'image-reference' %}
+                                                            <p><img class="subtest__extra__image" src="{{ rel_path(document_path, extra.value)}}" /></p>
                                                             {% else %}
                                                             <pre class="subtest__extra__text">{{ extra.value }}</pre>
                                                             {% endif %}
@@ -280,6 +282,8 @@
                                         <div class="test__extra">
                                             {% if extra.type.startswith('image') %}
                                             <img class="test__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" />
+                                            {% elif extra.type == 'image-reference' %}
+                                            <img class="test__extra__image" src="{{ extra.value }}" /></p>
                                             {% else %}
                                             <pre class="test__extra__text">{{ extra.value }}</pre>
                                             {% endif %}

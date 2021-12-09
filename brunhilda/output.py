@@ -3,6 +3,8 @@ import jinja2
 import datetime
 
 
+from .rel_path import rel_path
+
 class Output:
     def load_template(self, template):
         """

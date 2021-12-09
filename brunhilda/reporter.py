@@ -5,6 +5,7 @@ import yaml
 from typing import Dict, List, Optional, Union, Tuple
 
 from brunhilda.data import Summary
+from brunhilda.rel_path import rel_path
 from brunhilda.html_test_summary_output import HtmlTestSummaryOutput
 from brunhilda.html_req_summary_output import HtmlReqSummaryOutput
 from brunhilda.html_test_plan_output import HtmlTestPlanOutput
@@ -21,30 +22,6 @@ class Reporter:
         self._issue_list_path = None
         self._test_plan_paths = {'_': ''}
         self._user_data = user_data
-
-    def _rel_path(self, base_path: str, target_path: str) -> str:
-        """
-        Returns relative path from the base_path to the target_path.
-
-        :param base_path: path (filename) from where the path originates
-        :param target_path: path (filename) where the target is located
-        """
-        target_dir = os.path.dirname(target_path)
-        base_dir = os.path.dirname(base_path)
-
-        if target_dir != '':
-            target_file = os.path.split(target_path)[1]
-        else:
-            target_file = target_path
-
-        if target_dir == '':
-            target_dir = '.'
-
-        if base_dir == '':
-            base_dir = '.'
-
-        relative_dir = os.path.relpath(base_dir, target_dir)
-        return os.path.join(relative_dir, target_file)
 
     def _load(self, path: str) -> Dict:
         with open(path, 'r', encoding='utf-8') as f:
@@ -176,8 +153,8 @@ class Reporter:
         :param preamble: path to the HTML document to be used as a document preamble
         """
         formater = HtmlReqSummaryOutput(preamble=preamble)
-        issue_list_path = self._rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
-        test_plan_paths = {level: self._rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
+        issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
+        test_plan_paths = {level: rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
 
         output = formater.print(name=name,
                                 testsuite=self._tests,
@@ -197,8 +174,8 @@ class Reporter:
         :param preamble: path to the HTML document to be used as a document preamble
         """
         formater = HtmlTestSummaryOutput(preamble=preamble)
-        issue_list_path = self._rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
-        test_plan_paths = {level: self._rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
+        issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
+        test_plan_paths = {level: rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
 
         output = formater.print(name=name,
                                 testsuite=self._tests,
@@ -232,7 +209,7 @@ class Reporter:
         else:
             self._test_plan_paths['_'] = path
 
-        formater = HtmlTestPlanOutput(preamble=preamble)
+        formater = HtmlTestPlanOutput(preamble=preamble, path=path)
         output = formater.print(name=name, testsuite=self._tests, levels=levels, user_data=self._user_data)
         self._write_file(name, path, output)
 
@@ -245,7 +222,7 @@ class Reporter:
         :param preamble: path to the HTML document to be used as a document preamble
         """
         self._issue_list_path = path
-        formater = HtmlIssueListOutput(preamble=preamble)
+        formater = HtmlIssueListOutput(preamble=preamble, path=path)
         output = formater.print(name, self._issues, user_data=self._user_data)
         self._write_file(name, path, output)
 
@@ -261,7 +238,7 @@ class Reporter:
         file_list = []
 
         for file_name, file_path in self._outputs:
-            file_list.append((file_name, self._rel_path(path, file_path)))
+            file_list.append((file_name, rel_path(path, file_path)))
 
         output = formater.print(name, file_list)
         self._write_file(name, path, output)

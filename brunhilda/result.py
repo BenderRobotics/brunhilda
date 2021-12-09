@@ -10,6 +10,8 @@ import datetime
 import platform
 import colorama
 import unittest
+from io import BytesIO
+from PIL import Image
 
 from copy import deepcopy
 from typing import List
@@ -96,6 +98,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     Test result class produced by the BRunhilda test runner.
     """
     _renderers = None
+    EMBEDDED_IMAGES = False     #: controls embeding images as base64
 
     def __init__(self,
                  stream,
@@ -103,6 +106,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                  verbosity,
                  name='',
                  dut='',
+                 extra_data_path='./extra',
                  user_data=None):
         super().__init__(stream, descriptions, verbosity)
         self.stream_buffer = io.StringIO()
@@ -110,6 +114,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self._tests = []
         self._issues = {}
         self._requirements = set()
+        self.extra_data_path = extra_data_path
         self.last_result: Result = EMPTY
         self.name = name
         self.dut = dut
@@ -149,13 +154,17 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         processed_extras = []
 
-        for ex in extra:
+        for i, ex in enumerate(extra):
             img = self._render_img(ex)
 
             if isinstance(ex, str):
                 processed_extras.append({'type': 'text', 'value': ex})
             elif img is not None:
-                processed_extras.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
+                if self.EMBEDDED_IMAGES:
+                    processed_extras.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
+                else:
+                    path = self._store_img(f'{test_id}-{i:03}', img[0])
+                    processed_extras.append({'type': 'image-reference', 'value': path})
             else:
                 processed_extras.append({'type': 'text', 'value': pprint.pformat(ex, indent=2, width=120)})
 
@@ -205,9 +214,6 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
             # Try to create PIL image renderer
             try:
-                from io import BytesIO
-                from PIL import Image
-
                 def render_pil(img, fmt="jpg"):
                     if not callable(getattr(img, "save", None)):
                         return None
@@ -264,6 +270,22 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 return res
 
         return None
+
+    def _store_img(self, filename, image):
+        """
+        Stores image into extra data folder as an jpeg file
+
+        :param filename: name of the file
+        :param image: image bytes
+        """
+        if not os.path.exists(self.extra_data_path):
+            os.makedirs(self.extra_data_path)
+
+        save_path = os.path.join(self.extra_data_path, f'{filename}.jpg')
+        im = Image.open(BytesIO(image))
+        im.save(save_path, format='jpeg')
+
+        return save_path
 
     @property
     def result(self):
@@ -373,7 +395,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self.results['testcases'][testcase_name]['tests'].append({
             'subtests': self.subtests,
             'skip_reason': self.skip_reason,
-            'id': test.id().lstrip(test.__module__ + '.'),
+            'id': test_id,
             'name': test._testMethodName,
             'time': self.test_execution_time,
             'description': parse_description(test._testMethodDoc),
@@ -382,12 +404,12 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'result': self.last_result,
             'output': self.stream_buffer.read(),
             'errors': self.errors_strings,
-            'extra': self._process_extra_data(test.extra)
+            'extra': self._process_extra_data(test.extra, test_id)
         })
 
         self.summary.results += self.last_result
 
-        self._record(testcase_name, test.id().lstrip(test.__module__ + '.'), test.steps, test._testMethodDoc,
+        self._record(testcase_name, test_id, test.steps, test._testMethodDoc,
                      self.last_result, self.skip_reason)
 
     def addSuccess(self, test):
@@ -408,12 +430,14 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 if img is not None:
                     test.extra.append(ex)
 
+        test_id = self._get_test_id(test)
+
         self._issues['errors'].append({
-            'test': test.id().lstrip(test.__module__ + '.'),
+            'test': test_id,
             'sub-test': None,
             'result': ERRORED,
             'message': self._exc_info_to_string(err, test),
-            'extra': self._process_extra_data(test.extra),
+            'extra': self._process_extra_data(test.extra, test_id),
             'bug-id': '',
             'comment': '',
             'justified': '',
@@ -432,12 +456,14 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             for ex in err[1].args:
                 test.extra.append(ex)
 
+        test_id = self._get_test_id(test)
+
         self._issues['failures'].append({
-            'test': test.id().strip(test.__module__ + '.'),
+            'test': test_id,
             'sub-test': None,
             'result': FAILED,
             'message': self._exc_info_to_string(err, test),
-            'extra': self._process_extra_data(test.extra),
+            'extra': self._process_extra_data(test.extra, test_id),
             'bug-id': '',
             'comment': '',
             'justified': '',
@@ -456,12 +482,15 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         if err is not None:
             subtest.extra += list(err[1].args)
 
+        test_id = self._get_test_id(test)
+        subtest_id = subtest.id().lstrip(test.__module__ + '.')
+
         self.subtests.append({
             'num': 1+len(self.subtests),
-            'id': subtest.id().lstrip(test.__module__ + '.'),
+            'id': subtest_id,
             'name': str(dict(subtest.params)),
             'result': PASSED,
-            'extra': self._process_extra_data(subtest.extra)
+            'extra': self._process_extra_data(subtest.extra, subtest_id)
         })
 
         # `err` contains info about errors and failures, if `None`, sub-test passed
@@ -482,10 +511,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                     self.last_result = FAILED
 
             issue = {
-                'test': test.id().strip(test.__module__ + '.'),
-                'sub-test': subtest.id().strip(test.__module__ + '.'),
+                'test': test_id,
+                'sub-test': subtest_id,
                 'message': err_str,
-                'extra': self._process_extra_data(subtest.extra),
+                'extra': self._process_extra_data(subtest.extra, subtest_id),
                 'result': self.last_result,
                 'bug-id': '',
                 'comment': '',
@@ -624,5 +653,6 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         Prints test results with the given result output.
         """
         if filename is not None:
+            output_formater.path = filename
             output = output_formater.print(self.env_info, self.user_data, self.results, self.summary)
             self._write_file(filename, output)

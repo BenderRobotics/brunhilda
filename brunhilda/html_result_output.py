@@ -40,5 +40,6 @@ class HtmlResultOutput(HtmlOutput):
                                    env_info=env_info,
                                    user_data=user_data,
                                    result=result,
-                                   summary=summary)
+                                   summary=summary,
+                                   document_path=self.path)
         return rendered

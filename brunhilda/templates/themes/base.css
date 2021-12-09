@@ -474,7 +474,11 @@ input.testcase__expander:checked+.testcase__description {
     text-transform: uppercase;
 }
 
-.test__name {
+.test__header .test__result {
+    width: 25%;
+}
+
+.test__header .test__name {
     width: 50%;
     max-width: 30rem;
 }
