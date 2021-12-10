@@ -1,5 +1,10 @@
 # Brunhilda project changelog
 
+## 2.0.0 (2021-12-10)
+
+- Used external images instead of embedded images in the HTML reports to reduce memory errors during test runs (refs [#5043](https://redmine.benderrobotics.com/issues/5043)).
+- Majorly refactored to generate intermediate format used for post processing (refs [#5043](https://redmine.benderrobotics.com/issues/5043)).
+
 ## 1.3.1 (2021-12-10)
 
 - Changed structure of the test-suite produced by loader to be complaint with Brest expectations (refs [#5043](https://redmine.benderrobotics.com/issues/5043), [#5364](https://redmine.benderrobotics.com/issues/5364)).
