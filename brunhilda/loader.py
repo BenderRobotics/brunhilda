@@ -32,22 +32,24 @@ class BRunhildaTestLoader:
         order even on filesystems with non-alphabetical ordering like ext3/4.
         """
         patterns = pattern.split(',')
-        main_suite = unittest.TestSuite()
+        tests = unittest.TestSuite()
 
         for pattern in patterns:
             suite = unittest.defaultTestLoader.discover(start_dir, pattern.strip(), top_level_dir)
 
             for test in self._iter_suite(suite):
                 if tag_filter is None:
-                    main_suite.addTest(test)
+                    tests.addTest(test)
                 else:
                     docstring = getattr(test, test._testMethodName).__doc__
                     tags = BRunhildaTestResult.parseTags(docstring)
 
                     if self._filter_by_tags(tag_filter, tags):
-                        main_suite.addTest(test)
+                        tests.addTest(test)
 
-        return main_suite
+        # this ugly thing is added for the compatibility with Brest which expects suite in the suite
+        suite = unittest.TestSuite(tests=[tests])
+        return unittest.TestSuite(tests=[suite])
 
     @classmethod
     def _iter_suite(cls, suite):
