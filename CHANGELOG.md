@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 1.3.1 (2021-12-10)
+
+- Changed structure of the test-suite produced by loader to be complaint with Brest expectations (refs [#5043](https://redmine.benderrobotics.com/issues/5043), [#5364](https://redmine.benderrobotics.com/issues/5364)).
+
 ## 1.3.0 (2021-12-01)
 
 - Added BRunhilda loader with support to filter tests by tags (refs [#5175](https://redmine.benderrobotics.com/issues/5175)).
