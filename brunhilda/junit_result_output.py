@@ -1,7 +1,10 @@
 import re
 import copy
-from brunhilda.output import Output
+from typing import Dict
+
+
 from .output import Output
+from .data import Summary
 
 
 class JUnitResultOutput(Output):
@@ -46,7 +49,7 @@ class JUnitResultOutput(Output):
         text = re.sub(xml_illegal_character_regex, '?', text)
         return text
 
-    def print(self, env_info, user_data, result, summary, paths):
+    def print(self, env_info: Dict, user_data: Dict, result, summary: Summary):
         result = copy.deepcopy(result)
 
         for case in sorted(result['testcases'].values(), key=lambda item: item['id']):
@@ -62,6 +65,5 @@ class JUnitResultOutput(Output):
         rendered = template.render(env_info=env_info,
                                    user_data=user_data,
                                    result=result,
-                                   summary=summary,
-                                   paths=paths)
+                                   summary=summary)
         return rendered

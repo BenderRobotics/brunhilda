@@ -1,6 +1,7 @@
-from .brunhilda import *
-from .result import *
-from .loader import *
+from .brunhilda import BRunhilda
+from .result import BRunhildaTestResult
+from .loader import BRunhildaTestLoader
+from .reporter import Reporter
 
 __version__ = '1.3.1'
-__all__ = ["BRunhilda", "BRunhildaTestResult", "BRunhildaTestLoader"]
+__all__ = ["BRunhilda", "BRunhildaTestResult", "BRunhildaTestLoader", "Reporter"]

@@ -1,4 +1,9 @@
-<p>{% if env_info.name %}<strong>{{ env_info.name }}</strong>{% endif %} generated <time>{{ now().strftime('%Y-%m-%d %H:%M:%S') }}</time> by Brunhilda</p>
+<p>
+    {% if env_info and env_info.name %}<strong>{{ env_info.name }}</strong>{% endif %} generated <time datetime="{{ now().strftime('%Y-%m-%d %H:%M:%S') }}">{{ now().strftime('%Y-%m-%d %H:%M:%S') }}</time> by Brunhilda
+</p>
+
+
+{% if env_info %}
 <h2>Environment</h2>
 <table class="testrun__environment">
     <tbody>
@@ -18,6 +23,7 @@
         </tr>
     </tbody>
 </table>
+{% endif %}
 
 {% if user_data %}
 <h2>User data</h2>

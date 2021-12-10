@@ -1,0 +1,664 @@
+- case: TestCase1
+  comment: ''
+  description: "\n\n        But *.bin or *.hex is OK!\n        Verifies normal execution\
+    \ of the scheduled program.\n\n        "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: PASSED
+  steps:
+  - comment: ''
+    description: |2-
+                    Set ``{user_permission}`` to 3 (installer). When the test step description
+                    is too long, it is possible to split in multiple lines. It is possible to
+                    use RS inside of these
+
+                    - including
+                    - lists
+    expectation: '             ``{user_permission} == 3``'
+    number: 1
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Set {tm_user_permission_user} to 20.'
+    expectation: |2-
+                   {tm_user_permission} == 20. When the test step description
+                   is too long, it is possible to split in multiple lines.
+    number: 2
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Enter and activate test run A.1.1.'
+    expectation: '             A.1.1 BC is active BC'
+    number: 3
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    - VIRT
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_00_pass
+- case: TestCase1
+  comment: ''
+  description: "\n\n        Verifies normal execution of the scheduled program.\n\n\
+    \        1) Generates schedule program with random values and times,\n       \
+    \ 2) Write program to MMI.\n        3) Set MMI date-time before the first program\
+    \ action time.\n        4) Write A\n        5) Verify value of the schedule timer\
+    \ action target to be a previous scheduled value.\n        6) Verify value of\
+    \ the schedule timer action target to be a new scheduled value.\n\n        - a\n\
+    \        - b\n        - c\n        - d\n        "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: FAILED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_01_fail
+- case: TestCase1
+  comment: ''
+  description: "\n\n        Verifies normal execution of the scheduled program.\n\n\
+    \        1) Generates schedule program with random values and times,\n       \
+    \ 2) Write program to MMI.\n        3) Set MMI date-time before the first program\
+    \ action time.\n        4) Write A\n        5) Verify value of the schedule timer\
+    \ action target to be a previous scheduled value.\n        6) Verify value of\
+    \ the schedule timer action target to be a new scheduled value.\n\n        Repeat\
+    \ steps 3\u20136 for entire progam.\n        "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: ERRORED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_02_subtest
+- case: TestCase1
+  comment: ''
+  description: "\n\n        Verifies normal execution of the scheduled program.\n\n\
+    \        1) Generates schedule program with random values and times,\n       \
+    \ 2) Write program to MMI.\n        3) Set MMI date-time before the first program\
+    \ action time.\n        4) Verify value of the schedule timer action target to\
+    \ be a previous scheduled value.\n        5) Wait for time pass over the action\
+    \ time.\n        6) Verify value of the schedule timer action target to be a new\
+    \ scheduled value.\n\n        Repeat steps 3 \u2013 6 for entire progam.\n   \
+    \     "
+  level: system
+  requirements:
+  - L11 4.4
+  result: ERRORED
+  steps: []
+  tags:
+    author:
+    - Jan Hrbacek
+    covering:
+    - REQ_SYS_FW_001
+    - REQ_SYS_FW_002
+    env:
+    - PHY1; PHY2; VIRT
+    environment:
+    - ENV_002
+    exec-time:
+    - 150s
+    execution:
+    - automatic
+    priority:
+    - high
+    spec:
+    - L11 4.4
+    status:
+    - new
+    test-id:
+    - ST_FW_002
+    tp:
+    - TP07.1
+    variants:
+    - MMI_TGL_001
+    - MMI_TGL_002
+  test_id: test_01.TestCase1.test_03_error
+- case: TestCase1
+  comment: ''
+  description: "\n\n        Verifies normal execution of the scheduled program.\n\n\
+    \        1) Generates schedule program with random values and times,\n       \
+    \ 2) Write program to MMI.\n        3) Set MMI date-time before the first program\
+    \ action time.\n        4) Verify value of the schedule timer action target to\
+    \ be a previous scheduled value.\n        5) Wait for time pass over the action\
+    \ time.\n        6) Verify value of the schedule timer action target to be a new\
+    \ scheduled value.\n\n        Repeat steps 3 \u2013 6 for entire progam.\n   \
+    \     "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: SKIPPED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_04_skip
+- case: TestCase1
+  comment: ''
+  description: "\n\n        Verifies normal execution of the scheduled program.\n\n\
+    \        1) Generates schedule program with random values and times,\n       \
+    \ 2) Write program to MMI.\n        3) Set MMI date-time before the first program\
+    \ action time.\n        4) Verify value of the schedule timer action target to\
+    \ be a previous scheduled value.\n        5) Wait for time pass over the action\
+    \ time.\n        6) Verify value of the schedule timer action target to be a new\
+    \ scheduled value.\n\n        Repeat steps 3 \u2013 6 for entire progam.\n   \
+    \     "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: SKIPPED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_05_skip_decorator
+- case: TestCase1
+  comment: ''
+  description: "\n        "
+  level: system
+  requirements:
+  - '-'
+  result: EXPECTED FAILURE
+  steps: []
+  tags: {}
+  test_id: test_01.TestCase1.test_06_expected_failure
+- case: TestCase1
+  comment: ''
+  description: ''
+  level: system
+  requirements:
+  - '-'
+  result: UNEXPECTED SUCCESS
+  steps: []
+  tags: {}
+  test_id: test_01.TestCase1.test_07_unexpected_sucess
+- case: TestCase1
+  comment: ''
+  description: ''
+  level: system
+  requirements:
+  - '-'
+  result: FAILED
+  steps: []
+  tags: {}
+  test_id: test_01.TestCase1.test_08_exception_args
+- case: TestCase1
+  comment: ''
+  description: "\n        "
+  level: integration
+  requirements:
+  - MMI_PGF_L02_4.1
+  - MMI_PGF_L02_4.2
+  - MMI_PGF_L02_4.3
+  result: FAILED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - manual
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_09_ddt_01_1
+- case: TestCase1
+  comment: ''
+  description: "\n        "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: PASSED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_09_ddt_02_2
+- case: TestCase1
+  comment: ''
+  description: "\n        "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: FAILED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_09_ddt_03_3
+- case: TestCase1
+  comment: ''
+  description: "\n        "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: FAILED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_09_ddt_04_4
+- case: TestCase1
+  comment: ''
+  description: "\n        "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: PASSED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_09_ddt_05_5
+- case: TestCase1
+  comment: ''
+  description: "\n        "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: FAILED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_09_ddt_06_6
+- case: TestCase1
+  comment: ''
+  description: "\n        "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: PASSED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_09_ddt_07_7
+- case: TestCase1
+  comment: ''
+  description: "\n        "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: FAILED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_09_ddt_08_8
+- case: TestCase1
+  comment: ''
+  description: "\n        "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: FAILED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_09_ddt_09_9
+- case: TestCase1
+  comment: ''
+  description: "\n        "
+  level: system
+  requirements:
+  - MMI_PGF_L02_4.1
+  result: FAILED
+  steps: []
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: test_01.TestCase1.test_09_ddt_10_10
+- case: TestCaseA
+  comment: ''
+  description: "\n        Some test from A\n        "
+  level: system
+  requirements:
+  - '-'
+  result: PASSED
+  steps: []
+  tags: {}
+  test_id: test_01.TestCaseA.test_0A_pass

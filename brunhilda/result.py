@@ -1,8 +1,8 @@
 import io
 import os
-import re
 import sys
 import time
+import yaml
 import base64
 import socket
 import pprint
@@ -11,15 +11,35 @@ import platform
 import colorama
 import unittest
 
+from copy import deepcopy
+from typing import List
+
+from .rel_path import rel_path
+from .data import (Summary, Result)
+from .parser import (parse_tags, parse_description, parse_requirements, parse_steps)
+
 __unittest = True
+
 
 PASSED = 'PASSED'
 FAILED = 'FAILED'
 ERRORED = 'ERRORED'
 SKIPPED = 'SKIPPED'
-EXPECTED_FAILURE = 'EXPECTED FAILURE'
-UNEXPECTED_SUCCESS = 'UNEXPECTED SUCCESS'
+JUSTIFIED = 'JUSTIFIED'
+EXPECTED_FAILURE = 'EXPECTED-FAILURE'
+UNEXPECTED_SUCCESS = 'UNEXPECTED-SUCCESS'
 EMPTY = 'EMPTY'    # for test case without test
+
+
+def yaml_str_presenter(dumper, text):
+    """Custom string presenter to dump multiline strings nicely"""
+    try:
+        if len(text.splitlines()) > 1:
+            return dumper.represent_scalar('tag:yaml.org,2002:str', text, style='|')
+    except TypeError:
+        return dumper.represent_scalar('tag:yaml.org,2002:str', text)
+
+    return dumper.represent_scalar('tag:yaml.org,2002:str', text)
 
 
 class CatchedStream():
@@ -58,10 +78,15 @@ class CatchedStream():
         """
         if arg:
             self._buffer.write(arg)
+
         self._buffer.write('\n')
 
         try:
-            return self.stream.writeln(arg)
+            if hasattr(self.stream, 'writeln'):
+                self.stream.writeln(arg)
+            else:
+                self.stream.write(arg)
+                self.stream.write('\n')
         except Exception:
             pass
 
@@ -77,39 +102,71 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                  descriptions,
                  verbosity,
                  name='',
+                 dut='',
                  user_data=None):
         super().__init__(stream, descriptions, verbosity)
-        self._outputs = []
+        self.stream_buffer = io.StringIO()
+        self.stream = CatchedStream(stream, self.stream_buffer)
+        self._tests = []
+        self._issues = {}
+        self._requirements = set()
+        self.last_result: Result = EMPTY
         self.name = name
+        self.dut = dut
         self.user_data = user_data
+        self.summary = Summary()
         self.env_info = {
             'pyversion': sys.version,
             'system': platform.platform(),
             'hostname': socket.gethostname(),
             'name': self.name,
         }
-        self.stream_buffer = io.StringIO()
-        self.stream = CatchedStream(stream, self.stream_buffer)
         self._clean()
 
     def _clean(self):
         self._stdout_backup = None
         self._stderr_backup = None
-        self._outputs.clear()
         self.total_execution_time = 0   # time to execute all tests
         self.suite_execution_time = 0   # time to execute tests in current test case class
         self.num_suites = 0
         self.num_tests = 0
-        self.num_success = 0
-        self.num_skipped = 0
-        self.num_failed = 0
-        self.num_errored = 0
-        self.executed_tests = []
-        self.requirements = set()
         self.results = {
             'total': {},
             'testcases': {},
         }
+        self._requirements.clear()
+        self._tests.clear()
+        self._issues = {'errors': [], 'failures': [], 'run': {}}
+        self.summary = Summary()
+
+    def _process_extra_data(self, extra: List, test_id: str) -> List:
+        """
+        Goes through the extra data list, renderers images to base64 or stores them to the filesystem.
+
+        :param extra: extra data list
+        :param test_id: ID of the current test
+        :return: processed extra data
+        """
+        processed_extras = []
+
+        for ex in extra:
+            img = self._render_img(ex)
+
+            if isinstance(ex, str):
+                processed_extras.append({'type': 'text', 'value': ex})
+            elif img is not None:
+                processed_extras.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
+            else:
+                processed_extras.append({'type': 'text', 'value': pprint.pformat(ex, indent=2, width=120)})
+
+        return processed_extras
+
+    def _get_test_id(self, test):
+        """
+        Gets test ID in the unified format
+        """
+        test_id = test.id()
+        return '.'.join(chunk for chunk in test_id.split('.') if chunk != test.__module__)
 
     @classmethod
     def _render_img(cls, img, fmt="jpg", height=612):
@@ -213,24 +270,11 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         Returns result of the whole test run.
         """
-        if self.num_errored > 0:
-            return ERRORED
-        elif self.num_failed > 0:
-            return FAILED
-        elif self.num_success > 0:
-            return PASSED
-        elif self.num_skipped > 0:
-            return SKIPPED
-        elif len(self.expectedFailures) > 0:
-            return EXPECTED_FAILURE
-        elif len(self.unexpectedSuccesses) > 0:
-            return UNEXPECTED_SUCCESS
-        else:
-            return EMPTY
+        return self.summary.result
 
     def startTestRun(self):
         self._clean()
-        self.last_result = ''
+        self.last_result = EMPTY
         self.run_start_timestamp = datetime.datetime.now()
         super().startTestRun()
 
@@ -239,20 +283,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self.run_finish_timestamp = datetime.datetime.now()
         self.env_info['timestamp_start'] = self.run_start_timestamp
         self.env_info['timestamp_finish'] = self.run_finish_timestamp
-
-        self.results['total'] = {
-            'tests': self.num_tests,
-            'timestamp': datetime.datetime.now(),
-            'time': self.total_execution_time,
-            'passed': self.num_success,
-            'skipped':  self.num_skipped,
-            'failed': self.num_failed,
-            'errored': self.num_errored,
-            'expected_failures': len(self.expectedFailures),
-            'unexpected_successes': len(self.unexpectedSuccesses),
-            'result': self.result,
-            'requirements': len([req for req in self.requirements if req != '-'])
-        }
+        self.env_info['execution_time'] = self.total_execution_time
 
     def startTest(self, test):
         """
@@ -266,7 +297,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'timestamp': datetime.datetime.now(),
                 'time': 0,
                 'name': testcase_name,
-                'description': self.parseDescription(test.__class__.__doc__),
+                'description': parse_description(test.__class__.__doc__),
                 'id': self.num_suites,
                 'tests': [],
                 'passed': 0,
@@ -336,45 +367,27 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         elif self.results['testcases'][testcase_name]['passed'] != 0:
             self.results['testcases'][testcase_name]['result'] = PASSED
 
-        extra = None
-
-        for ex in test.extra:
-            if extra is None:
-                extra = []
-
-            img = self._render_img(ex)
-
-            if isinstance(ex, str):
-                extra.append({'type': 'text', 'value': ex})
-            elif img is not None:
-                extra.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
-            else:
-                extra.append({'type': 'text', 'value': pprint.pformat(ex, indent=2, width=120)})
+        test_id = self._get_test_id(test)
 
         self.results['testcases'][testcase_name]['time'] = self.suite_execution_time
         self.results['testcases'][testcase_name]['tests'].append({
             'subtests': self.subtests,
             'skip_reason': self.skip_reason,
-            'id': self.num_tests,
+            'id': test.id().lstrip(test.__module__ + '.'),
             'name': test._testMethodName,
             'time': self.test_execution_time,
-            'description': self.parseDescription(test._testMethodDoc),
-            'steps': self.parseSteps(test.steps, test._testMethodDoc),
-            'tags': self.parseTags(test._testMethodDoc),
+            'description': parse_description(test._testMethodDoc),
+            'steps': parse_steps(test.steps, test._testMethodDoc),
+            'tags': parse_tags(test._testMethodDoc),
             'result': self.last_result,
             'output': self.stream_buffer.read(),
             'errors': self.errors_strings,
-            'extra': extra
+            'extra': self._process_extra_data(test.extra)
         })
 
-        if self.last_result == PASSED:
-            self.num_success += 1
-        elif self.last_result == FAILED:
-            self.num_failed += 1
-        elif self.last_result == ERRORED:
-            self.num_errored += 1
+        self.summary.results += self.last_result
 
-        self._record(testcase_name, test._testMethodName, test.steps, test._testMethodDoc,
+        self._record(testcase_name, test.id().lstrip(test.__module__ + '.'), test.steps, test._testMethodDoc,
                      self.last_result, self.skip_reason)
 
     def addSuccess(self, test):
@@ -395,6 +408,17 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 if img is not None:
                     test.extra.append(ex)
 
+        self._issues['errors'].append({
+            'test': test.id().lstrip(test.__module__ + '.'),
+            'sub-test': None,
+            'result': ERRORED,
+            'message': self._exc_info_to_string(err, test),
+            'extra': self._process_extra_data(test.extra),
+            'bug-id': '',
+            'comment': '',
+            'justified': '',
+            'tags': parse_tags(test._testMethodDoc)
+        })
         self.errors_strings.append(self._exc_info_to_string(err, test))
         self.last_result = ERRORED
 
@@ -406,10 +430,19 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         if err is not None:
             for ex in err[1].args:
-                img = self._render_img(ex)
-                if img is not None:
-                    test.extra.append(ex)
+                test.extra.append(ex)
 
+        self._issues['failures'].append({
+            'test': test.id().strip(test.__module__ + '.'),
+            'sub-test': None,
+            'result': FAILED,
+            'message': self._exc_info_to_string(err, test),
+            'extra': self._process_extra_data(test.extra),
+            'bug-id': '',
+            'comment': '',
+            'justified': '',
+            'tags': parse_tags(test._testMethodDoc)
+        })
         self.errors_strings.append(self._exc_info_to_string(err, test))
         self.last_result = FAILED
 
@@ -417,31 +450,18 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         This method is called after sub-test is done.
         """
-        extra = []
-        subtest_extra = []
-
-        if hasattr(subtest, 'extra'):
-            subtest_extra += subtest.extra
+        if not hasattr(subtest, 'extra'):
+            subtest.extra = []
 
         if err is not None:
-            subtest_extra += list(err[1].args)
-
-        for ex in subtest_extra:
-            img = self._render_img(ex)
-
-            if isinstance(ex, str):
-                extra.append({'type': 'text', 'value': ex})
-            elif img is not None:
-                extra.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
-            else:
-                extra.append({'type': 'text', 'value': pprint.pformat(ex, indent=2, width=120)})
+            subtest.extra += list(err[1].args)
 
         self.subtests.append({
             'num': 1+len(self.subtests),
-            'id': subtest.id(),
+            'id': subtest.id().lstrip(test.__module__ + '.'),
             'name': str(dict(subtest.params)),
             'result': PASSED,
-            'extra': extra
+            'extra': self._process_extra_data(subtest.extra)
         })
 
         # `err` contains info about errors and failures, if `None`, sub-test passed
@@ -461,6 +481,20 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 if self.last_result != ERRORED:
                     self.last_result = FAILED
 
+            issue = {
+                'test': test.id().strip(test.__module__ + '.'),
+                'sub-test': subtest.id().strip(test.__module__ + '.'),
+                'message': err_str,
+                'extra': self._process_extra_data(subtest.extra),
+                'result': self.last_result,
+                'bug-id': '',
+                'comment': '',
+                'justified': '',
+                'tags': parse_tags(test._testMethodDoc)
+            }
+
+            self._issues['errors' if self.last_result == ERRORED else 'failures'].append(issue)
+
         super().addSubTest(test, subtest, err)
 
     def addSkip(self, test, reason):
@@ -478,9 +512,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'reason': reason
             })
         else:
-            self.num_skipped += 1
-            self.last_result = SKIPPED
             self.skip_reason = reason
+            self.last_result = SKIPPED
+            self.summary.results += SKIPPED
 
     def addExpectedFailure(self, test, err):
         """
@@ -497,141 +531,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         super().addUnexpectedSuccess(test)
         self.last_result = UNEXPECTED_SUCCESS
 
-    @staticmethod
-    def parseTags(description):
-        """
-        Extracts tags from the test description.
-
-        :param str description: test description (docstring)
-        :return: dictionary of tags, key is the tag name, value is the tag value
-        :rtype: Dict[str, str]
-        """
-        excluded_tags = ('steps', 'endsteps')
-        tags = {}
-
-        if description and isinstance(description, str):
-            for line in description.splitlines():
-                line = line.strip()
-
-                if line.startswith('@'):
-                    pair = line.split(' ')
-                    tag = pair[0]
-                    tag = tag.strip('@').strip(':').lower()
-
-                    if tag not in excluded_tags:
-                        if len(pair) > 1:
-                            value = ' '.join(pair[1:])
-                            value = value.split(',')
-                        else:
-                            value = ['']
-
-                        tags[tag] = [v.strip('; ') for v in value]  # strip ; and space
-
-        return tags
-
-    def _parseRequirements(self, description):
-        """
-        Extracts requirements from the test description.
-
-        :param str description: test description (docstring)
-        """
-        specs = None
-
-        if description and isinstance(description, str):
-            for line in description.splitlines():
-                specs = re.search(r'@spec[:\s]\s*\w.+', line.strip())
-
-                if specs:
-                    break
-
-        if specs is not None:
-            specs = re.sub(r'@spec[:\s]s*', '', specs.group(0))
-            specs = [' '.join(spec.split()) for spec in specs.split(',')]
-        else:
-            specs = ['-']
-
-        return specs
-
-    @staticmethod
-    def parseSteps(test_steps, description):
-        """
-        Extracts test description without tags from the docstring.
-
-        :param str description: test description (docstring)
-        """
-        steps = []
-        steps_active = False
-        step_description_active = False
-        step = None
-        reg_step_description = re.compile(r'^\s*(?P<num>\d+)\)\s*>')
-        reg_step_expectation = re.compile(r'^\s*>')
-        indent_spaces = '            '
-
-        if description and isinstance(description, str):
-            for line in description.splitlines():
-                if line.strip().startswith('@steps'):
-                    steps_active = True
-                elif line.strip().startswith('@endsteps'):
-                    steps_active = False
-                elif steps_active:
-                    # check if line stars with "1) >" (or other number)
-                    if reg_step_description.match(line):
-                        if step:
-                            steps.append(step)
-
-                        step = {'number': 0, 'description': '', 'expectation': ''}
-                        step['number'] = int(reg_step_description.match(line).group('num'))
-                        step['description'] = reg_step_description.sub(indent_spaces, line)
-                        step['expectation'] = ''
-                        step['result'] = ''
-                        step['comment'] = ''
-                        step['obtained'] = ''
-                        step_description_active = True
-                    # check if line stars with "  >"
-                    elif reg_step_expectation.match(line):
-                        step_description_active = False
-                        step['expectation'] = reg_step_expectation.sub(indent_spaces, line)
-                    # if still in description, append to description
-                    elif step_description_active:
-                        step['description'] += '\n' + line
-                    # otherwise append to expectation
-                    else:
-                        step['expectation'] += '\n' + line
-        if step:
-            steps.append(step)
-
-        for test_step in test_steps:
-            for i in range(len(steps)):
-                if steps[i]['number'] == test_step['number']:
-                    steps[i]['result'] = test_step['result']
-                    steps[i]['comment'] = test_step['comment']
-                    steps[i]['obtained'] = test_step['obtained']
-
-        return steps
-
-    @staticmethod
-    def parseDescription(description):
-        """
-        Extracts test description without tags from the docstring.
-
-        :param str description: test description (docstring)
-        """
-        lines = []
-        block_active = False
-
-        if description and isinstance(description, str):
-            for line in description.splitlines():
-                if not line.strip().startswith('@') and not block_active:
-                    lines.append(line)
-
-                if line.strip().startswith('@steps'):
-                    block_active = True
-                elif line.strip().startswith('@endsteps'):
-                    block_active = False
-
-        return '\n'.join(lines)
-
-    def _record(self, testcase_name, test_name, test_steps, description, result, comment=''):
+    def _record(self, testcase_name, test_id, test_steps, description, result, comment=''):
         """
         Adds executed test to the trace record
 
@@ -640,24 +540,23 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param description: test docstring
         :param result: result of the test execution
         """
-        requirements = self._parseRequirements(description)
-        tags = self.parseTags(description)
-        steps = self.parseSteps(test_steps, description)
-        description = self.parseDescription(description)
-        test_id = f'{testcase_name}.{test_name}'
+        requirements = parse_requirements(description)
+        tags = parse_tags(description)
+        steps = parse_steps(test_steps, description)
+        description = parse_description(description)
 
-        self.requirements.update(requirements)
-        self.executed_tests.append({'case': testcase_name,
-                                    'test': test_name,
-                                    'result': result,
-                                    'tags': tags,
-                                    'description': description,
-                                    'steps': steps,
-                                    'requirements': requirements,
-                                    'test_id': test_id,
-                                    'comment': comment})
+        self._requirements.update(requirements)
+        self._tests.append({'case': testcase_name,
+                            'result': result,
+                            'tags': tags,
+                            'description': description,
+                            'steps': steps,
+                            'requirements': requirements,
+                            'test_id': test_id,
+                            'comment': comment,
+                            'level': self.name,})
 
-    def _writeFile(self, document_name, filename, content):
+    def _write_file(self, filename, content):
         """
         Writes content to the given filename
 
@@ -667,93 +566,63 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         dir_name = os.path.dirname(os.path.abspath(filename))
 
         if not os.path.exists(dir_name):
-            os.mkdir(dir_name)
+            os.makedirs(dir_name)
 
         with open(filename, 'w', encoding="utf-8") as f:
             f.write(content)
 
-        # keep track about created HTML files
-        if '.htm' in filename:
-            self._outputs.append({'name': document_name, 'path': os.path.split(filename)[-1]})
+        print(f"... created output {filename}")
 
-    def print(self, output_formater, path):
+    def _serialize(self, content, filename):
+        """
+        Serializes given content into yaml file
+        """
+        yaml.add_representer(str, yaml_str_presenter)
+        self._write_file(filename, yaml.dump(content))
+
+    def _issues_relative_to(self, base_path):
+        """
+        Modifies paths in the issues to be relative to the given filename
+
+        :param base_path: new path to be used as a base path
+        """
+        issues = deepcopy(self._issues)
+
+        for issue in issues['errors'] + issues['failures']:
+            for extra in issue['extra']:
+                if extra['type'] == 'image-reference':
+                    extra['value'] = rel_path(base_path, extra['value'])
+
+        return issues
+
+    def serialize_issues(self, filename: str):
+        """
+        Serializes test result into yaml file
+
+        :param filename: filename to put the serialized form into
+        """
+        self._issues['run'] = {
+            'user data': self.user_data,
+            'date-time': self.run_start_timestamp,
+            'level': self.name,
+            'dut': self.dut
+        }
+
+        issues = self._issues_relative_to(filename)
+        self._serialize(issues, filename)
+
+    def serialize_tests(self, filename: str):
+        """
+        Serializes executed tests
+
+        :param filename: filename to put the serialized form into
+        """
+        self._serialize(self._tests, filename)
+
+    def print(self, output_formater, filename):
         """
         Prints test results with the given result output.
         """
-        if path is not None:
-            output = output_formater.print(self.env_info, self.user_data, self.results,
-                                           self.results['total'], self.paths)
-            self._writeFile('Test report', path, output)
-            print(f"... created report {path}")
-
-    def printTraceability(self, output_formater, path):
-        """
-        Prints test traceability report in a matrix form.
-
-        :param output_formater: format to process the data
-        :param path: where to store the output file
-        """
-        if path is not None:
-            refs = []
-
-            for test in self.executed_tests:
-                refs += test['requirements']
-
-            refs = list(set(refs))
-            refs.sort()
-
-            for test in self.executed_tests:
-                test['ref_indexes'] = []
-
-                for test_ref in test['requirements']:
-                    test['ref_indexes'].append(refs.index(test_ref))
-
-            output = output_formater.print(refs, self.executed_tests, self.paths)
-            self._writeFile('Traceability matrix', path, output)
-            print(f"... created traceability matrix {path}")
-
-    def printTestSummary(self, output_formater, path):
-        """
-        Prints test summary report.
-
-        :param output_formater: format to process the data
-        :param path: where to store the output file
-        """
-        if path is not None:
-            output = output_formater.print(self.env_info, self.user_data, self.executed_tests,
-                                           self.results['total'], self.paths)
-            self._writeFile('Test summary report', path, output)
-            print(f"... created test summary {path}")
-
-    def printRequirementsSummary(self, output_formater, path, requirements_list=[]):
-        """
-        Prints requirements summary report.
-
-        :param output_formater: format to process the data
-        :param path: where to store the output file
-        :param requirements_list: additional list of requirements
-        """
-        if path is not None:
-            output = output_formater.print(self.env_info, self.user_data, self.executed_tests, self.paths, requirements_list)
-            self._writeFile('Requirements summary report', path, output)
-            print(f"... created requirements summary {path}")
-
-    def printTestPlan(self, output_formater, path):
-        """
-        Prints test summary plan.
-
-        :param output_formater: format to process the data
-        :param path: where to store the output file
-        """
-        if path is not None:
-            output = output_formater.print(self.env_info, self.user_data, self.executed_tests, self.paths)
-            self._writeFile('Test plan', path, output)
-            print(f"... created test plan {path}")
-
-    def printIndex(self, output_formater, path):
-        """
-        Prints index file for the generated files
-        """
-        output = output_formater.print(self._outputs, self.paths)
-        self._writeFile('.', path, output)
-        print(f"... created index file {path}")
+        if filename is not None:
+            output = output_formater.print(self.env_info, self.user_data, self.results, self.summary)
+            self._write_file(filename, output)

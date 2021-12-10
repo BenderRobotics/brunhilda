@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Test Run Summary {% if env_info.name %}[{{ env_info.name }}]{% endif %}</title>
+    <title>{{ name }}</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -12,25 +12,40 @@
 </head>
 
 <body>
-    <h1>Test Run Summary {% if env_info.name %}<strong>[{{ env_info.name }}]</strong>{% endif %}</h1>
+    <h1>{{ name }}</h1>
     <div class="header">
         {% include "header.html.jinja2" %}
     </div>
+
     <div class="main">
 {% if preamble %}
         <section class="preamble">
             {{ preamble }}
         </section>
 {% endif %}
+
+        <section>
+        {% include "summary.html.jinja2" %}
+        </section>
+
         <section>
             <h2>Tests Summary</h2>
-
-            {% include "summary.html.jinja2" %}
-
             <table class="summary table--wide">
                 <thead>
                     <tr>
-                        <th>Test ID</th>
+                        <th>
+                            <span>Test Level</span>
+                            <select id="level-selector">
+                                <option value="all">All</option>
+                            {% for level in summary.levels %}
+                                <option value={{ level }}>{{ level|capitalize }}</option>
+                            {% endfor %}
+                            </select>
+                        </th>
+                        <th>
+                            <span>Test ID</span>
+                            <input id="filter"/>
+                        </th>
                         <th>Requirements</th>
                         <th>Test Result</th>
                         <th>Bug ID</th>
@@ -38,30 +53,76 @@
                     </tr>
                 </thead>
                 <tbody>
-{% for test in tests %}
-    {% for requirement in test.requirements %}
-        {% if loop.first %}
-                <tr class="test--{{ test.result|lower|replace(' ', '-') }}">
+
+    {% set ns = namespace(refered_requirements=[]) %}
+    {% for test_case in tests %}
+        {% if test_case.result == "PASSED" -%}
+            {% set test_result_class = "test--passed" %}
+        {%- elif test_case.result == "SKIPPED" %}
+            {% set test_result_class = "test--skipped" %}
+        {%- elif test_case.result == "ERRORED" %}
+            {% set test_result_class = "test--errored" %}
+        {%- elif test_case.result == "FAILED" %}
+            {% set test_result_class = "test--failed" %}
+        {%- elif test_case.result == "JUSTIFIED" %}
+            {% set test_result_class = "test--justified" %}
+        {%- elif test_case.result == "EXPECTED_FAILURE" %}
+            {% set test_result_class = "test--expected-failure" %}
+        {%- elif test_case.result == "UNEXPECTED_SUCCESS" %}
+            {% set test_result_class = "test--unexpected-success" %}
+        {%- endif %}
+
+        {% if level_name in test_plan_paths: %}
+            {% set test_plan_path = test_plan_paths[level_name] %}
         {% else %}
-                <tr>
+            {% set test_plan_path = test_plan_paths['_'] %}
         {% endif %}
-        {% if loop.first %}
-                    <td class="test__id" rowspan="{{ loop.length }}"><a href="{{ paths.test_plan }}#{{ test.test_id }}">{{ test.test_id }}</a></td>
-        {% endif %}
-                    <td class="test__requirement">{{ requirement }}</td>
-        {% if loop.first %}
-                    <td class="test__result" rowspan="{{ loop.length }}"><a href="{{ paths.test_record }}#{{ test.test_id }}">{{ test.result }}</a></td>
-                    <td class="test__bug-id" rowspan="{{ loop.length }}"><input type="text" name="{{ test.test_id }}--bug" id="{{ test.test_id }}--bug" /></td>
-                    <td class="test__comment" rowspan="{{ loop.length }}"><div contenteditable class="textarea">{{ test.comment }}</div></td>
-        {% endif %}
+
+        {% if test_case.requirements %}
+            {% for requirement in test_case.requirements %}
+                {{ ns.refered_requirements.append(requirement)|default("", True) }}
+                        <tr class="test_level--{{ test_case.level }} {{ test_result_class }} filterable" data-filter="{{ test_case.test_id }}">
+                {% if loop.first %}
+                            <td class="test__level" rowspan="{{ loop.length }}">{{ test_case.level|capitalize }}</td>
+                            <td class="test__id" rowspan="{{ loop.length }}"><a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }}</a></td>
+                {% endif %}
+                            <td class="test__requirement">{{ requirement }}</td>
+                {% if loop.first %}
+                            <td class="test__result" rowspan="{{ loop.length }}">
+                    {% if test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED_FAILURE') %}
+                                <a href="{{ issue_list_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
+                    {% else %}
+                                {{ test_case.result }}
+                    {% endif %}
+                            </td>
+                            <td class="test__bug-id" rowspan="{{ loop.length }}">{{ test_case.bug_id }}</td>
+                            <td class="test__comment" rowspan="{{ loop.length }}">{{ test_case.comment }}</td>
+                {% endif %}
+                        </tr>
+            {% endfor %}
+        {% else %}
+                <tr class="test_level--{{ test_case.level }} {{ test_result_class }} filterable" data-filter="{{ test_case.test_id }}">
+                    <td class="test__level">{{ test_case.level|capitalize }}</td>
+                    <td class="test__id"><a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }}</a></td>
+                    <td class="test__requirement"></td>
+                    <td class="test__result">
+                    {% if test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED_FAILURE') %}
+                        <a href="{{ issue_list_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
+                    {% else %}
+                        {{ test_case.result }}
+                    {% endif %}
+                    </td>
+                    <td class="test__bug-id">{{ test_case.bug_id }}</td>
+                    <td class="test__comment">{{ test_case.comment }}</td>
                 </tr>
+        {% endif %}
     {% endfor %}
-{% endfor %}
                 </tbody>
                 <tfoot>
                     <tr class="test--{{ summary.result|lower|replace(' ', '-') }}">
-                        <th>Total tests: {{ summary.tests }}</th>
-                        <th>Total requirements: {{ summary.requirements }}</th>
+                        <th>Total levels: {{ summary.levels.keys()|length }}</th>
+                        <th>Total tests: {{ summary.results.total }}</th>
+                        <th>Total requirements: {{ ns.refered_requirements|unique|list|length }}</th>
                         <th class="test__result">{{ summary.result }}</th>
                         <th></th>
                         <th></th>

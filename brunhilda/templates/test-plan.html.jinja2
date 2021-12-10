@@ -3,18 +3,18 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Test Plan {% if env_info.name %}[{{ env_info.name }}]{% endif %}</title>
+    <title>{{ name }}</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-            {% include "themes/base.css" %}
+    {% include "themes/base.css" %}
     </style>
 </head>
 
 {% set ns = namespace(test_case_name='') %}
 
 <body>
-    <h1>Test Plan {% if env_info.name %}<strong>[{{ env_info.name }}]</strong>{% endif %}</h1>
+    <h1>{{ name }}</h1>
     <div class="header">
         {% include "header.html.jinja2" %}
     </div>

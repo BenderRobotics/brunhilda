@@ -3,7 +3,7 @@ import jinja2
 import datetime
 
 
-class Output():
+class Output:
     def load_template(self, template):
         """
         Prints testresult to HTML document.
@@ -22,5 +22,8 @@ class Output():
                                          trim_blocks=True,
                                          lstrip_blocks=True)
         template = environment.from_string(template_str)
-        template.globals['now'] = datetime.datetime.now
+        template.globals['now'] = datetime.datetime.now     # pass func short-hand to the template
+        template.globals['rel_path'] = rel_path             # pass func short-hand for relative paths
+        template.globals['join_path'] = os.path.join        # pass func short-hand for path join func
+        template.globals['dir_path'] = os.path.dirname      # pass func short-hand for dirname func
         return template

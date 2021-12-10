@@ -1,0 +1,139 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title>{{ name }}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    {% include "themes/base.css" %}
+    </style>
+</head>
+
+<body>
+    <h1>{{ name }}</h1>
+    <div class="header">
+        {% include "header.html.jinja2" %}
+    </div>
+    <div class="main--relative">
+        <section>
+            <table style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Device under test</th>
+                        <th>Test level</th>
+                        <th>Test ID</th>
+                        <th>Requirements</th>
+                        <th>Result</th>
+                        <th colspan="2">Message</th>
+                        <th>Bug ID</th>
+                        <th>Justified</th>
+                        <th>Justification</th>
+                    </tr>
+                </thead>
+
+        {% set ns = namespace(test_id='') %}
+
+        {% for path, report in reports.items() %}
+            {% set ns.test_id = '' %}
+            {% for issue in report.errors %}
+                {% if ns.test_id != issue.test %}
+                    {% if ns.test_id != '' %}
+                </tbody>
+                    {% endif %}
+                    {% set ns.test_id = issue.test %}
+                <tbody id="{{ issue.test }}">
+                {% endif %}
+                {% if issue.justified|lower == 'yes' %}
+                    {% set class_justification = 'issue--justified' %}
+                {% else %}
+                    {% set class_justification = 'issue--not-justified' %}
+                {% endif %}
+                    <tr class="{{ class_justification }}">
+                        <td>{{ report.run.dut }}</td>
+                        <td>{{ report.run.level }}</td>
+                        <td>{{ issue['sub-test'] or issue.test }}</td>
+                        <td><ul>
+                            {% for spec in issue.tags.spec%}
+                            <li>{{ spec }}</li>
+                            {% endfor %}
+                        </ul></td>
+                        <td>ERROR</td>
+                        <td colspan="{{ 1 if issue.extra else 2 }}">
+                            <pre>{{ issue.message }}</pre>
+                        </td>
+                {% if issue.extra %}
+                        <td>
+                        {% for extra in issue.extra %}
+                            {% if extra.type.startswith('image') %}
+                            <p><img class="issue__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" /></p>
+                            {% elif extra.type == 'image-reference' %}
+                            <p><img class="issue__extra__image" src="{{ rel_path(document_path, join_path(dir_path(path), extra.value)) }}" /></p>
+                            {% else %}
+                            <pre class="issue__extra__text">{{ extra.value }}</pre>
+                            {% endif %}
+                        {% endfor %}
+                        </td>
+                {% endif %}
+                        <td>{{ issue['bug-id'] }}</td>
+                        <td>{{ issue.justified }}</td>
+                        <td>{{ issue.comment }}</td>
+                    </tr>
+            {% endfor %}
+
+            {% set ns.test_id = '' %}
+
+            {% for issue in report.failures %}
+                {% if ns.test_id != issue.test %}
+                    {% if ns.test_id != '' %}
+                </tbody>
+                    {% endif %}
+                    {% set ns.test_id = issue.test %}
+                <tbody id="{{ issue.test }}">
+                {% endif %}
+                {% if issue.justified|lower == 'yes' %}
+                    {% set class_justification = 'issue--justified' %}
+                {% else %}
+                    {% set class_justification = 'issue--not-justified' %}
+                {% endif %}
+
+                    <tr class="{{ class_justification }}">
+                        <td>{{ report.run.dut }}</td>
+                        <td>{{ report.run.level }}</td>
+                        <td>{{ issue['sub-test'] or issue.test }}</td>
+                        <td><ul>
+                            {% for spec in issue.tags.spec%}
+                            <li>{{ spec }}</li>
+                            {% endfor %}
+                        </ul></td>
+                        <td>FAIL</td>
+                        <td colspan="{{ 1 if issue.extra else 2 }}">
+                            <pre>{{ issue.message }}</pre>
+                        </td>
+                    {% if issue.extra %}
+                        <td>
+                        {% for extra in issue.extra %}
+                            {% if extra.type.startswith('image') %}
+                            <p><img class="issue__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" /></p>
+                            {% elif extra.type == 'image-reference' %}
+                            <p><img class="issue__extra__image" src="{{ rel_path(document_path, join_path(dir_path(path), extra.value)) }}" /></p>
+                            {% else %}
+                            <pre class="issue__extra__text">{{ extra.value }}</pre>
+                            {% endif %}
+                        {% endfor %}
+                        </td>
+                    {% endif %}
+                        <td>{{ issue['bug-id'] }}</td>
+                        <td>{{ issue.justified }}</td>
+                        <td>{{ issue.comment }}</td>
+                    </tr>
+            {% endfor %}
+        {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+
+</html>

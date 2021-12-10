@@ -1,13 +1,18 @@
 import copy
+from typing import Dict
 
+from .data import Summary
 from .html_output import HtmlOutput
 
 class HtmlResultOutput(HtmlOutput):
-    def print(self, env_info, user_data, result, summary, paths):
+    def print(self, env_info: Dict, user_data: Dict, result, summary: Summary):
         """
         Prints test result to HTML document.
 
-        :param result: BRunhilda test result from the test run,
+        :param env_info: environment info dictionary
+        :param user_data: user data dictionary
+        :param result: BRunhilda test result from the test run
+        :param summary: BRunhilda test result summary
         :return: HTML string
         :rtype: str
         """
@@ -35,6 +40,5 @@ class HtmlResultOutput(HtmlOutput):
                                    env_info=env_info,
                                    user_data=user_data,
                                    result=result,
-                                   summary=summary,
-                                   paths=paths)
+                                   summary=summary)
         return rendered

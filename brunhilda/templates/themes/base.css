@@ -132,15 +132,17 @@ table {
  :root {
     --color--pass: green;
     --color--pass-bg: rgba(0, 128, 0, 0.1);
-    --color--fail: rgb(220, 0, 0);
+    --color--fail: #dc0000;
     --color--fail-bg: rgba(220, 0, 0, 0.1);
-    --color--error: rgb(167, 0, 209);
+    --color--error: #a700d1;
     --color--error-bg: rgba(167, 0, 209, 0.1);
     --color--skip: orange;
     --color--skip-bg: rgba(255, 166, 0, 0.1);
-    --color--expected-failure: rgb(64, 0, 240);
+    --color--justified: #74ad09;
+    --color--justified-bg: rgba(116, 173, 9, 0.1);
+    --color--expected-failure: #4000f0;
     --color--expected-failure-bg: rgba(64, 0, 240, 0.1);
-    --color--unexpected-success: rgb(0, 200, 200);
+    --color--unexpected-success: #00c8c8;
     --color--unexpected-success-bg: rgba(0, 200, 200, 0.1);
 }
 
@@ -222,6 +224,20 @@ thead tr {
     border-bottom: 2px solid #4b4b4b;
 }
 
+thead input, thead select {
+    display: block;
+    width: 90%;
+    margin-top: 0.5em;
+}
+
+tfoot tr {
+    border-top: 3px double #4b4b4b;
+}
+
+tfoot td {
+    font-weight: bold;
+}
+
 tr {
     page-break-inside: avoid;
     page-break-after: auto
@@ -236,8 +252,9 @@ th {
 
 th,
 td {
-    padding: 0.333em;
+    padding: 0.25em;
     border: 1px solid #a0a0a0;
+    vertical-align: middle;
 }
 
 strong {
@@ -304,6 +321,11 @@ input[type="datetime-local"] {
     .toc {
         page-break-after: always;
     }
+}
+
+.main {
+    width: 100%;
+    max-width: 1200px;
 }
 
 
@@ -417,6 +439,14 @@ input.testcase__expander:checked+.testcase__description {
     background-color: rgb(255, 255, 245);
 }
 
+.test--hidden, .test--hidden_lvl {
+    visibility: collapse;
+}
+
+.test--hidden_id {
+    display: none;
+}
+
 .test__header {
     display: block;
     padding: 0.25rem 0.5rem 0.25rem 2rem;
@@ -436,7 +466,6 @@ input.testcase__expander:checked+.testcase__description {
 }
 
 .test__result {
-    width: 25%;
     max-width: 10rem;
     font-weight: bold;
 }
@@ -469,6 +498,12 @@ input.testcase__expander:checked+.testcase__description {
 .test--skipped .test__result a,
 .run-summary--skipped {
     color: var(--color--skip);
+}
+
+.test--justified .test__result,
+.test--justified .test__result a,
+.run-summary--justified {
+    color: var(--color--justified);
 }
 
 .test--errored .test__result,
@@ -614,6 +649,10 @@ input.test__expander:checked+.test__detail {
     width: auto;
 }
 
+.req__test-id a, .test-id a  {
+    overflow-wrap: anywhere;
+}
+
 .subtests {
     width: 100%;
 }
@@ -652,6 +691,67 @@ input.test__expander:checked+.test__detail {
     width: auto;
 }
 
+/********************************************************/
+
+.inner_table {
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+.inner_table tr:first-child td {
+    border-top: none;
+}
+
+.inner_table tr:last-child td {
+    border-bottom: none;
+}
+
+.inner_table tr td:nth-child(1) {
+    border-left: none;
+}
+
+.inner_table tr td:nth-child(n) {
+    border-right: none;
+}
+
+.inner_table__td {
+    padding: 0px;
+}
+
+/********************************************************/
+
+.testcase__inner_table__td {
+}
+
+.table--wide {
+    width: 100%;
+}
+
+.table__col--test_requirement {
+    min-width: 160px;
+    max-width: 160px;
+}
+
+.table__col--test_level {
+    min-width: 100px;
+    max-width: 100px;
+}
+
+.table__col--req_name {
+    min-width: 600px;
+    max-width: 40vw;
+}
+
+.table__col--cov_p {
+    min-width: 125px;
+    max-width: 125px;
+}
+
+.table__col--test_result {
+    min-width: 125px;
+    max-width: 125px;
+}
 
 /********************************************************/
 
@@ -702,6 +802,10 @@ input.test__expander:checked+.test__detail {
 
 .bar__line--skipped {
     background-color: var(--color--skip);
+}
+
+.bar__line--justified {
+    background-color: var(--color--justified);
 }
 
 .bar__line--expected-failure {
@@ -866,12 +970,6 @@ ol.lowerroman {
 
 
 /*************************************/
-
-.summary {
-    width: 100%;
-    max-width: 1200px;
-}
-
 .summary td {
     vertical-align: middle;
 }
@@ -879,4 +977,27 @@ ol.lowerroman {
 .summary th {
     position: sticky;
     top: 0;
+}
+
+/**************************************/
+
+.issue--justified {
+    background-color: #eafee7;
+}
+
+.issue--not-justified {
+    background-color: #fff0f2;
+}
+
+.issue__extra__image {
+    max-width: 50vw;
+    width: 720px;
+}
+
+.issue__extra__text {
+    padding: 1em 0;
+}
+
+.issue__extra__text + .issue__extra__text {
+    border-top: 1px solid gray;
 }

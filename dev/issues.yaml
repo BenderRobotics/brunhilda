@@ -1,0 +1,640 @@
+errors:
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 269, in test_02_subtest
+        self.assertEqual(1, 1 / (i % 3) , "Message")
+    ZeroDivisionError: division by zero
+  result: ERRORED
+  sub-test: test_01.TestCase1.test_02_subtest (i=3, j=6, bc='9.1.2')
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_02_subtest
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 269, in test_02_subtest
+        self.assertEqual(1, 1 / (i % 3) , "Message")
+    AssertionError: 1 != 0.5 : Message
+  result: ERRORED
+  sub-test: test_01.TestCase1.test_02_subtest (i=5, j=10, bc='9.1.2')
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_02_subtest
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 267, in test_02_subtest
+        raise AssertionError(img.copy())
+    AssertionError: <PIL.Image.Image image mode=RGB size=1600x1000 at 0x12866013670>
+  result: ERRORED
+  sub-test: test_01.TestCase1.test_02_subtest (i=6, j=12, bc='9.1.2')
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_02_subtest
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 267, in test_02_subtest
+        raise AssertionError(img.copy())
+    AssertionError: <PIL.Image.Image image mode=RGB size=1600x1000 at 0x12866013880>
+  result: ERRORED
+  sub-test: test_01.TestCase1.test_02_subtest (i=8, j=16, bc='9.1.2')
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_02_subtest
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 269, in test_02_subtest
+        self.assertEqual(1, 1 / (i % 3) , "Message")
+    ZeroDivisionError: division by zero
+  result: ERRORED
+  sub-test: test_01.TestCase1.test_02_subtest (i=9, j=18, bc='9.1.2')
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_02_subtest
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 297, in test_03_error
+        self.assertTrue(1 / 0, "Message")
+    ZeroDivisionError: division by zero
+  result: ERRORED
+  sub-test: null
+  tags:
+    author:
+    - Jan Hrbacek
+    covering:
+    - REQ_SYS_FW_001
+    - REQ_SYS_FW_002
+    env:
+    - PHY1; PHY2; VIRT
+    environment:
+    - ENV_002
+    exec-time:
+    - 150s
+    execution:
+    - automatic
+    priority:
+    - high
+    spec:
+    - L11 4.4
+    status:
+    - new
+    test-id:
+    - ST_FW_002
+    tp:
+    - TP07.1
+    variants:
+    - MMI_TGL_001
+    - MMI_TGL_002
+  test: test_01.TestCase1.test_03_error
+failures:
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 229, in test_01_fail
+        self.assertEqual(1, 2, "Message")
+    AssertionError: 1 != 2 : Message
+  result: FAILED
+  sub-test: null
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_01_fail
+- bug-id: ''
+  comment: 'false positive OCR error detection'
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 267, in test_02_subtest
+        raise AssertionError(img.copy())
+    AssertionError: <PIL.Image.Image image mode=RGB size=1600x1000 at 0x12866013250>
+  result: FAILED
+  sub-test: test_01.TestCase1.test_02_subtest (i=0, j=0, bc='9.1.2')
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_02_subtest
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 267, in test_02_subtest
+        raise AssertionError(img.copy())
+    AssertionError: <PIL.Image.Image image mode=RGB size=1600x1000 at 0x12866013460>
+  result: FAILED
+  sub-test: test_01.TestCase1.test_02_subtest (i=2, j=4, bc='9.1.2')
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_02_subtest
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 368, in test_08_exception_args
+        raise AssertionError(img.copy())
+    AssertionError: <PIL.Image.Image image mode=RGB size=1600x1000 at 0x1286593A970>
+  result: FAILED
+  sub-test: null
+  tags: {}
+  test: test_01.TestCase1.test_08_exception_args
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "b:\BR\br_Brunhilda\brunhilda\venv\lib\site-packages\ddt.py", line 191, in wrapper
+        return func(self, *args, **kwargs)
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 386, in test_09_ddt
+        self.assertIn(param, [2, 5, 7])
+    AssertionError: 1 not found in [2, 5, 7]
+  result: FAILED
+  sub-test: null
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_09_ddt_01_1
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "b:\BR\br_Brunhilda\brunhilda\venv\lib\site-packages\ddt.py", line 191, in wrapper
+        return func(self, *args, **kwargs)
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 386, in test_09_ddt
+        self.assertIn(param, [2, 5, 7])
+    AssertionError: 3 not found in [2, 5, 7]
+  result: FAILED
+  sub-test: null
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_09_ddt_03_3
+- bug-id: ''
+  comment: ''
+  justified: 'no'
+  message: |
+    Traceback (most recent call last):
+      File "b:\BR\br_Brunhilda\brunhilda\venv\lib\site-packages\ddt.py", line 191, in wrapper
+        return func(self, *args, **kwargs)
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 386, in test_09_ddt
+        self.assertIn(param, [2, 5, 7])
+    AssertionError: 4 not found in [2, 5, 7]
+  result: FAILED
+  sub-test: null
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_09_ddt_04_4
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "b:\BR\br_Brunhilda\brunhilda\venv\lib\site-packages\ddt.py", line 191, in wrapper
+        return func(self, *args, **kwargs)
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 386, in test_09_ddt
+        self.assertIn(param, [2, 5, 7])
+    AssertionError: 6 not found in [2, 5, 7]
+  result: FAILED
+  sub-test: null
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_09_ddt_06_6
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "b:\BR\br_Brunhilda\brunhilda\venv\lib\site-packages\ddt.py", line 191, in wrapper
+        return func(self, *args, **kwargs)
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 386, in test_09_ddt
+        self.assertIn(param, [2, 5, 7])
+    AssertionError: 8 not found in [2, 5, 7]
+  result: FAILED
+  sub-test: null
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_09_ddt_08_8
+- bug-id: ''
+  comment: ''
+  justified: 'no'
+  message: |
+    Traceback (most recent call last):
+      File "b:\BR\br_Brunhilda\brunhilda\venv\lib\site-packages\ddt.py", line 191, in wrapper
+        return func(self, *args, **kwargs)
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 386, in test_09_ddt
+        self.assertIn(param, [2, 5, 7])
+    AssertionError: 9 not found in [2, 5, 7]
+  result: FAILED
+  sub-test: null
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_09_ddt_09_9
+- bug-id: ''
+  comment: ''
+  justified: 'yes'
+  message: |
+    Traceback (most recent call last):
+      File "b:\BR\br_Brunhilda\brunhilda\venv\lib\site-packages\ddt.py", line 191, in wrapper
+        return func(self, *args, **kwargs)
+      File "B:\BR\br_Brunhilda\brunhilda\dev\test_01.py", line 386, in test_09_ddt
+        self.assertIn(param, [2, 5, 7])
+    AssertionError: 10 not found in [2, 5, 7]
+  result: FAILED
+  sub-test: null
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - INT_ENV_MMI1
+    - INT_ENV_MMI2
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of logic values related to the main zone
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L02_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test: test_01.TestCase1.test_09_ddt_10_10
+run:
+  date-time: 2021-12-02 14:14:51.021804
+  dut: MMI2
+  level: system
+  user data:
+    Branch: '-'
+    Commit ID: '-'
+    Execution: manual
+    Firmware version: '- (bootloader -)'
+    Job ID: '-'
+    Job name: '-'
+    Job stage: '-'
+    Pipeline: '-'
+    Project: '-'
+    Project name: '-'
+    Runner: '-'
+    Runner ID: '-'
+    Tag: '-'
+    Triggered by: '-'

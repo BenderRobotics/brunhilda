@@ -22,18 +22,23 @@ if __name__ == '__main__':
     runner = brunhilda.BRunhilda(user_data=information,
                                  verbosity=3,
                                  stream=sys.stdout,
-                                 name="system",
-                                 html_preamble="dev/report.intro.html",
+                                 name='system',
+                                 dut='MMI2',
                                  html_output="dev/report.html",
                                  junit_output="dev/report.xml",
-                                 traceability_output="dev/traceability.html",
-                                 req_summary_output="dev/req-summary.html",
-                                 test_summary_preamble="dev/test-summary.intro.html",
-                                 test_summary_output="dev/test-summary.html",
-                                 test_plan_preamble="dev/test-plan.intro.html",
-                                 test_plan_output="dev/test-plan.html",
-                                 requirements_list=['L10', 'L11', 'L12', 'C05'])
+                                 issues_output="dev/issues.yaml",
+                                 tests_output="dev/tests.yaml")
 
     loader = brunhilda.BRunhildaTestLoader()
-    suite = loader.discover('.')
+    suite = loader.discover('dev')
     runner.run(suite)
+
+    reporter = brunhilda.reporter.Reporter(requirements=['L55'])
+    reporter.load_tests('dev/tests.yaml')
+    reporter.load_issues('dev/issues.yaml')
+    reporter.justify_tests()
+    reporter.print_issue_list('dev/issues.html')
+    reporter.print_test_plan('dev/plan.html')
+    reporter.print_requirements_summary('dev/requirements.html')
+    reporter.print_test_summary('dev/tests.html')
+    reporter.print_index('dev/index.html')

@@ -3,67 +3,131 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Requirements Coverage Summary {% if env_info.name %}[{{ env_info.name }}]{% endif %}</title>
+    <title>{{ name }}</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-            {% include "themes/base.css" %}
+    {% include "themes/base.css" %}
     </style>
 </head>
 
 <body>
-    <h1>Requirements Coverage Summary {% if env_info.name %}<strong>[{{ env_info.name }}]</strong>{% endif %}</h1>
+    <h1>{{ name }}</h1>
     <div class="header">
         {% include "header.html.jinja2" %}
     </div>
+
     <div class="main">
 {% if preamble %}
         <section class="preamble">
             {{ preamble }}
         </section>
 {% endif %}
+
+        <section>
+        {% include "summary.html.jinja2" %}
+        </section>
+
         <section>
             <h2>Requirements Summary</h2>
             <table class="summary table--wide">
                 <thead>
                     <tr>
-                        <th>Requirement ID</th>
-                        <th>Test Cases Covering Requirement</th>
-                        <th>Requirement Coverage Percentage/Test Case</th>
-                        <th>Test Result</th>
+                        <th class="table__col--test_requirement">
+                            <span>Requirement ID</span>
+                            <input id="filter"/>
+                        </th>
+                        <th class="table__col--test_level">
+                            <span>Test Level</span>
+                            <select id="level-selector">
+                                <option value="all">All</option>
+                            {% for level in summary.levels %}
+                                <option value={{ level }}>{{ level|capitalize }}</option>
+                            {% endfor %}
+                            </select>
+                        </th>
+                        <th class="table__col--req_name">Test Cases Covering Requirement</th>
+                        <th class="table__col--cov_p">Requirement Coverage Percentage/Test Case</th>
+                        <th class="table__col--test_result">Test Result</th>
                         <th>Requirement Pass Percentage</th>
                     </tr>
                 </thead>
                 <tbody>
-{% for requirement in requirements %}
-    {% if not requirement.tests %}
-                <tr>
-                    <td class="req__id">{{ requirement.requirement_id }}</td>
-                    <td class="req__test-id">Not covered</td>
-                    <td class="req__test-coverage">0</td>
-                    <td class="req__test-result">-</td>
-                    <td class="req__coverage">0</td>
-                </tr>
-    {% else %}
-        {% for test in requirement.tests %}
-                <tr>
-            {% if loop.first %}
-                    <td class="req__id" rowspan="{{ loop.length }}">{{ requirement.requirement_id }}</td>
-            {% endif %}
-                    <td class="req__test-id"><a href="{{ paths.test_plan }}#{{ test.test_id }}">{{ test.test_id }}</a></td>
-                    <td class="req__test-coverage">{{ "%.0f"|format(test.coverage_ratio * 100) }}</td>
-                    <td class="req__test-result test--{{ test.result|lower|replace(' ', '-') }}"><span class="test__result">{{ test.result }}</span></td>
-            {% if loop.first %}
-                    <td class="req__coverage" rowspan="{{ loop.length }}">{{ "%.0f"|format(requirement.test_pass_ratio * 100) }}</td>
-            {% endif %}
-                </tr>
-        {% endfor %}
-    {% endif %}
-{% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
-</body>
 
+                {% for requirement in requirements %}
+                    <tr class="filterable" data-filter="{{ requirement.name }}">
+                        <td class="req__id table__col--test_requirement">{{ requirement.name }}</td>
+                        <td class="inner_table__td" colspan="4">
+                            <table class="inner_table">
+                            <tbody>
+                    {% if requirement.levels|length == 0 %}
+                                <tr class="test--not-covered">
+                                    <td>Not Covered</td>
+                                </tr>
+                    {% else %}
+                        {% for level_name, level_tests in requirement.levels.items() -%}
+                            {% set level_loop = loop %}
+                            {% for test_case in level_tests -%}
+                                {% if test_case.result == "PASSED" -%}
+                                    {% set test_result_class = "test--passed" %}
+                                {%- elif test_case.result == "SKIPPED" %}
+                                    {% set test_result_class = "test--skipped" %}
+                                {%- elif test_case.result == "ERRORED" %}
+                                    {% set test_result_class = "test--errored" %}
+                                {%- elif test_case.result == "FAILED" %}
+                                    {% set test_result_class = "test--failed" %}
+                                {%- elif test_case.result == "JUSTIFIED" %}
+                                    {% set test_result_class = "test--justified" %}
+                                {%- elif test_case.result == "EXPECTED_FAILURE" %}
+                                    {% set test_result_class = "test--expected-failure" %}
+                                {%- elif test_case.result == "UNEXPECTED_SUCCESS" %}
+                                    {% set test_result_class = "test--unexpected-success" %}
+                                {%- endif %}
+
+                                {% if level_name in test_plan_paths: %}
+                                    {% set test_plan_path = test_plan_paths[level_name] %}
+                                {% else %}
+                                    {% set test_plan_path = test_plan_paths['_'] %}
+                                {% endif %}
+
+                                <tr class="{{ test_result_class }} test_level--{{ level_name }}">
+                                    <td class="req__test-level testcase__inner_table__td table__col--test_level" >{{ level_name|capitalize }}</td>
+                                    <td class="req__test-id testcase__inner_table__td table__col--req_name">
+                                        <a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }}</a>
+                                    </td>
+                                    <td class="req__test-coverage testcase__inner_table__td table__col--cov_p">{{ (100 / requirement.count)|round|int }}</td>
+                                    <td class="{{ test_result_class }} req__test-result testcase__inner_table__td table__col--test_result">
+                                        <span class="test__result">
+                                    {% if test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED_FAILURE') %}
+                                            <a href="{{ issue_list_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
+                                    {% else %}
+                                            {{ test_case.result }}
+                                    {% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+                            </tbody>
+                            </table>
+                        </td>
+                        <td class="req__coverage">{{ requirement.pass_ratio|round|int }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="test--{{ summary.result|lower|replace(' ', '-') }}">
+                        <th>Total requirements: {{ requirements|length }}</th>
+                        <th>Total levels: {{ summary.levels.keys()|length }}</th>
+                        <th>Total tests: {{ summary.results.total }}</th>
+                        <th></th>
+                        <th class="test__result">{{ summary.result }}</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+    </div>
+</body>
 </html>
