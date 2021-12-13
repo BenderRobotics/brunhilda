@@ -1,5 +1,12 @@
 # Brunhilda project changelog
 
+
+## 2.0.1 (2021-12-14)
+
+- Fixed loader filtering by tags.
+- Fixed invalid characters in the extra file name.
+- Fixed extra image paths in the test execution report.
+
 ## 2.0.0 (2021-12-10)
 
 - Used external images instead of embedded images in the HTML reports to reduce memory errors during test runs (refs [#5043](https://redmine.benderrobotics.com/issues/5043)).
