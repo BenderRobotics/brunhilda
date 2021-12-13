@@ -278,8 +278,13 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param filename: name of the file
         :param image: image bytes
         """
+        invalid_path_characters = ("'", '"', '/', '\\', '?', '<', '>', ':', '|', '*')
+
         if not os.path.exists(self.extra_data_path):
             os.makedirs(self.extra_data_path)
+
+        for char in invalid_path_characters:
+            filename = filename.replace(char, '')
 
         save_path = os.path.join(self.extra_data_path, f'{filename}.jpg')
         im = Image.open(BytesIO(image))
