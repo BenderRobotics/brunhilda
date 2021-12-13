@@ -1,5 +1,6 @@
 import unittest
 from .result import BRunhildaTestResult
+from .parser import parse_tags
 
 
 class BRunhildaTestLoader:
@@ -42,7 +43,7 @@ class BRunhildaTestLoader:
                     tests.addTest(test)
                 else:
                     docstring = getattr(test, test._testMethodName).__doc__
-                    tags = BRunhildaTestResult.parseTags(docstring)
+                    tags = parse_tags(docstring)
 
                     if self._filter_by_tags(tag_filter, tags):
                         tests.addTest(test)
