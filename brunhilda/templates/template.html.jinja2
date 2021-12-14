@@ -280,10 +280,10 @@
                                         <h3>Extra</h3>
                                         {% for extra in test.extra %}
                                         <div class="test__extra">
-                                            {% if extra.type.startswith('image') %}
+                                            {% if extra.type.startswith('image/') %}
                                             <img class="test__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" />
                                             {% elif extra.type == 'image-reference' %}
-                                            <img class="test__extra__image" src="{{ extra.value }}" /></p>
+                                            <img class="test__extra__image" src="{{ rel_path(document_path, extra.value)}}" />
                                             {% else %}
                                             <pre class="test__extra__text">{{ extra.value }}</pre>
                                             {% endif %}
