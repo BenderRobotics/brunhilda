@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 2.0.2 (2021-12-23)
+
+- Fixed processing of extra test data by additional check if test object contains extra data.
+- Fixed saving of extra images with too long filename by limiting max length of the filename to 120 chars.
 
 ## 2.0.1 (2021-12-14)
 
