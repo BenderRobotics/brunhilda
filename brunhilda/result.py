@@ -280,17 +280,21 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         invalid_path_characters = ("'", '"', '/', '\\', '?', '<', '>', ':', '|', '*')
 
-        if not os.path.exists(self.extra_data_path):
-            os.makedirs(self.extra_data_path)
+        try:
+            if not os.path.exists(self.extra_data_path):
+                os.makedirs(self.extra_data_path)
 
-        for char in invalid_path_characters:
-            filename = filename.replace(char, '')
+            for char in invalid_path_characters:
+                filename = filename.replace(char, '')
 
-        save_path = os.path.join(self.extra_data_path, f'{filename}.jpg')
-        im = Image.open(BytesIO(image))
-        im.save(save_path, format='jpeg')
-
-        return save_path
+            filename = filename[:120]   # limit to 120 characters
+            save_path = os.path.join(self.extra_data_path, f'{filename}.jpg')
+            im = Image.open(BytesIO(image))
+            im.save(save_path, format='jpeg')
+        except Exception:
+            save_path = ''
+        finally:
+            return save_path
 
     @property
     def result(self):
