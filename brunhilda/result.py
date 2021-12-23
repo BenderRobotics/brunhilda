@@ -399,6 +399,13 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             self.results['testcases'][testcase_name]['result'] = PASSED
 
         test_id = self._get_test_id(test)
+        extra = []
+
+        try:
+            if hasattr(test, 'extra'):
+                extra = self._process_extra_data(test.extra, test_id)
+        except Exception:
+            pass
 
         self.results['testcases'][testcase_name]['time'] = self.suite_execution_time
         self.results['testcases'][testcase_name]['tests'].append({
@@ -413,7 +420,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'result': self.last_result,
             'output': self.stream_buffer.read(),
             'errors': self.errors_strings,
-            'extra': self._process_extra_data(test.extra, test_id)
+            'extra': extra
         })
 
         self.summary.results += self.last_result
@@ -440,13 +447,20 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                     test.extra.append(ex)
 
         test_id = self._get_test_id(test)
+        extra = []
+
+        try:
+            if hasattr(test, 'extra'):
+                extra = self._process_extra_data(test.extra, test_id)
+        except Exception:
+            pass
 
         self._issues['errors'].append({
             'test': test_id,
             'sub-test': None,
             'result': ERRORED,
             'message': self._exc_info_to_string(err, test),
-            'extra': self._process_extra_data(test.extra, test_id),
+            'extra': extra,
             'bug-id': '',
             'comment': '',
             'justified': '',
@@ -466,13 +480,20 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 test.extra.append(ex)
 
         test_id = self._get_test_id(test)
+        extra = []
+
+        try:
+            if hasattr(test, 'extra'):
+                extra = self._process_extra_data(test.extra, test_id)
+        except Exception:
+            pass
 
         self._issues['failures'].append({
             'test': test_id,
             'sub-test': None,
             'result': FAILED,
             'message': self._exc_info_to_string(err, test),
-            'extra': self._process_extra_data(test.extra, test_id),
+            'extra': extra,
             'bug-id': '',
             'comment': '',
             'justified': '',
@@ -493,13 +514,20 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         test_id = self._get_test_id(test)
         subtest_id = subtest.id().lstrip(test.__module__ + '.')
+        extra = []
+
+        try:
+            if hasattr(subtest, 'extra'):
+                extra = self._process_extra_data(subtest.extra, subtest_id)
+        except Exception:
+            pass
 
         self.subtests.append({
             'num': 1+len(self.subtests),
             'id': subtest_id,
             'name': str(dict(subtest.params)),
             'result': PASSED,
-            'extra': self._process_extra_data(subtest.extra, subtest_id)
+            'extra': extra
         })
 
         # `err` contains info about errors and failures, if `None`, sub-test passed
@@ -523,7 +551,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'test': test_id,
                 'sub-test': subtest_id,
                 'message': err_str,
-                'extra': self._process_extra_data(subtest.extra, subtest_id),
+                'extra': extra,
                 'result': self.last_result,
                 'bug-id': '',
                 'comment': '',
