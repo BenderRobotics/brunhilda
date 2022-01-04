@@ -163,7 +163,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 if self.EMBEDDED_IMAGES:
                     processed_extras.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
                 else:
-                    path = self._store_img(f'{test_id}-{i:03}', img[0])
+                    path = self._store_img(test_id, img[0])
                     processed_extras.append({'type': 'image-reference', 'value': path})
             else:
                 processed_extras.append({'type': 'text', 'value': pprint.pformat(ex, indent=2, width=120)})
@@ -288,7 +288,13 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 filename = filename.replace(char, '')
 
             filename = filename[:120]   # limit to 120 characters
-            save_path = os.path.join(self.extra_data_path, f'{filename}.jpg')
+            num = 0
+            save_path = None
+
+            while (save_path is None) or os.path.isfile(save_path):
+                num += 1
+                save_path = os.path.join(self.extra_data_path, f'{filename}-{num:03}.jpg')
+
             im = Image.open(BytesIO(image))
             im.save(save_path, format='jpeg')
         except Exception:

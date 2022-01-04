@@ -31,7 +31,7 @@ if __name__ == '__main__':
                                  extra_data_output="dev/extra")
 
     loader = brunhilda.BRunhildaTestLoader()
-    suite = loader.discover('dev')
+    suite = loader.discover('.')
     runner.run(suite)
 
     reporter = brunhilda.reporter.Reporter(requirements=['L55'])
