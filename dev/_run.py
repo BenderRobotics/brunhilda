@@ -24,22 +24,22 @@ if __name__ == '__main__':
                                  stream=sys.stdout,
                                  name='system',
                                  dut='MMI2',
-                                 html_output="dev/report.html",
-                                 junit_output="dev/report.xml",
-                                 issues_output="dev/issues.yaml",
-                                 tests_output="dev/tests.yaml",
                                  extra_data_output="dev/extra")
 
     loader = brunhilda.BRunhildaTestLoader()
-    suite = loader.discover('.')
-    runner.run(suite)
+    suite = loader.discover('.', pattern='test*.py', top_level_dir=None, tag_filter=None)
+    result = runner.run(suite)
+    runner.save_issues(result, 'issues.yaml')
+    runner.save_tests(result, 'tests.yaml')
+    runner.save_junit_report(result, 'report.junit')
+    runner.save_html_report(result, 'report.html')
 
     reporter = brunhilda.reporter.Reporter(requirements=['L55'])
-    reporter.load_tests('dev/tests.yaml')
-    reporter.load_issues('dev/issues.yaml')
+    reporter.load_tests('tests.yaml')
+    reporter.load_issues('issues.yaml')
     reporter.justify_tests()
-    reporter.print_issue_list('dev/issues.html')
-    reporter.print_test_plan('dev/plan.html')
-    reporter.print_requirements_summary('dev/requirements.html')
-    reporter.print_test_summary('dev/tests.html')
-    reporter.print_index('dev/index.html')
+    reporter.print_issue_list('issues.html')
+    reporter.print_test_plan('plan.html', preamble='preamble.html')
+    reporter.print_requirements_summary('requirements.html')
+    reporter.print_test_summary('tests.html')
+    reporter.print_index('index.html')

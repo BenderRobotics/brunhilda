@@ -26,10 +26,6 @@ class BRunhilda(unittest.TextTestRunner):
                        warnings=None,
                        name="",
                        dut="",
-                       html_output="report.html",
-                       junit_output="report.xml",
-                       issues_output="issues.yaml",
-                       tests_output="tests.yaml",
                        extra_data_output="extra",
                        user_data=None):
         super().__init__(stream=stream,
@@ -41,10 +37,6 @@ class BRunhilda(unittest.TextTestRunner):
         self.name = name
         self.dut = dut
         self.user_data = user_data
-        self.html_output = html_output
-        self.junit_output = junit_output
-        self.issues_output = issues_output
-        self.tests_output = tests_output
         self.extra_data_output = extra_data_output
 
     def _makeResult(self):
@@ -56,20 +48,38 @@ class BRunhilda(unittest.TextTestRunner):
                                    extra_data_path=self.extra_data_output,
                                    user_data=self.user_data)
 
-    def run(self, suite: TestSuite):
+    def save_html_report(self, result, output_path):
         """
-        Run the given test case or test suite, prints the JUnit and HTML
-        reports if requested.
+        Prints the HTML report of the last result
         """
-        result = super().run(suite)
+        try:
+            result.print(HtmlResultOutput(), output_path)
+        except Exception as ex:
+            print(ex)
 
-        # print reports
-        for path, Printer in ((self.html_output, HtmlResultOutput),
-                              (self.junit_output, JUnitResultOutput)):
-            if path:
-                result.print(Printer(), path)
+    def save_junit_report(self, result, output_path):
+        """
+        Prints the jUnit report of the last result
+        """
+        try:
+            result.print(JUnitResultOutput(), output_path)
+        except Exception as ex:
+            print(ex)
 
-        # serialize for post-processing
-        result.serialize_issues(self.issues_output)
-        result.serialize_tests(self.tests_output)
-        return result
+    def save_issues(self, result, output_path):
+        """
+        Serializes issues from the last result.
+        """
+        try:
+            result.serialize_issues(output_path)
+        except Exception as ex:
+            print(ex)
+
+    def save_tests(self, result, output_path):
+        """
+        Serializes executed tests from the last result.
+        """
+        try:
+            result.serialize_tests(output_path)
+        except Exception as ex:
+            print(ex)
