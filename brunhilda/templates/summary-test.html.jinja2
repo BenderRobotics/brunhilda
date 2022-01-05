@@ -72,8 +72,8 @@
             {% set test_result_class = "test--unexpected-success" %}
         {%- endif %}
 
-        {% if level_name in test_plan_paths: %}
-            {% set test_plan_path = test_plan_paths[level_name] %}
+        {% if test_case.level in test_plan_paths: %}
+            {% set test_plan_path = test_plan_paths[test_case.level] %}
         {% else %}
             {% set test_plan_path = test_plan_paths['_'] %}
         {% endif %}
