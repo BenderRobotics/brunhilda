@@ -17,21 +17,34 @@
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
 <script>
-    const results = ['passed', 'failed', 'errored', 'justified', 'skipped', 'expected-failure', 'unexpected-success'];
-    lvl_selector = $("#level-selector")
+    const results = ['passed', 'failed', 'errored', 'justified', 'skipped',
+                     'expected-failure', 'unexpected-success', 'not-covered'];
 
     $(document).ready(function() {
         for (const result of results) {
             (function(r) {
-                $("#run-summary--" + r).change(function() {
-                    if (this.checked) {
-                        $(".test--" + r).removeClass("test--hidden");
-                    }
-                    else {
-                        $(".test--" + r).addClass("test--hidden");
-                    }
-                });
+                if ($("#run-summary--" + r).length) {
+                    $("#run-summary--" + r).change(function() {
+                        if (this.checked) {
+                            $(".test--" + r).removeClass("test--hidden");
+                        }
+                        else {
+                            $(".test--" + r).addClass("test--hidden");
+                        }
 
+                        /* hide rows with no items */
+                        for (const tr of $("tr.filterable")) {
+                            if ($(tr).find(".inner_table").length) {
+                                if ($(tr).find(".inner_table tr:not(.test--hidden)").length == 0) {
+                                    $(tr).addClass("test--hidden_id");
+                                }
+                                else {
+                                    $(tr).removeClass("test--hidden_id");
+                                }
+                            }
+                        }
+                    });
+                }
             })(result);
         }
 

@@ -66,10 +66,12 @@
             {% set test_result_class = "test--failed" %}
         {%- elif test_case.result == "JUSTIFIED" %}
             {% set test_result_class = "test--justified" %}
-        {%- elif test_case.result == "EXPECTED_FAILURE" %}
+        {%- elif test_case.result == "EXPECTED-FAILURE" %}
             {% set test_result_class = "test--expected-failure" %}
-        {%- elif test_case.result == "UNEXPECTED_SUCCESS" %}
+        {%- elif test_case.result == "UNEXPECTED-SUCCESS" %}
             {% set test_result_class = "test--unexpected-success" %}
+        {%- else %}
+            {% set test_result_class = test_case.result|lower %}
         {%- endif %}
 
         {% if test_case.level in test_plan_paths: %}

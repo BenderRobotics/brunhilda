@@ -30,6 +30,9 @@
 
         <section>
             <h2>Requirements Summary</h2>
+            <p>
+                <input type="checkbox" id="run-summary--not-covered" checked> <label for="run-summary--not-covered">Not covered</label>
+            </p>
             <table class="summary table--wide">
                 <thead>
                     <tr>
@@ -78,10 +81,12 @@
                                     {% set test_result_class = "test--failed" %}
                                 {%- elif test_case.result == "JUSTIFIED" %}
                                     {% set test_result_class = "test--justified" %}
-                                {%- elif test_case.result == "EXPECTED_FAILURE" %}
+                                {%- elif test_case.result == "EXPECTED-FAILURE" %}
                                     {% set test_result_class = "test--expected-failure" %}
-                                {%- elif test_case.result == "UNEXPECTED_SUCCESS" %}
+                                {%- elif test_case.result == "UNEXPECTED-SUCCESS" %}
                                     {% set test_result_class = "test--unexpected-success" %}
+                                {%- else %}
+                                    {% set test_result_class = test_case.result|lower %}
                                 {%- endif %}
 
                                 {% if level_name in test_plan_paths: %}
