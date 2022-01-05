@@ -1,5 +1,13 @@
 # Brunhilda project changelog
 
+## 2.1.0 (2021-01-07)
+
+- Prevented collision in generated extra file names (refs [#5307](https://redmine.benderrobotics.com/issues/5307)).
+- Fixed paths to the test plan in the test summary report (refs [#5416](https://redmine.benderrobotics.com/issues/5416)).
+- Split artifacts generation process into dedicated functions - no longer part of the the test running.
+- Improved report filtering function (refs [#5416](https://redmine.benderrobotics.com/issues/5416), CBTFM-394)
+- Removed catch of the missing preamble error to stop reporting (refs [#5416](https://redmine.benderrobotics.com/issues/5416)).
+
 ## 2.0.2 (2021-12-23)
 
 - Fixed processing of extra test data by additional check if test object contains extra data.
