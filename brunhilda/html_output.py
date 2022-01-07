@@ -12,12 +12,8 @@ class HtmlOutput(Output):
         self.path = path
 
         if preamble is not None:
-            try:
-                with open(preamble, encoding='utf-8') as f:
-                    self._include_preamble = f.read()
-            except Exception as ex:
-                self._include_preamble = (f'<p style="color: red; font-weight: bold;">Preamble not loaded. '
-                                          f'<span style="font-family: Consolas, Courier, monospace; background-color: black;">{ex}</span></p>')
+            with open(preamble, encoding='utf-8') as f:
+                self._include_preamble = f.read()
 
     def _format_doc(self, description):
         """
