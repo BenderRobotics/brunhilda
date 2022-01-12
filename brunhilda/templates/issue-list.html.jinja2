@@ -69,7 +69,7 @@
                             {% if extra.type.startswith('image/') %}
                             <p><img class="issue__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" /></p>
                             {% elif extra.type == 'image-reference' %}
-                            <p><img class="issue__extra__image" src="{{ rel_path(document_path, join_path(dir_path(path), extra.value)) }}" /></p>
+                            <p><img class="issue__extra__image" src="{{ rel_path(document_path, join_path(dir_path(path), quote(extra.value))) }}" /></p>
                             {% else %}
                             <pre class="issue__extra__text">{{ extra.value }}</pre>
                             {% endif %}
@@ -117,7 +117,7 @@
                             {% if extra.type.startswith('image/') %}
                             <p><img class="issue__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" /></p>
                             {% elif extra.type == 'image-reference' %}
-                            <p><img class="issue__extra__image" src="{{ rel_path(document_path, join_path(dir_path(path), extra.value)) }}" /></p>
+                            <p><img class="issue__extra__image" src="{{ rel_path(document_path, join_path(dir_path(path), quote(extra.value))) }}" /></p>
                             {% else %}
                             <pre class="issue__extra__text">{{ extra.value }}</pre>
                             {% endif %}

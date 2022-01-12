@@ -164,6 +164,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                     processed_extras.append({'type': img[1], 'value': base64.b64encode(img[0]).decode()})
                 else:
                     path = self._store_img(test_id, img[0])
+                    path = path.replace('\\', '/')
                     processed_extras.append({'type': 'image-reference', 'value': path})
             else:
                 processed_extras.append({'type': 'text', 'value': pprint.pformat(ex, indent=2, width=120)})
