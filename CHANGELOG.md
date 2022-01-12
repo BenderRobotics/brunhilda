@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 2.1.1 (2021-01-12)
+
+- Added quoting of the URL's in generated HTML's to prevent invalid links to referenced artifacts (refs #5416) (refs [#5416](https://redmine.benderrobotics.com/issues/5416)).
+
 ## 2.1.0 (2021-01-07)
 
 - Prevented collision in generated extra file names (refs [#5307](https://redmine.benderrobotics.com/issues/5307)).
