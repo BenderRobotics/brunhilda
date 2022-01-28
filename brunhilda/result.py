@@ -143,6 +143,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self._tests.clear()
         self._issues = {'errors': [], 'failures': [], 'run': {}}
         self.summary = Summary()
+        self.last_result = EMPTY
+        self.run_start_timestamp = datetime.datetime.now()
 
     def _process_extra_data(self, extra: List, test_id: str) -> List:
         """
@@ -312,8 +314,6 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
     def startTestRun(self):
         self._clean()
-        self.last_result = EMPTY
-        self.run_start_timestamp = datetime.datetime.now()
         super().startTestRun()
 
     def stopTestRun(self):

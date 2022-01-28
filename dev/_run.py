@@ -39,7 +39,7 @@ if __name__ == '__main__':
     reporter.load_issues('issues.yaml')
     reporter.justify_tests()
     reporter.print_issue_list('issues.html')
-    reporter.print_test_plan('plan.html', preamble='preamble.html')
+    reporter.print_test_plan('plan.html')
     reporter.print_requirements_summary('requirements.html')
     reporter.print_test_summary('tests.html')
     reporter.print_index('index.html')

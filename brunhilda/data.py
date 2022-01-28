@@ -18,6 +18,7 @@ class ResultsSummary:
     justified: int
     expected_failures: int
     unexpected_successes: int
+    not_executed: int
 
     @property
     def total(self) -> int:
@@ -27,7 +28,8 @@ class ResultsSummary:
                 + self.skipped
                 + self.justified
                 + self.expected_failures
-                + self.unexpected_successes)
+                + self.unexpected_successes
+                + self.not_executed)
 
     @property
     def pct_passed(self) -> float:
@@ -72,6 +74,8 @@ class ResultsSummary:
             self.expected_failures += 1
         elif result == 'UNEXPECTED-SUCCESS':
             self.unexpected_successes += 1
+        elif result == 'EMPTY':
+            self.not_executed += 1
         else:
             raise ValueError(f'Unknown result "{result}".')
 
@@ -80,7 +84,7 @@ class ResultsSummary:
 
 class Summary:
     def __init__(self):
-        self.results = ResultsSummary(0, 0, 0, 0, 0, 0, 0)
+        self.results = ResultsSummary(0, 0, 0, 0, 0, 0, 0, 0)
         self.execution = {}
         self.levels = {}
 

@@ -1,10 +1,9 @@
 import sys
 import unittest
-
-from typing import cast
 from unittest.suite import TestSuite
 
-from .result import BRunhildaTestResult
+from .loader import iter_suite
+from .result import BRunhildaTestResult, EMPTY
 from .html_result_output import HtmlResultOutput
 from .junit_result_output import JUnitResultOutput
 
@@ -38,6 +37,25 @@ class BRunhilda(unittest.TextTestRunner):
         self.dut = dut
         self.user_data = user_data
         self.extra_data_output = extra_data_output
+
+    def dryrun(self, suite: TestSuite) -> BRunhildaTestResult:
+        """
+        Executes a dry run of the test suite. Creates the same artifacts as a normal run but without
+        actually executing the tests.
+
+        :param suite: test suite
+        :return: test result
+        """
+        result = self._makeResult()
+        result.startTestRun()
+
+        for test in iter_suite(suite):
+            result.startTest(test)
+            result.last_result = EMPTY  # override since we do not execute the test
+            result.stopTest(test)
+
+        result.stopTestRun()
+        return result
 
     def _makeResult(self):
         return BRunhildaTestResult(self.stream,

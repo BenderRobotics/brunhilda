@@ -33,6 +33,21 @@ A test runner implementation that outputs results to a stream as an extension of
 - `extra_data_output: str` - Path were extra test artifacts are stored (e.g. images).
 - `user_data: dict` - Dictionary with additional information rendered as an table in the output reports.
 
+#### Dry run
+
+Test suite `dryrun` allows to generate artifacts without actually executing the tests. This is useful when you want
+to create the reports and do not want to execute the entire test suite.
+
+```python
+    loader = brunhilda.BRunhildaTestLoader()
+    suite = loader.discover('.', pattern='test*.py')
+    result = runner.dryrun(suite)
+    runner.save_issues(result, 'issues.yaml')
+    runner.save_tests(result, 'tests.yaml')
+    runner.save_junit_report(result, 'report.junit')
+    runner.save_html_report(result, 'report.html')
+```
+
 ### Extended Test Docstring format
 
 BRunhilda introduces extended format of the test method docstring to hold the detailed information about the test in the

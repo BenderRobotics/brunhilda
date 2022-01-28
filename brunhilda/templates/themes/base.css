@@ -144,6 +144,8 @@ table {
     --color--expected-failure-bg: rgba(64, 0, 240, 0.1);
     --color--unexpected-success: #00c8c8;
     --color--unexpected-success-bg: rgba(0, 200, 200, 0.1);
+    --color--empty: #808080;
+    --color--empty-bg: rgba(128, 128, 128, 0.1);
 }
 
 body {
@@ -538,6 +540,12 @@ input.testcase__expander:checked+.testcase__description {
     color: var(--color--unexpected-success);
 }
 
+.test--empty .test__result,
+.test--empty .test__result a,
+.run-summary--empty {
+    color: var(--color--empty);
+}
+
 .test__detail {
     overflow: hidden;
     height: 0;
@@ -822,6 +830,10 @@ input.test__expander:checked+.test__detail {
 
 .bar__line--unexpected-success {
     background-color: var(--color--unexpected-success);
+}
+
+.bar__line--empty {
+    background-color: var(--color--empty);
 }
 
 .bar__line span {

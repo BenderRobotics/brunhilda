@@ -70,6 +70,8 @@
             {% set test_result_class = "test--expected-failure" %}
         {%- elif test_case.result == "UNEXPECTED-SUCCESS" %}
             {% set test_result_class = "test--unexpected-success" %}
+        {%- elif test_case.result == "EMPTY" %}
+            {% set test_result_class = "test--empty" %}
         {%- else %}
             {% set test_result_class = test_case.result|lower %}
         {%- endif %}
@@ -91,7 +93,8 @@
                             <td class="test__requirement">{{ requirement }}</td>
                 {% if loop.first %}
                             <td class="test__result" rowspan="{{ loop.length }}">
-                    {% if test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED_FAILURE') %}
+                    {% if test_case.result == 'EMPTY' %}
+                    {% elif test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED_FAILURE') %}
                                 <a href="{{ issue_list_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
                     {% else %}
                                 {{ test_case.result }}
@@ -128,7 +131,8 @@
                     <td class="test__id"><a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }}</a></td>
                     <td class="test__requirement"></td>
                     <td class="test__result">
-                    {% if test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED_FAILURE') %}
+                    {% if test_case.result == 'EMPTY' %}
+                    {% elif test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED_FAILURE') %}
                         <a href="{{ issue_list_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
                     {% else %}
                         {{ test_case.result }}

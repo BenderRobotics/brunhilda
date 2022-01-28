@@ -1,6 +1,17 @@
 import unittest
-from .result import BRunhildaTestResult
 from .parser import parse_tags
+
+
+def iter_suite(suite: unittest.TestSuite):
+    """
+    Iterate through test suites, and yield individual tests
+    """
+    for test in suite:
+        if isinstance(test, unittest.TestSuite):
+            for t in iter_suite(test):
+                yield t
+        else:
+            yield test
 
 
 class BRunhildaTestLoader:
@@ -38,7 +49,7 @@ class BRunhildaTestLoader:
         for pattern in patterns:
             suite = unittest.defaultTestLoader.discover(start_dir, pattern.strip(), top_level_dir)
 
-            for test in self._iter_suite(suite):
+            for test in iter_suite(suite):
                 if tag_filter is None:
                     tests.addTest(test)
                 else:
@@ -51,18 +62,6 @@ class BRunhildaTestLoader:
         # this ugly thing is added for the compatibility with Brest which expects suite in the suite
         suite = unittest.TestSuite(tests=[tests])
         return unittest.TestSuite(tests=[suite])
-
-    @classmethod
-    def _iter_suite(cls, suite):
-        """
-        Iterate through test suites, and yield individual tests
-        """
-        for test in suite:
-            if isinstance(test, unittest.TestSuite):
-                for t in cls._iter_suite(test):
-                    yield t
-            else:
-                yield test
 
     def _filter_by_tags(self, conditions, tags):
         """
