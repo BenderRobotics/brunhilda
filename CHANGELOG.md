@@ -1,10 +1,15 @@
 # Brunhilda project changelog
 
-## 2.1.1 (2021-01-12)
+## 2.1.2 (2022-02-15)
 
-- Added quoting of the URL's in generated HTML's to prevent invalid links to referenced artifacts (refs #5416) (refs [#5416](https://redmine.benderrobotics.com/issues/5416)).
+- Filled comment and bug ID columns in the summary report (refs [#5573](https://redmine.benderrobotics.com/issues/5573), CBTFM-433).
+- Fixed CSS sizes of test header in the HTML test execution report.
 
-## 2.1.0 (2021-01-07)
+## 2.1.1 (2022-01-12)
+
+- Added quoting of the URL's in generated HTML's to prevent invalid links to referenced artifacts (refs [#5416](https://redmine.benderrobotics.com/issues/5416)).
+
+## 2.1.0 (2022-01-07)
 
 - Prevented collision in generated extra file names (refs [#5307](https://redmine.benderrobotics.com/issues/5307)).
 - Fixed paths to the test plan in the test summary report (refs [#5416](https://redmine.benderrobotics.com/issues/5416)).
