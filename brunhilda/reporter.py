@@ -37,14 +37,25 @@ class Reporter:
             for tests in self._tests.values():
                 for test in tests:
                     justifications = [] # list of justifications - there can be several failures in one test
+                    comments = set()
+                    bug_ids = set()
 
                     for issues in self._issues.values():
                         for issue in issues['errors'] + issues['failures']:
                             if issue['test'] == test['test_id']:
                                 justifications.append(issue['justified'].lower().strip() == 'yes')
 
+                                if issue['comment']:
+                                    comments.add(issue['comment'])
+
+                                if issue['bug-id']:
+                                    bug_ids.add(issue['bug-id'])
+
                     if len(justifications) and all(justifications):
                         test['result'] = 'JUSTIFIED'
+
+                    test['comment'] = list(comments)
+                    test['bug_id'] = list(bug_ids)
 
     def load_tests(self, path: str) -> None:
         """

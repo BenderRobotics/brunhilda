@@ -97,8 +97,28 @@
                                 {{ test_case.result }}
                     {% endif %}
                             </td>
-                            <td class="test__bug-id" rowspan="{{ loop.length }}">{{ test_case.bug_id }}</td>
-                            <td class="test__comment" rowspan="{{ loop.length }}">{{ test_case.comment }}</td>
+                            <td class="test__bug-id" rowspan="{{ loop.length }}">
+                            {% if test_case.bug_id|length > 1 %}
+                                <ul>
+                                {% for bug_id in test_case.bug_id %}
+                                    <li>{{ bug_id }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% elif test_case.bug_id|length == 1 %}
+                                {{ test_case.bug_id[0] }}
+                            {% endif %}
+                            </td>
+                            <td class="test__comment" rowspan="{{ loop.length }}">
+                            {% if test_case.comment|length > 1 %}
+                                <ul>
+                                {% for comment in test_case.comment %}
+                                    <li>{{ comment }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% elif test_case.comment|length == 1 %}
+                                {{ test_case.comment[0] }}
+                            {% endif %}
+                            </td>
                 {% endif %}
                         </tr>
             {% endfor %}
