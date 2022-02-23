@@ -1,5 +1,10 @@
 # Brunhilda project changelog
 
+## 2.2.0 (2022-02-23)
+
+- Add advanced tag-based filtering during test discovery (refs [#5525](https://redmine.benderrobotics.com/issues/5525)).
+- Add dryrun functionality (refs [#5449](https://redmine.benderrobotics.com/issues/5449)).
+
 ## 2.1.2 (2022-02-15)
 
 - Filled comment and bug ID columns in the summary report (refs [#5573](https://redmine.benderrobotics.com/issues/5573), CBTFM-433).
