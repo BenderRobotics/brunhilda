@@ -4,13 +4,13 @@ import yaml
 
 from typing import Dict, List, Optional, Union, Tuple
 
-from brunhilda.data import Summary
-from brunhilda.rel_path import rel_path
-from brunhilda.html_test_summary_output import HtmlTestSummaryOutput
-from brunhilda.html_req_summary_output import HtmlReqSummaryOutput
-from brunhilda.html_test_plan_output import HtmlTestPlanOutput
-from brunhilda.html_index_output import HtmlIndexOutput
-from brunhilda.html_issue_list_output import HtmlIssueListOutput
+from .data import Summary
+from .rel_path import rel_path
+from .html_test_summary_output import HtmlTestSummaryOutput
+from .html_req_summary_output import HtmlReqSummaryOutput
+from .html_test_plan_output import HtmlTestPlanOutput
+from .html_index_output import HtmlIndexOutput
+from .html_issue_list_output import HtmlIssueListOutput
 
 
 class Reporter:

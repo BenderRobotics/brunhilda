@@ -6,3 +6,4 @@ docutils>=0.15.2
 Pillow>=8.4.0
 pyaml
 typing_extensions
+pytest

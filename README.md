@@ -168,6 +168,48 @@ In addition to [`unittest.TestLoader.discover`](https://docs.python.org/3/librar
 
 `tag_filter` parameter of the `discover` method can be used to limit the suite to the tests with the defined tag values.
 
+Following syntax can be used for the tag_filter
+
+- `tag1==A` *match* - test must be tagged by `tag1` and it must contain only the one value `A` (does not allow other
+  values to be present),
+- `tag1!=A` *mismatch* - test must be tagged by `tag1` and it must not contain the one value `A` (does not allow other
+  values to be present),
+- `tag1=~A` *contains* - test must be tagged by `tag1` and it must contain at least the one value `A` (allows other
+  values to be present),
+- `tag1!~A` *does not contain* - test must be tagged by `tag1` and it must not contain the value `A` (allows other
+   values to be present),
+- `@tag1` *is tagged* - test is tagged with `tag1`,
+- `!tag1` *is not tagged* - test is not tagged `tag1`,
+- `tag1>=A` *greater than or equal to* - test must be tagged by `tag1` its numeric value must not be lower than `A`,
+- `tag1>A` *greater than* - test must be tagged by `tag1` its numeric value must be greater than `A`,
+- `tag1<=A` *lower than or equal* - test must be tagged by `tag1` its numeric value must not be greater than `A`,
+- `tag1<A` *lower than* - test must be tagged by `tag1` its numeric value must be lower than `A`.
+
+Logical conjunction:
+
+- `||` - OR (one of condition satisfied)
+- `&&` - AND (all conditions satisfied)
+
+when multiple conjunctions is used, the AND operator is treated with priority.
+
+```
+tag1==A && tag2==B || tag3==C
+```
+
+is equivalent to
+
+```
+(tag1==A && tag2==B) || tag3==C
+```
+
+#### Examples
+
+`tag1` contains `A` and `tag2` is present:
+
+```
+tag1=~A && @tag2
+```
+
 Given test case
 
 ```python
@@ -194,7 +236,7 @@ class Test_Environments(unittest.TestCase):
 and the filter
 
 ```python
-filter = {'environment': 'ENV_TEST_1'}
+filter = 'environment=~ENV_TEST_1'
 ```
 
 will result in loading only `test_01` and `test_03` in the test suite.

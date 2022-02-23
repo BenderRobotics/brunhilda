@@ -1,5 +1,6 @@
 import unittest
 from .parser import parse_tags
+from .tag_filter import eval_tags
 
 
 def iter_suite(suite: unittest.TestSuite):
@@ -56,7 +57,7 @@ class BRunhildaTestLoader:
                     docstring = getattr(test, test._testMethodName).__doc__
                     tags = parse_tags(docstring)
 
-                    if self._filter_by_tags(tag_filter, tags):
+                    if eval_tags(tag_filter, tags):
                         tests.addTest(test)
 
         # this ugly thing is added for the compatibility with Brest which expects suite in the suite
