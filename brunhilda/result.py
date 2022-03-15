@@ -447,34 +447,33 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         super().addError(test, err)
 
-        if err is not None:
-            for ex in err[1].args:
-                img = self._render_img(ex)
-                if img is not None:
-                    test.extra.append(ex)
-
-        test_id = self._get_test_id(test)
-        extra = []
-
         try:
-            if hasattr(test, 'extra'):
-                extra = self._process_extra_data(test.extra, test_id)
-        except Exception:
-            pass
+            if err is not None:
+                for ex in err[1].args:
+                    img = self._render_img(ex)
 
-        self._issues['errors'].append({
-            'test': test_id,
-            'sub-test': None,
-            'result': ERRORED,
-            'message': self._exc_info_to_string(err, test),
-            'extra': extra,
-            'bug-id': '',
-            'comment': '',
-            'justified': '',
-            'tags': parse_tags(test._testMethodDoc)
-        })
-        self.errors_strings.append(self._exc_info_to_string(err, test))
-        self.last_result = ERRORED
+                    if img is not None:
+                        test.extra.append(ex)
+
+            test_id = self._get_test_id(test)
+            extra = []
+            extra = self._process_extra_data(test.extra, test_id)
+            self._issues['errors'].append({
+                'test': test_id,
+                'sub-test': None,
+                'result': ERRORED,
+                'message': self._exc_info_to_string(err, test),
+                'extra': extra,
+                'bug-id': '',
+                'comment': '',
+                'justified': '',
+                'tags': parse_tags(test._testMethodDoc)
+            })
+        except AttributeError:
+            pass
+        finally:
+            self.errors_strings.append(self._exc_info_to_string(err, test))
+            self.last_result = ERRORED
 
     def addFailure(self, test, err):
         """
