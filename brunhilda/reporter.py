@@ -41,15 +41,16 @@ class Reporter:
                     bug_ids = set()
 
                     for issues in self._issues.values():
-                        for issue in issues['errors'] + issues['failures']:
-                            if issue['test'] == test['test_id']:
-                                justifications.append(issue['justified'].lower().strip() == 'yes')
+                        if issues['run']['level'] == test['level']:
+                            for issue in issues['errors'] + issues['failures']:
+                                if issue['test'] == test['test_id']:
+                                    justifications.append(issue['justified'].lower().strip() == 'yes')
 
-                                if issue['comment']:
-                                    comments.add(issue['comment'])
+                                    if issue['comment']:
+                                        comments.add(issue['comment'])
 
-                                if issue['bug-id']:
-                                    bug_ids.add(issue['bug-id'])
+                                    if issue['bug-id']:
+                                        bug_ids.add(issue['bug-id'])
 
                     if len(justifications) and all(justifications):
                         test['result'] = 'JUSTIFIED'
