@@ -1,5 +1,10 @@
 # Brunhilda project changelog
 
+## 2.2.1 (2022-03-15)
+
+- Fixed linking issues to tests from different test levels (refs [#5619](https://redmine.benderrobotics.com/issues/5619)).
+- Fixed exceptions in case that other object than test is raised as errored.
+
 ## 2.2.0 (2022-02-23)
 
 - Add advanced tag-based filtering during test discovery (refs [#5525](https://redmine.benderrobotics.com/issues/5525)).
