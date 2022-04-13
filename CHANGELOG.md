@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 2.2.2 (2022-04-13)
+
+- Added skip reason to the tests overview report (CBTFM-511).
+
 ## 2.2.1 (2022-03-15)
 
 - Fixed linking issues to tests from different test levels (refs [#5619](https://redmine.benderrobotics.com/issues/5619)).
