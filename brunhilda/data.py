@@ -60,6 +60,8 @@ class ResultsSummary:
         return (self.unexpected_successes / self.total * 100.0) if (self.total != 0) else 0.0
 
     def __add__(self, result: Result):
+        result = str(result).upper().replace(' ', '-').replace('_', '-').strip()
+
         if result == 'PASSED':
             self.passed += 1
         elif result == 'ERRORED':
