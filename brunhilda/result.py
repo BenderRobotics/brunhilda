@@ -146,6 +146,22 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self.last_result = EMPTY
         self.run_start_timestamp = datetime.datetime.now()
 
+    def _process_test_extra(self, test, test_id: str) -> None:
+        """
+        Process extra data of the given subtest and replaces it with the processed one.
+
+        This is usefull when the extra data are images.
+
+        :param test: test to be process
+        :param test_id: id of the test
+        """
+        try:
+            extra = self._process_extra_data(test.extra, test_id)
+            del test.extra
+            test.extra = extra
+        except Exception:
+            test.extra = []
+
     def _process_extra_data(self, extra: List, test_id: str) -> List:
         """
         Goes through the extra data list, renderers images to base64 or stores them to the filesystem.
@@ -406,13 +422,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             self.results['testcases'][testcase_name]['result'] = PASSED
 
         test_id = self._get_test_id(test)
-        extra = []
-
-        try:
-            if hasattr(test, 'extra'):
-                extra = self._process_extra_data(test.extra, test_id)
-        except Exception:
-            pass
+        self._process_test_extra(test, test_id)
 
         self.results['testcases'][testcase_name]['time'] = self.suite_execution_time
         self.results['testcases'][testcase_name]['tests'].append({
@@ -427,7 +437,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'result': self.last_result,
             'output': self.stream_buffer.read(),
             'errors': self.errors_strings,
-            'extra': extra
+            'extra': test.extra
         })
 
         self.summary.results += self.last_result
@@ -456,14 +466,14 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                         test.extra.append(ex)
 
             test_id = self._get_test_id(test)
-            extra = []
-            extra = self._process_extra_data(test.extra, test_id)
+            self._process_test_extra(test, test_id)
+
             self._issues['errors'].append({
                 'test': test_id,
                 'sub-test': None,
                 'result': ERRORED,
                 'message': self._exc_info_to_string(err, test),
-                'extra': extra,
+                'extra': test.extra,
                 'bug-id': '',
                 'comment': '',
                 'justified': '',
@@ -486,20 +496,14 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 test.extra.append(ex)
 
         test_id = self._get_test_id(test)
-        extra = []
-
-        try:
-            if hasattr(test, 'extra'):
-                extra = self._process_extra_data(test.extra, test_id)
-        except Exception:
-            pass
+        self._process_test_extra(test, test_id)
 
         self._issues['failures'].append({
             'test': test_id,
             'sub-test': None,
             'result': FAILED,
             'message': self._exc_info_to_string(err, test),
-            'extra': extra,
+            'extra': test.extra,
             'bug-id': '',
             'comment': '',
             'justified': '',
@@ -520,20 +524,14 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         test_id = self._get_test_id(test)
         subtest_id = subtest.id().lstrip(test.__module__ + '.')
-        extra = []
-
-        try:
-            if hasattr(subtest, 'extra'):
-                extra = self._process_extra_data(subtest.extra, subtest_id)
-        except Exception:
-            pass
+        self._process_test_extra(subtest, subtest_id)
 
         self.subtests.append({
             'num': 1+len(self.subtests),
             'id': subtest_id,
             'name': str(dict(subtest.params)),
             'result': PASSED,
-            'extra': extra
+            'extra': subtest.extra
         })
 
         # `err` contains info about errors and failures, if `None`, sub-test passed
@@ -557,7 +555,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'test': test_id,
                 'sub-test': subtest_id,
                 'message': err_str,
-                'extra': extra,
+                'extra': subtest.extra,
                 'result': self.last_result,
                 'bug-id': '',
                 'comment': '',
