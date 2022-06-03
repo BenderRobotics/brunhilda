@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 2.3.0 (2022-06-03)
+
+- Add option to build feature list based on YAML-defined features (refs [#5664](https://redmine.benderrobotics.com/issues/5664), CBTFM-446).
+
 ## 2.2.3 (2022-05-02)
 
 - Removes image extra data from the result memory when they are stored to the disk (refs [#5280](https://redmine.benderrobotics.com/issues/5280)).
