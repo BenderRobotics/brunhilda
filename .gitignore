@@ -8,3 +8,4 @@ __pycache__/
 dev/*.html
 dev/*.xml
 dev/__pycache__/
+dev/extra/*.jpg

@@ -36,5 +36,6 @@ setuptools.setup(
         'colorama>=0.4.1',
         'docutils>=0.15.2',
         'Pillow>=7.2.0',
+        'simplejson>=3.17.6',
     ]
 )

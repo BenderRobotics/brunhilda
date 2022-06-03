@@ -1,0 +1,487 @@
+# File generated on: 2022-03-30 09:10:01
+# Source file: ..\..\doc\specs\Overall feature list.xlsx
+Auto restart:
+- Auto restart:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - 9.E
+      MMI_PGF_L21_4: {}
+    order: 8100
+Commissioning:
+- Installer mode:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - A
+    order: 7350
+- configuration wizard:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '9.1'
+      MMI_PGF_L12: {}
+    order: 7400
+- Installer settings for setup:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - A
+    order: 7500
+- 'Commissioning: Test run':
+    link:
+      MMI_PGF_G04:
+        bc:
+        - A.1
+        - A.2
+      MMI_PGF_L18: {}
+    order: 7600
+- 'Commissioning: Air purge':
+    link:
+      MMI_PGF_G04:
+        bc:
+        - A.3
+      MMI_PGF_L19: {}
+    order: 7700
+- 'Commisioning: UFH Screed dry out':
+    link:
+      MMI_PGF_G04:
+        bc:
+        - A.4
+      MMI_PGF_L20: {}
+    order: 7800
+- 'Commissioning: pumpdown':
+    link:
+      MMI_PGF_G04:
+        bc:
+        - A.5
+      MMI_PGF_L25: {}
+    order: 7900
+- 'Commissioning: 10 day brine pump operation':
+    link:
+      MMI_PGF_G04:
+        bc:
+        - A.6
+    order: 8000
+DHW:
+- DHW operation (ON/OFF):
+    link:
+      MMI_PGF_G04:
+        bc:
+        - C.3
+      MMI_PGF_L05_1.2: {}
+    order: 4400
+- DHW Setpoint:
+    link:
+      MMI_PGF_L04_4.1: {}
+      MMI_PGF_L04_4.2: {}
+    order: 4800
+- DHW Setpoint Max:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '5.8'
+    order: 5100
+- DHW operation mode:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - 5.G
+      MMI_PGF_L04_4.11: {}
+    order: 5200
+- DHW powerful mode:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '5.1'
+      MMI_PGF_L04_4.9: {}
+    order: 5300
+- DHW setpoint Weather dependent:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - 5.C
+      MMI_PGF_L04_4.5: {}
+    order: 5600
+- DHW schedule timer:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '5.5'
+      MMI_PGF_L04_4.3: {}
+    order: 5700
+- BSH schedule timer:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '9.4'
+      MMI_PGF_L04_4.6: {}
+    order: 5800
+- DHW Disinfection function  (anti-legionella):
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '5.7'
+      MMI_PGF_L04_4.8: {}
+    order: 5900
+- balancing heating / DHW:
+    link: {}
+    order: 6000
+- DHW recirculation pump:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - 9.2.3
+      MMI_PGF_L04_4.7: {}
+    order: 6100
+- Instant DHW Comfort:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '6.1'
+    order: 6200
+- Instant DHW Max DHW setpoint:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '6.2'
+    order: 6300
+- Instant DHW Pump capacity:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '6.3'
+    order: 6400
+Emergency:
+- Emergency operation (when Error is active):
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '9.5'
+        - 9.1.3.4
+      MMI_PGF_L15_4.5: {}
+    order: 8700
+Energy prices:
+- 'Energy prices: Electricity price':
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '7.5'
+      MMI_PGF_L13: {}
+    order: 7200
+- 'Energy prices: Gas price':
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '7.6'
+      MMI_PGF_L13: {}
+    order: 7300
+Holiday:
+- Holiday:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '7.3'
+      MMI_PGF_L10: {}
+    order: 6800
+LWT:
+- Space C/H operation (ON/OFF):
+    link:
+      MMI_PGF_G04:
+        bc:
+        - C.2
+      MMI_PGF_L05_4.1.1: {}
+    order: 2100
+- LWT Main zone setpoint:
+    link:
+      MMI_PGF_L02_4.1: {}
+      MMI_PGF_L02_4.2: {}
+    order: 2500
+- LWT Main zone setpoint range:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '2.8'
+    order: 2900
+- LWT Main zone setpoint Weather dependent:
+    link:
+      MMI_PGF_L02_4.1: {}
+      MMI_PGF_L02_4.2: {}
+    order: 3000
+- LWT Main zone setpoint schedule:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '2.2'
+        - '2.3'
+      MMI_PGF_L02_4.3: {}
+    order: 3200
+- LWT Main zone setpoint schedule overrule:
+    link:
+      MMI_PGF_L02_4.3: {}
+    order: 3300
+- LWT Add zone setpoint:
+    link:
+      MMI_PGF_L03_4.1: {}
+      MMI_PGF_L03_4.2: {}
+    order: 3500
+- LWT Add zone setpoint range:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '3.8'
+    order: 3900
+- LWT Add zone setpoint Weather dependent:
+    link:
+      MMI_PGF_L03_4.1: {}
+      MMI_PGF_L03_4.2: {}
+    order: 4000
+- LWT Add zone on-off schedule:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '3.2'
+        - '3.3'
+      MMI_PGF_L03_4.3: {}
+    order: 4200
+Lifetime of MMI:
+- Increase the lifetime of the MMI screen by deactivating it when not in use:
+    link:
+      MMI_PGF_L17_4.1: {}
+    order: 12000
+MMI-hydro compatibility checking:
+- MMI hydro compatiblity checking:
+    link:
+      MMI_PGF_L15_4.7: {}
+      MMI_PGG_C1: {}
+    order: 8800
+Monitor data:
+- home screen:
+    link:
+      MMI_PGF_G03_1: {}
+    order: 8200
+- Error (active):
+    link:
+      MMI_PGF_L15_4.2: {}
+    order: 8300
+- energy data:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '8.1'
+      MMI_PGF_L14: {}
+    order: 8900
+- produced heat data:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - 8.1.2
+    order: 8910
+- error history:
+    link:
+      MMI_PGF_L15_4.3: {}
+      MMI_PGF_L16: {}
+    order: 9000
+- Dealer information:
+    link:
+      MMI_PGF_L11_8.3: {}
+    order: 9100
+- Sensor & actuators data:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '8.4'
+        - '8.5'
+      MMI_PGF_L11_4.2: {}
+    order: 9200
+- operation modes:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '8.6'
+    order: 9800
+- running hours:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '8.9'
+      MMI_PGF_L11_4.1: {}
+    order: 10100
+- initisalisation screen:
+    link: {}
+    order: 10110
+- Connection status:
+    link: {}
+    order: 10600
+- software version information:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '8.7'
+      MMI_PGF_L11_4.3: {}
+    order: 10700
+Multi language:
+- multi language:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '7.1'
+        - 9.1.1
+      MMI_PGF_G07: {}
+    order: 6500
+Offboarding gateways:
+- Offboarding WLAN adapter:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - D.4
+    order: 0
+- Offboarding WLAN cartridge:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - D.4
+    order: 0
+Permission level:
+- Show only basic features:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - B
+      MMI_PGF_L11_4.4: {}
+    order: 10800
+Production verification:
+- '"Unit" running test mode':
+    link:
+      MMI_PGF_R01_4: {}
+      MMI_PGG_C01: {}
+    order: 11900
+Quiet operation:
+- Quiet operation:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '7.4'
+      MMI_PGF_L06: {}
+    order: 6900
+- Quiet operation schedule:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '7.4'
+      MMI_PGF_L06: {}
+    order: 7100
+RT:
+- RT operation (ON/OFF):
+    link:
+      MMI_PGF_G04:
+        bc:
+        - C.1
+      MMI_PGF_L05: {}
+    order: 600
+- RT temperature sensor HCI:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '1.7'
+      MMI_PGF_L09_4.5: {}
+      MMI_PGF_L09_4.6: {}
+    order: 1000
+- RT temperature external sensor on hydro:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '1.6'
+      MMI_PGF_L09_4.5: {}
+    order: 1100
+- RT Setpoint:
+    link:
+      MMI_PGF_L09_4.1: {}
+      MMI_PGF_L09_4.2: {}
+    order: 1200
+- RT Setpoint range:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '1.5'
+    order: 1600
+- RT Setpoint schedule:
+    link:
+      MMI_PGF_L09_4.3: {}
+    order: 1810
+- RT Setpoint overrule schedule:
+    link:
+      MMI_PGF_L09_4.3: {}
+      MMI_PGF_L09_4.4: {}
+    order: 1900
+Recovery:
+- WLAN reboot:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - D.2
+    order: 0
+Setting data:
+- Menu:
+    link:
+      MMI_PGF_G04: {}
+    order: 8250
+- 'Menu: Hydro settings':
+    link:
+      MMI_PGF_G04: {}
+    order: 8260
+Space C/H operation mode:
+- Space C/H operation mode:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '4.1'
+      MMI_PGF_L07: {}
+    order: 100
+- Space C/H operation mode Allowance Schedule:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '4.2'
+      MMI_PGF_L07_4.3: {}
+    order: 500
+Testable product:
+- Debug port features:
+    link: {}
+    order: 12200
+Time/date:
+- Time/date:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - '7.2'
+        - 9.1.2
+      MMI_PGF_L08: {}
+    order: 6600
+Update/Download:
+- update MMI to new software & EEPROM:
+    link: {}
+    order: 11000
+- update MMI to new software & EEPROM:
+    link: {}
+    order: 11100
+- import setting MMI:
+    link: {}
+    order: 11200
+- import setting MMI:
+    link: {}
+    order: 11300
+- Export settings MMI:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - 9.N
+      MMI_PGG_S03_2.8: {}
+    order: 11400
+- Export settings MMI:
+    link:
+      MMI_PGF_G04:
+        bc:
+        - 9.N
+      MMI_PGG_S03_2.8: {}
+    order: 11500

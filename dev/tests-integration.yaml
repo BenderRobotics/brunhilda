@@ -1,0 +1,849 @@
+- case: Test_D01_ParameterDatabase
+  comment: ''
+  description: "\n\n        The test verifies the writeability of the DB items according\
+    \ to the conditions defined in D01.\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGG_D01
+  result: PASSED
+  steps:
+  - comment: ''
+    description: '             Set item conditions controlling writeability according
+      to the D01.'
+    expectation: '             The writeability of the selected item is correct.'
+    number: 1
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    - Logic
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - '92'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of correct writability of the DB items based on setting item conditions
+    priority:
+    - mid
+    spec:
+    - MMI_PGG_D01
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_D01_ParameterDatabase.test_01_writeability
+- case: Test_D01_ParameterDatabase
+  comment: ''
+  description: "\n\n        The test verifies the applicability of the DB items according\
+    \ to the conditions defined in D01.\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGG_D01
+  result: PASSED
+  steps:
+  - comment: ''
+    description: '             Set item conditions controlling applicability according
+      to the D01.'
+    expectation: '             The applicability of the selected item is correct.'
+    number: 1
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - ''
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of correct applicability of the DB items based on setting item
+      conditions
+    priority:
+    - mid
+    spec:
+    - MMI_PGG_D01
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_D01_ParameterDatabase.test_02_applicability
+- case: Test_D01_ParameterDatabase
+  comment: ''
+  description: "\n\n        The test verifies applicable values of the DB items according\
+    \ to the conditions defined in D01.\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGG_D01
+  result: PASSED
+  steps:
+  - comment: ''
+    description: '             Set item conditions controlling applicable values according
+      to the D01.'
+    expectation: '             The applicable values are correct.'
+    number: 1
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - '239'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of correct applicable values of the DB items based on setting item
+      conditions
+    priority:
+    - mid
+    spec:
+    - MMI_PGG_D01
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_D01_ParameterDatabase.test_03_applicable_values
+- case: Test_D01_ParameterDatabase
+  comment: ''
+  description: "\n\n        The test verifies consistency of DB representations of\
+    \ field settings.\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGG_D01
+  - MMI_PGG_C01-6
+  result: PASSED
+  steps:
+  - comment: ''
+    description: '             Load all field settings from database.'
+    expectation: '             Definition of applicable value for each field setting
+      is found in D01.'
+    number: 1
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Read out value, minimum, maximum and step of the fields
+      setting item through database debug interface.'
+    expectation: '            '
+    number: 2
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Read value, minimum, maximum and step of the fields
+      setting item through P1P2 debug interface.'
+    expectation: '            '
+    number: 3
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Compare both values.'
+    expectation: '             Both obtained values are the same.'
+    number: 4
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Compare both minimum values of range.'
+    expectation: '             Both obtained minimum values of range are the same.'
+    number: 5
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Compare both maximum values of range.'
+    expectation: '             Both obtained maximum values of range are the same.'
+    number: 6
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Compare both step values.'
+    expectation: '             Both obtained step values are the same.'
+    number: 7
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - '43'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of consistency of the field settings
+    priority:
+    - mid
+    spec:
+    - MMI_PGG_D01
+    - MMI_PGG_C01-6
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_D01_ParameterDatabase.test_04_field_settings_consistency
+- case: Test_D03_LogicDatabase
+  comment: ''
+  description: "\n\n        The test verifies logic conditions defined for DB logic\
+    \ items in a read direction.\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGG_D03
+  result: PASSED
+  steps:
+  - comment: ''
+    description: '             Set the conditions so that the logic item value matches
+      the expected one.'
+    expectation: '             Logic item value is the same as expected one.'
+    number: 1
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - '157'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Correct setting of logic items based on defined logic conditions
+    priority:
+    - mid
+    spec:
+    - MMI_PGG_D03
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_D03_LogicDatabase.test_01_logic_database_read
+- case: Test_D03_LogicDatabase
+  comment: ''
+  description: "\n\n        The test verifies logic conditions in form of {logic_item}\
+    \ <-> [db_item] defined for DB logic items in a write direction.\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGG_D03
+  result: PASSED
+  steps:
+  - comment: ''
+    description: '             Set value of logic item.'
+    expectation: '             Logic item value is correctly written to db item.'
+    number: 1
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - '38'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Correct setting of logic conditions based on setting of logic items
+    priority:
+    - mid
+    spec:
+    - MMI_PGG_D03
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_D03_LogicDatabase.test_02_logic_database_write
+- case: Test_G04_MenuStructure
+  comment: ''
+  description: "\n\n        Test controller simulates conditions controlling states\
+    \ of the menu structure\n        items and verifies response of the UI logic layer\
+    \ via the debug protocol.\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGF_G04
+  result: PASSED
+  steps:
+  - comment: ''
+    description: "             Set condition controlling menu structure item visibility\
+      \ to \u201Cvisible\u201D."
+    expectation: "             The UI logic layer returns \u201Cvisible\u201D for\
+      \ the menu structure item."
+    number: 1
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: "             Set condition controlling menu structure item visibility\
+      \ to \u201Cnot visible\u201D."
+    expectation: "             The UI logic layer returns \u201Cnot visible\u201D\
+      \ for the menu structure item."
+    number: 2
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: "             Set condition controlling menu structure item grey-out\
+      \ to \u201Cnot grey-out\u201D."
+    expectation: "             The UI logic layer returns \u201Cnot grey-out\u201D\
+      \ for the menu structure item."
+    number: 3
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: "             Set condition controlling menu structure item visibility\
+      \ to \u201Cgrey-out\u201D."
+    expectation: "             The UI logic layer returns \u201Cgrey-out\u201D for\
+      \ the menu structure item."
+    number: 4
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - '2131'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Correct display of menu items triggered by simulating of conditions
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_G04
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_G04_MenuStructure.test_01_structure
+- case: Test_G04_UiLogic
+  comment: ''
+  description: "\n\n        Test of the UI logic binding to the units of the database\
+    \ items.\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGF_G04
+  - MMI_PGG_D01
+  result: PASSED
+  steps:
+  - comment: ''
+    description: '             Read unit of the item from the DB specification.'
+    expectation: '             Correct unit of UI logic is returned.'
+    number: 1
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - '76'
+    execution:
+    - automatic
+    maintainer:
+    - Pavel Kumpan
+    name:
+    - Verification of UI logic binding to the units of the database items
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_G04
+    - MMI_PGG_D01
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_G04_UiLogic.test_01_units
+- case: Test_L05_OperationLogic
+  comment: ''
+  description: "\n\n        Test controller verifies logic defined in L05 4.1.1 with\
+    \ respect to the previous behavior.\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGF_L05_4
+  result: PASSED
+  steps:
+  - comment: ''
+    description: '             Set the value of [unit_control] and [LWT_add_present]
+      one by one to cover all combinations.'
+    expectation: '            '
+    number: 1
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: |2-
+                   For each combination of [unit_control] and [LWT_add_present]
+                   change the value of [Space C/H operation] to True (on)
+                   and read out value of [RT operation] from DUT.
+    expectation: '             Value of [RT operation] is set to same value as [Space
+      C/H operation].'
+    number: 2
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: |2-
+                   Change the value of [Space C/H operation] to False (on)
+                   and read out value of [RT operation] from DUT.
+    expectation: '             Value of [RT operation] is set to same value as [Space
+      C/H operation].'
+    number: 3
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: |2-
+                   Set [RT operation] to True (on) to ensure the change from False to True.
+                   and read out value of [Space C/H operation] from DUT.
+    expectation: '             Value of [Space C/H operation] is updated according
+      to the value of [RT operation].'
+    number: 4
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: |2-
+                   Set [RT operation] to False (off) to ensure the change from True to False
+                   and read out value of [Space C/H operation] from DUT.
+    expectation: '             Value of [Space C/H operation] is updated according
+      to the value of [RT operation].'
+    number: 5
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - '51'
+    execution:
+    - automatic
+    maintainer:
+    - Antonia Vrbicanova
+    name:
+    - Verification of operation logic functionality
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L05_4
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_L05_OperationLogic.test_01_operation_logic
+- case: Test_L08_DateTimeDst
+  comment: ''
+  description: "\n\n        This test verifies transition from winter to summer (daylight\
+    \ saving) time on the\n        last Sunday of March and a reverse transition on\
+    \ the last Sunday of October.\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGF_L08_4.2
+  result: PASSED
+  steps:
+  - comment: ''
+    description: '             Set {clock_dst} = 1'
+    expectation: '            '
+    number: 1
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Set DUT system date time to last Sunday of March before
+      02:00:00 winter time.'
+    expectation: '            '
+    number: 2
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Read DUT DST status.'
+    expectation: '             DST is not active before 02:00:00 of last Sunday of
+      March.'
+    number: 3
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Wait to pass at 02:00:00 last Sunday of March.'
+    expectation: '            '
+    number: 4
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Read DUT DST status.'
+    expectation: '             DST is active after passing 02:00:00 of last Sunday
+      of March.'
+    number: 5
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Generates dates for the next 7 days after the transition
+      from winter time to summer time.'
+    expectation: '             DST is still active.'
+    number: 6
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Set DUT system date time to last Sunday of October
+      before 03:00:00 summer time.'
+    expectation: '            '
+    number: 7
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Read DUT DST status.'
+    expectation: '             DST is active before 03:00:00 of last Sunday of October.'
+    number: 8
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Wait to pass 03:00:00 of last Sunday of October.'
+    expectation: '            '
+    number: 9
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Read DUT DST status.'
+    expectation: '             DST is not active after passing 03:00:00 of last Sunday
+      of October.'
+    number: 10
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Generates dates for the next 7 days after the transition
+      from summer time to winter time.'
+    expectation: '             DST is still not active.'
+    number: 11
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - '68'
+    execution:
+    - automatic
+    maintainer:
+    - Antonia Vrbicanova
+    name:
+    - Automatic activation of summer time / winter time based on current date time
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L08_4.2
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_L08_DateTimeDst.test_01_summer_winter_time_active
+- case: Test_L08_DateTimeDst
+  comment: ''
+  description: "\n\n        This test verifies handling of the last sunday of march\
+    \ and october\n        when the DST setting is not active.\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGF_L08_4.2
+  result: PASSED
+  steps:
+  - comment: ''
+    description: '             Set {clock_dst} = 0'
+    expectation: '            '
+    number: 1
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Set DUT system date time to last Sunday of March before
+      02:00:00 winter time.'
+    expectation: '            '
+    number: 2
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Read DUT DST status.'
+    expectation: '             DST is not active before 02:00:00 of last Sunday of
+      March.'
+    number: 3
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Wait to pass at 02:00:00 of last Sunday of March.'
+    expectation: '            '
+    number: 4
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Read DUT DST status.'
+    expectation: '             DST is not activated after passing 02:00:00 of last
+      Sunday of March.'
+    number: 5
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Set DUT system date time to last Sunday of October
+      before 02:00:00 winter time.'
+    expectation: '            '
+    number: 6
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Read DUT DST status.'
+    expectation: '             DST is not active before 02:00:00 of last Sunday of
+      October.'
+    number: 7
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Wait to pass at 02:00:00 of last Sunday of October.'
+    expectation: '            '
+    number: 8
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Read DUT DST status.'
+    expectation: '             DST is not active after passing 02:00:00 of last Sunday
+      of October.'
+    number: 9
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - '67'
+    execution:
+    - automatic
+    maintainer:
+    - Antonia Vrbicanova
+    name:
+    - Disabled automatic activation of summer time / winter time based on current
+      date time
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L08_4.2
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_L08_DateTimeDst.test_02_summer_winter_time_not_active
+- case: Test_L08_DateTimeDst
+  comment: ''
+  description: "\n\n        The test verifies the correct DST setting according to\
+    \ the generated date.\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGF_L08_4.2
+  result: PASSED
+  steps:
+  - comment: ''
+    description: '             Set {clock_dst} = 1'
+    expectation: '            '
+    number: 1
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Set randomly DUT system date-time.'
+    expectation: '            '
+    number: 2
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Read DUT DST status.'
+    expectation: '             DUT DST status is set to expected value according to
+      generated date-time.'
+    number: 3
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - '1'
+    execution:
+    - automatic
+    maintainer:
+    - Antonia Vrbicanova
+    name:
+    - Automatic activation of summer time / winter time based on current date time
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L08_4.2
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_L08_DateTimeDst.test_03_correct_setting_dst
+- case: Test_L15_ErrorHandling
+  comment: ''
+  description: "\n\n        The test controller invokes conditions that shall lead\
+    \ to the generation of the MMI errors, taking priority into account.\n\n     \
+    \   3 errors are skipped:\n\n        - U8-09 (spec L15_N states: 'Please disable\
+    \ this feature until final clarification is done at DENV side.')\n        - U8-03,\
+    \ U8-07 (not testable on this testing level)\n\n        "
+  level: integration
+  requirements:
+  - MMI_PGF_L15_4.1
+  result: PASSED
+  steps:
+  - comment: ''
+    description: '             For each error induced by MMI (from lowest to highest
+      priority) perform steps 2) and 3)'
+    expectation: '            '
+    number: 1
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Set conditions which shall lead to the generation of
+      an error in the DUT.'
+    expectation: '            '
+    number: 2
+    obtained: ''
+    result: ''
+  - comment: ''
+    description: '             Read out [RC_error_code] and [RC_error_detailed_code]
+      from the DUT.'
+    expectation: '             The values of [RC_error_code] and [RC_error_detailed_code]
+      match expected error code determined by the set conditions.'
+    number: 3
+    obtained: ''
+    result: ''
+  tags:
+    covering:
+    - ''
+    disabled-modules:
+    - P1P2
+    environment:
+    - ENV_INT_BASIC_MMI1
+    - ENV_INT_BASIC_MMI2
+    - ENV_INT_ADVANCED_MMI1
+    - ENV_INT_ADVANCED_MMI2
+    - ENV_INT_VIRT
+    exec-time:
+    - '60'
+    execution:
+    - automatic
+    maintainer:
+    - Miroslav Cepl
+    name:
+    - Generating errors in the DUT by setting the conditions
+    priority:
+    - mid
+    spec:
+    - MMI_PGF_L15_4.1
+    status:
+    - ''
+    test-id:
+    - ''
+    variants:
+    - ''
+  test_id: Test_L15_ErrorHandling.test_01_mmi_errors

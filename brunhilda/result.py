@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import yaml
+import simplejson as json
 import base64
 import socket
 import pprint
@@ -443,7 +444,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self.summary.results += self.last_result
 
         self._record(testcase_name, test_id, test.steps, test._testMethodDoc,
-                     self.last_result, self.skip_reason)
+                     self.last_result, self.skip_reason, self.subtests)
 
     def addSuccess(self, test):
         """
@@ -531,7 +532,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'id': subtest_id,
             'name': str(dict(subtest.params)),
             'result': PASSED,
-            'extra': subtest.extra
+            'extra': subtest.extra,
+            'parameters': dict(subtest.params),
         })
 
         # `err` contains info about errors and failures, if `None`, sub-test passed
@@ -579,7 +581,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'id': 1+len(self.subtests),
                 'name': str(dict(test.params)),
                 'result': SKIPPED,
-                'reason': reason
+                'reason': reason,
+                'parameters': dict(test.params),
             })
         else:
             self.skip_reason = reason
@@ -601,7 +604,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         super().addUnexpectedSuccess(test)
         self.last_result = UNEXPECTED_SUCCESS
 
-    def _record(self, testcase_name, test_id, test_steps, description, result, comment=''):
+    def _record(self, testcase_name, test_id, test_steps, description, result, comment='', subtests=[]):
         """
         Adds executed test to the trace record
 
@@ -609,6 +612,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param str test_name: name of the test method
         :param description: test docstring
         :param result: result of the test execution
+        :param subtests: all subtests of this test
         """
         requirements = parse_requirements(description)
         tags = parse_tags(description)
@@ -624,7 +628,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                             'requirements': requirements,
                             'test_id': test_id,
                             'comment': comment,
-                            'level': self.name,})
+                            'level': self.name,
+                            'subtests': deepcopy(subtests),})
 
     def _write_file(self, filename, content):
         """
@@ -645,10 +650,17 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
     def _serialize(self, content, filename):
         """
-        Serializes given content into yaml file
+        Serializes given content into yaml/json file
         """
-        yaml.add_representer(str, yaml_str_presenter)
-        self._write_file(filename, yaml.dump(content))
+        if filename.lower().endswith(('yaml', 'yml')):
+            yaml.add_representer(str, yaml_str_presenter)
+            serialized = yaml.dump(content)
+        elif filename.lower().endswith(('json')):
+            serialized = json.dumps(content)
+        else:
+            raise ValueError(f'Invalid filename {filename}, only JSON and YAML files are supported.')
+
+        self._write_file(filename, serialized)
 
     def _issues_relative_to(self, base_path):
         """
@@ -667,7 +679,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
     def serialize_issues(self, filename: str):
         """
-        Serializes test result into yaml file
+        Serializes test result into yaml/json file
 
         :param filename: filename to put the serialized form into
         """

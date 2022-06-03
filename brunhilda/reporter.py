@@ -1,6 +1,7 @@
 import os
 import re
 import yaml
+import simplejson as json
 
 from typing import Dict, List, Optional, Union, Tuple
 
@@ -11,6 +12,7 @@ from .html_req_summary_output import HtmlReqSummaryOutput
 from .html_test_plan_output import HtmlTestPlanOutput
 from .html_index_output import HtmlIndexOutput
 from .html_issue_list_output import HtmlIssueListOutput
+from .html_feature_summary_output import HtmlFeatureSummaryOutput
 
 
 class Reporter:
@@ -19,13 +21,23 @@ class Reporter:
         self._requirements = requirements
         self._tests: Dict = {}
         self._issues: Dict = {}
-        self._issue_list_path = None
+        self._features: Optional[Dict] = None
+        self._issue_list_path: Optional[str] = None
+        self._feature_list_path: Optional[str] = None
         self._test_plan_paths = {'_': ''}
         self._user_data = user_data
 
     def _load(self, path: str) -> Dict:
+        print(f'... loading {path}')
+
         with open(path, 'r', encoding='utf-8') as f:
-            content = yaml.safe_load(f)
+            if path.endswith(('yaml', 'yml')):
+                content = yaml.safe_load(f)
+            elif path.endswith(('json')):
+                content = json.load(f)
+            else:
+                raise ValueError(f'Unsupported file type {path}')
+
             return content
 
     def justify_tests(self) -> None:
@@ -73,6 +85,14 @@ class Reporter:
         :param path: path to the file
         """
         self._issues[path] = self._load(path)
+
+    def load_features(self, path: str) -> None:
+        """
+        Loads serialized feature list
+
+        :param path: path to the file
+        """
+        self._features = self._load(path)
 
     def _write_file(self, name: str, path: str, content: str) -> None:
         """
@@ -235,7 +255,21 @@ class Reporter:
         """
         self._issue_list_path = path
         formater = HtmlIssueListOutput(preamble=preamble, path=path)
-        output = formater.print(name, self._issues, user_data=self._user_data)
+        output = formater.print(name=name, issues=self._issues, user_data=self._user_data)
+        self._write_file(name, path, output)
+
+    def print_feature_summary(self, path: str, name: str = 'Summary of Features', preamble: Optional[str] = None) -> None:
+        """
+        Prints summary of features with related tests
+
+        :param path: path where the file shall be created
+        :param name: name of the output file
+        :param preamble: path to the HTML document to be used as a document preamble
+        """
+        self._feature_list_path = path
+        formater = HtmlFeatureSummaryOutput(preamble=preamble, path=path)
+        test_plan_paths = {level: rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
+        output = formater.print(name=name, features=self._features, testsuite=self._tests, test_plan_paths=test_plan_paths)
         self._write_file(name, path, output)
 
     def print_index(self, path: str, name: str = 'Index', preamble: Optional[str] = None) -> None:

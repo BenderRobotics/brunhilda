@@ -331,6 +331,11 @@ input[type="datetime-local"] {
 }
 
 
+.main--wide {
+    width: 100%;
+    max-width: 100%;
+}
+
 /**************************************/
 
 .testcase {
@@ -659,6 +664,14 @@ input.test__expander:checked+.test__detail {
 
 .test__steps__result--failed {
     color: var(--color--fail);
+}
+
+.test__steps__result--skipped {
+    color: var(--color--skipped);
+}
+
+.test__steps__result--errored {
+    color: var(--color--error);
 }
 
 .test__steps__comments {
@@ -1020,4 +1033,75 @@ ol.lowerroman {
 
 .issue__extra__text + .issue__extra__text {
     border-top: 1px solid gray;
+}
+
+/**************************************/
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+    background-color: rgba(200, 200, 200, 0.3);
+    color: #444;
+    cursor: pointer;
+    padding: 5px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+  }
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.collapsible--active, .collapsible:hover {
+    background-color: rgba(200, 200, 200, 0.5);
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.collapsible__content {
+    padding: 0 5px;
+    display: none;
+    overflow: hidden;
+}
+
+.toc-right {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: white;
+    overflow: auto;
+    width: 480px;
+    padding-left: 20px;
+}
+
+.fixed-width {
+    width: calc(100% - 500px);
+}
+
+.piechart {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.piechart__chart {
+    width: 33%;
+    max-width: 800px;
+    min-width: 400px;
+}
+
+.feature--passed, .feature--justified {
+    background-color: var(--color--pass-bg);
+}
+
+.feature--skipped {
+    background-color: var(--color--skip-bg);
+}
+
+.feature--failed {
+    background-color: var(--color--fail-bg);
+}
+
+.feature--errored {
+    background-color: var(--color--error-bg);
 }

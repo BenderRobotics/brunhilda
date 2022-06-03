@@ -1,0 +1,284 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title>{{ name }}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    {% include "themes/base.css" %}
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" media="all">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
+    <script>
+        $(document).ready(function() {
+            var coll = document.getElementsByClassName("collapsible");
+            var i;
+
+            for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("collapsible--active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                }
+                else {
+                    content.style.display = "block";
+                }
+            });
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <h1>{{ name }}</h1>
+    <div class="header">
+        {% include "header.html.jinja2" %}
+    </div>
+
+    <div class="main--wide">
+{% if preamble %}
+        <section class="preamble">
+            {{ preamble }}
+        </section>
+{% endif %}
+        <section class="toc-right">
+            <ol>
+        {% for group in features %}
+                <li>
+                    <a href="#group--{{ loop.index }}">{{ group }}</a>
+            {% if features[group] %}
+                    <ol>
+                {% for feature in features[group] %}
+                        <li><a href="#feature--{{ feature.order }}">{{ feature.name }}</a></li>
+                {% endfor %}
+                    </ol>
+            {% endif %}
+                </li>
+        {% endfor %}
+            </ol>
+        </section>
+        <section class="fixed-width">
+        <h2>Summary</h2>
+        <table class="run-summary table--wide">
+            <tbody>
+                <tr class="run-summary--passed">
+                    <th>Passed</th>
+                    <td>
+                        {{ summary.results.passed }}
+                    </td>
+                    <td>All tests of the feature passed.</td>
+                </tr>
+                <tr class="run-summary--failed">
+                    <th>Failed</th>
+                    <td>
+                        {{ summary.results.failed }}
+                    </td>
+                    <td>At least one test of the feature failed.</td>
+                </tr>
+                <tr class="run-summary--errored">
+                    <th>Errored</th>
+                    <td>
+                        {{ summary.results.errored }}
+                    </td>
+                    <td>At least one test of the feature errored.</td>
+                </tr>
+                <tr class="run-summary--justified">
+                    <th>Justified</th>
+                    <td>
+                        {{ summary.results.justified }}
+                    </td>
+                    <td>All failed or erored feature tests were justified.</td>
+                </tr>
+                <tr class="run-summary--skipped">
+                    <th>Skipped</th>
+                    <td>
+                        {{ summary.results.skipped }}
+                    </td>
+                    <td>All feature tests were skipped.</td>
+                </tr>
+                <tr class="run-summary--expected-failure">
+                    <th>Expected failures</th>
+                    <td>
+                        {{ summary.results.expected_failures }}
+                    </td>
+                    <td>All feature tests failed are expected to fail during execution (e.g. DUT feature implementation is not yet finished).</td>
+                </tr>
+                <tr class="run-summary--unexpected-success">
+                    <th>Unexpected successes</th>
+                    <td>
+                        {{ summary.results.unexpected_successes }}
+                    </td>
+                    <td>At least one feature test marked as <em>expected failure</em> which passed despite expectation.</td>
+                </tr>
+                <tr class="run-summary--empty">
+                    <th>Not covered</th>
+                    <td>
+                        {{ summary.results.not_executed }}
+                    </td>
+                    <td>No tests are linked to the feature.</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th> Total </th>
+                    <td colspan="2">{{ summary.results.total }}</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+        <script>
+            google.charts.load('current', {'packages': ['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                var dataResult = google.visualization.arrayToDataTable([
+                    ['Test result', 'Amount'],
+                    ['passed', {{ summary.results.passed }}],
+                    ['failed', {{ summary.results.failed }}],
+                    ['errored', {{ summary.results.errored }}],
+                    ['skipped', {{ summary.results.skipped }}],
+                    ['justified', {{ summary.results.justified }}],
+                    ['expected failure', {{ summary.results.expected_failures }}],
+                    ['unexpected success', {{ summary.results.unexpected_successes }}],
+                    ['not covered', {{ summary.results.not_executed }}]
+                ]);
+
+                var chartResult = new google.visualization.PieChart(document.getElementById('piechart_result'));
+
+                chartResult.draw(dataResult, {
+                    title: 'Test Result',
+                    chartArea: {width: '95%', height: '80%'},
+                    pieHole: 0.3,
+                    colors: ['green','#dc0000', '#a700d1', 'orange', '#74ad09', '#4000f0', '#00c8c8', '#dddddd']
+                });
+            }
+        </script>
+        <div class="piechart">
+            <div id="piechart_result" class="piechart__chart"></div>
+        </div>
+        </section>
+        <section class="fixed-width">
+            <h2>Features Summary</h2>
+
+            {% for group in features %}
+            <h3 id="group--{{ loop.index }}">{{ group }}</h3>
+
+            <table class="summary table--wide">
+                <thead>
+                    <tr>
+                        <th class="table__col--feature_name" style="width: 200px">Feature</th>
+                        <th class="table__col--requirement" style="width: 120px">Requirement</th>
+                        <th class="table__col--test_level" style="width: 120px">Test Level</th>
+                        <th class="table__col--test_case">Test Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                {% for feature in features[group] %}
+                    {% set row = namespace(first=True) %}
+                    {% set test_count = namespace(value=0) %}
+
+                    {% for link in feature.links %}
+                        {% if feature.links[link] %}
+                            {% for test_group in feature.links[link] %}
+                                {% set test_count.value = test_count.value + 1 %}
+                            {% endfor %}
+                        {% else %}
+                            {% set test_count.value = test_count.value + 1 %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if feature.links|length > 0 %}
+                        {% for link in feature.links %}
+                            {% if feature.links[link] %}
+                                {% for test_group in feature.links[link] %}
+                                    <tr class="filterable" data-filter="{{ feature.group }}" id="feature--{{ feature.order }}">
+                                        {% if row.first %}
+                                            <td class="feature--{{ feature.result|lower }}" rowspan="{{ test_count.value }}">{{ feature.name }}</td>
+                                            {% set row.first = False %}
+                                        {% endif %}
+                                        {% if loop.first %}
+                                            {% set test_group_len = namespace(value=0) %}
+                                            {% for test_group_name in feature.links[link] %}
+                                                {% if feature.links[link][test_group_name] %}
+                                                    {% set test_group_len.value = test_group_len.value + 1 %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if test_group_len.value %}
+                                                <td class="" rowspan="{{ test_group_len.value }}">{{ link }}</td>
+                                            {% else %}
+                                                <td class="">{{ link }}</td>
+                                            {% endif %}
+                                        {% endif %}
+                                            {% if feature.links[link][test_group].tests %}
+                                                <td class="">{{ feature.links[link][test_group].level }}</td>
+                                                <td class="feature--{{ feature.links[link][test_group].result|lower }}">
+                                                    <button type="button" class="collapsible">{{ test_group }} ({{ feature.links[link][test_group].tests|length }} tests)</button>
+                                                    <div class="collapsible__content">
+                                                    <ul>
+                                                    {% for test_case in feature.links[link][test_group].tests %}
+                                                        {% if test_case.level in test_plan_paths: %}
+                                                            {% set test_plan_path = test_plan_paths[test_case.level] %}
+                                                        {% else %}
+                                                            {% set test_plan_path = test_plan_paths['_'] %}
+                                                        {% endif %}
+                                                        <li>
+                                                            <a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }} {{ test_case.subtest_id }}</a>
+                                                            {% if test_case.result|lower == 'passed' %}
+                                                                <i class="fa-solid fa-check test__steps__result--passed" title="passed"></i>
+                                                            {% elif test_case.result|lower == 'justified' %}
+                                                               <i class="fa-solid fa-magnifying-glass test__steps__result--justified" title="justified"></i>
+                                                            {% elif test_case.result|lower == 'failed' %}
+                                                                <i class="fa-regular fa-circle-xmark test__steps__result--failed" title="failed"></i>
+                                                            {% elif test_case.result|lower == 'skipped' %}
+                                                                <i class="fa-solid fa-forward-step test__steps__result--skipped" title="skippped"></i>
+                                                            {% elif test_case.result|lower == 'errored' %}
+                                                                <i class="fa-solid fa-triangle-exclamation test__steps__result--errored" title="errored"></i>
+                                                            {% elif test_case.result|lower == 'expected-failure' %}
+                                                               <i class="fa-solid fa-person-digging test__steps__result--expected-failure" title="expected-failure"></i>
+                                                            {% elif test_case.result|lower == 'unexpected-success' %}
+                                                                <i class="fa-solid fa-triangle-exclamation test__steps__result--unexpected-success" title="errored"></i>
+                                                            {% else %}
+                                                                {{ test_case.result|lower }}
+                                                            {% endif %}
+                                                        </li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                    </div>
+                                                </td>
+                                            {% else %}
+                                                <td class="" colspan="2">-</td>
+                                            {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr class="filterable" data-filter="{{ feature.group }}">
+                                    {% if row.first %}
+                                        <td class="feature--{{ feature.result|lower }}" rowspan="{{ test_count.value }}">{{ feature.name }}</td>
+                                        {% set row.first = False %}
+                                    {% endif %}
+                                    <td class="">{{ link }}</td>
+                                    <td class="" colspan="2">-</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <tr class="filterable" data-filter="{{ feature.group }}">
+                            <td class="feature--{{ feature.result|lower }}">{{ feature.name }}</td>
+                            <td class=""></td>
+                            <td class="" colspan="2">-</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+                <tfoot>
+            </table>
+            {% endfor %}
+        </section>
+    </div>
+</body>
+</html>

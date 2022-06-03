@@ -4,6 +4,7 @@ ddt>=1.2.2
 colorama>=0.4.1
 docutils>=0.15.2
 Pillow>=8.4.0
+simplejson
 pyaml
 typing_extensions
 pytest
