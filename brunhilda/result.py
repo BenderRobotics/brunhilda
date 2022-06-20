@@ -656,7 +656,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             yaml.add_representer(str, yaml_str_presenter)
             serialized = yaml.dump(content)
         elif filename.lower().endswith(('json')):
-            serialized = json.dumps(content)
+            serialized = json.dumps(content, default=str)
         else:
             raise ValueError(f'Invalid filename {filename}, only JSON and YAML files are supported.')
 
