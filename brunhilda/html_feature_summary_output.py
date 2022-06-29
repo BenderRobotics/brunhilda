@@ -34,6 +34,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                             subtest_['parameters'] = parameters
                             subtest_['subtest_id'] = ','.join(f'{parameter}:{value}' for parameter, value in parameters.items())
 
+                        subtest_['result'] = subtest['result']
                         subtest_['subtests'] = []  # clear the subtests, now the test is the subtest actually
                         flat_tests.append(subtest_)
                 else:
@@ -95,7 +96,6 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
         entries = OrderedDict()
         all_tests = self._flatten_tests(testsuite)
         unlinked_tests = deepcopy(all_tests)
-        requirement_tests = {}
         summary = Summary()
 
         for group in features:
@@ -103,6 +103,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
 
             for feature_group in features[group]:
                 for feature_name in feature_group:
+                    requirement_tests = {}
                     order = feature_group[feature_name]['order']
                     links = feature_group[feature_name]['link']
                     entry = {'group': group, 'name': feature_name, 'order': order, 'result': '', 'links': {}}

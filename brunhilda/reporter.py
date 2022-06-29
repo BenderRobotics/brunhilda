@@ -64,6 +64,11 @@ class Reporter:
                                     if issue['bug-id']:
                                         bug_ids.add(issue['bug-id'])
 
+                                    for i, subtest in enumerate(test['subtests']):
+                                        if subtest['id'] == issue['sub-test']:
+                                            test['subtests'][i]['result'] = 'JUSTIFIED'
+                                            break
+
                     if len(justifications) and all(justifications):
                         test['result'] = 'JUSTIFIED'
 
