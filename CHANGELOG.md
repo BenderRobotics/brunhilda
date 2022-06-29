@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+- Use str as a default JSON serializer.
+- Make JSON outputs pretty.
+- Respect individual sub-tests results in feature list report.
+
 ## 2.3.0 (2022-06-03)
 
 - Add option to build feature list based on YAML-defined features (refs [#5664](https://redmine.benderrobotics.com/issues/5664), CBTFM-446).
