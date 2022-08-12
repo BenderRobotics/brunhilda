@@ -1,5 +1,11 @@
 # Brunhilda project changelog
 
+## 2.3.2 (2022-08-12)
+
+- Use natural sort to sort requirements (refs [#6163](https://redmine.benderrobotics.com/issues/6163), CBTFM-560).
+
+## 2.3.1 (2022-06-29)
+
 - Use str as a default JSON serializer.
 - Make JSON outputs pretty.
 - Respect individual sub-tests results in feature list report.
