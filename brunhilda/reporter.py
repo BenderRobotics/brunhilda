@@ -3,6 +3,7 @@ import re
 import yaml
 import simplejson as json
 
+from natsort import natsorted
 from typing import Dict, List, Optional, Union, Tuple
 
 from .data import Summary
@@ -136,8 +137,8 @@ class Reporter:
             if not any(r.startswith(req) for r in requirements):
                 requirements.add(req)
 
-        return sorted(list(requirements),
-                      key=lambda req: ' '.join((f'{chunk:>010}' for chunk in re.split(r'-|_|\s', req))))
+        return natsorted(list(requirements),
+                         key=lambda req: ' '.join((f'{chunk:>010}' for chunk in re.split(r'-|_|\s', req))))
 
     def _collect_summary(self, testsuite: Dict) -> Summary:
         """

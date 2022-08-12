@@ -12,7 +12,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
         """
         Converts test-suite into list of tests.
 
-        If there are subtetest in the test, it puts individual subtests to the list.
+        If there are sub-tests in the test, it puts individual sub-tests to the list.
         :param testsuite: testsuite
         :return: list of tests
         """
@@ -172,7 +172,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                         else:
                             entry['links'][link][test_group]['result'] = self._result(entry['links'][link][test_group]['results']).lower()
 
-        # add not linked tests refereing to empty feature
+        # add not linked tests refereeing to empty feature
         unlinked_tests = list(filter(lambda test: test is not None, unlinked_tests))
         # entries['Not linked'] = [{'group': '', 'name': '', 'order': '', 'links': {'': unlinked_tests}}]
 
