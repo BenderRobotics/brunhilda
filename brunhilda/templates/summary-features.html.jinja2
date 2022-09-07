@@ -217,7 +217,17 @@
                                             {% if feature.links[link][test_group].tests %}
                                                 <td class="">{{ feature.links[link][test_group].level }}</td>
                                                 <td class="feature--{{ feature.links[link][test_group].result|lower }}">
-                                                    <button type="button" class="collapsible">{{ test_group }} ({{ feature.links[link][test_group].tests|length }} tests)</button>
+                                                    {% set test_cases_ok = namespace(value=0) %}
+
+                                                    {% for test_case in feature.links[link][test_group].tests %}
+                                                        {% if test_case.result|lower == 'passed' %}
+                                                            {% set test_cases_ok.value = test_cases_ok.value + 1 %}
+                                                        {% elif test_case.result|lower == 'justified' %}
+                                                            {% set test_cases_ok.value = test_cases_ok.value + 1 %}
+                                                        {% endif %}
+                                                    {% endfor %}
+
+                                                    <button type="button" class="collapsible">{{ test_group }} ({{ test_cases_ok.value }}/{{ feature.links[link][test_group].tests|length }} tests)</button>
                                                     <div class="collapsible__content">
                                                     <ul>
                                                     {% for test_case in feature.links[link][test_group].tests %}
