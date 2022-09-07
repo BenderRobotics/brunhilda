@@ -1,5 +1,11 @@
 # Brunhilda project changelog
 
+## 2.3.3 (2022-09-07)
+
+- Use a different colour for passed and justified feature tests (refs [#6249](https://redmine.benderrobotics.com/issues/6249), CBTFM-560).
+- Mention number of tests cases passed per feature (refs [#6249](https://redmine.benderrobotics.com/issues/6249), CBTFM-560).
+- Fix incorrect justification of tests in features summary report (refs [#6230](https://redmine.benderrobotics.com/issues/6230)).
+
 ## 2.3.2 (2022-08-12)
 
 - Use natural sort to sort requirements (refs [#6163](https://redmine.benderrobotics.com/issues/6163), CBTFM-560).
