@@ -57,7 +57,8 @@ class Reporter:
                         if issues['run']['level'] == test['level']:
                             for issue in issues['errors'] + issues['failures']:
                                 if issue['test'] == test['test_id']:
-                                    justifications.append(issue['justified'].lower().strip() == 'yes')
+                                    justified = issue['justified'].lower().strip() == 'yes'
+                                    justifications.append(justified)
 
                                     if issue['comment']:
                                         comments.add(issue['comment'])
@@ -66,11 +67,11 @@ class Reporter:
                                         bug_ids.add(issue['bug-id'])
 
                                     for i, subtest in enumerate(test['subtests']):
-                                        if subtest['id'] == issue['sub-test']:
+                                        if subtest['id'] == issue['sub-test'] and justified:
                                             test['subtests'][i]['result'] = 'JUSTIFIED'
                                             break
 
-                    if len(justifications) and all(justifications):
+                    if justifications and all(justifications):
                         test['result'] = 'JUSTIFIED'
 
                     test['comment'] = [comment for comment in comments if comment]
