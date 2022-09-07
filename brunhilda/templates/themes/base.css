@@ -654,8 +654,9 @@ input.test__expander:checked+.test__detail {
 }
 
 .test__steps__result {
-    width: 3em;
     font-weight: bold;
+    margin-left: 0.5em;
+    display: inline-block;
 }
 
 .test__steps__result--passed {
@@ -666,8 +667,12 @@ input.test__expander:checked+.test__detail {
     color: var(--color--fail);
 }
 
+.test__steps__result--justified {
+    color: var(--color--justified);
+}
+
 .test__steps__result--skipped {
-    color: var(--color--skipped);
+    color: var(--color--skip);
 }
 
 .test__steps__result--errored {
@@ -1090,8 +1095,12 @@ ol.lowerroman {
     min-width: 400px;
 }
 
-.feature--passed, .feature--justified {
+.feature--passed {
     background-color: var(--color--pass-bg);
+}
+
+.feature--justified {
+    background-color: var(--color--justified-bg);
 }
 
 .feature--skipped {

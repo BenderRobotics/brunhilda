@@ -239,19 +239,19 @@
                                                         <li>
                                                             <a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }} {{ test_case.subtest_id }}</a>
                                                             {% if test_case.result|lower == 'passed' %}
-                                                                <i class="fa-solid fa-check test__steps__result--passed" title="passed"></i>
+                                                                <i class="fa-solid fa-check test__steps__result test__steps__result--passed" title="passed"></i>
                                                             {% elif test_case.result|lower == 'justified' %}
-                                                               <i class="fa-solid fa-magnifying-glass test__steps__result--justified" title="justified"></i>
+                                                               <i class="fa-solid fa-magnifying-glass test__steps__result test__steps__result--justified" title="justified"></i>
                                                             {% elif test_case.result|lower == 'failed' %}
-                                                                <i class="fa-regular fa-circle-xmark test__steps__result--failed" title="failed"></i>
+                                                                <i class="fa-regular fa-circle-xmark test__steps__result test__steps__result--failed" title="failed"></i>
                                                             {% elif test_case.result|lower == 'skipped' %}
-                                                                <i class="fa-solid fa-forward-step test__steps__result--skipped" title="skippped"></i>
+                                                                <i class="fa-solid fa-forward-step test__steps__result test__steps__result--skipped" title="skippped"></i>
                                                             {% elif test_case.result|lower == 'errored' %}
-                                                                <i class="fa-solid fa-triangle-exclamation test__steps__result--errored" title="errored"></i>
+                                                                <i class="fa-solid fa-triangle-exclamation test__steps__result test__steps__result--errored" title="errored"></i>
                                                             {% elif test_case.result|lower == 'expected-failure' %}
-                                                               <i class="fa-solid fa-person-digging test__steps__result--expected-failure" title="expected-failure"></i>
+                                                               <i class="fa-solid fa-person-digging test__steps__result test__steps__result--expected-failure" title="expected-failure"></i>
                                                             {% elif test_case.result|lower == 'unexpected-success' %}
-                                                                <i class="fa-solid fa-triangle-exclamation test__steps__result--unexpected-success" title="errored"></i>
+                                                                <i class="fa-solid fa-triangle-exclamation test__steps__result test__steps__result--unexpected-success" title="errored"></i>
                                                             {% else %}
                                                                 {{ test_case.result|lower }}
                                                             {% endif %}
