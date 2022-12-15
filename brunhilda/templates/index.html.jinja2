@@ -19,5 +19,10 @@
         <li><a href="{{ path }}">{{ name }}</a></li>
         {% endfor %}
     </ol>
+    {% if preamble %}
+            <section class="preamble">
+                {{ preamble }}
+            </section>
+    {% endif %}
 </body>
 </html>

@@ -287,7 +287,7 @@ class Reporter:
         :param name: name of the output file
         :param preamble: path to the HTML document to be used as a document preamble
         """
-        formater = HtmlIndexOutput()
+        formater = HtmlIndexOutput(preamble=preamble)
         file_list = []
 
         for file_name, file_path in self._outputs:
