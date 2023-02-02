@@ -9,3 +9,4 @@ pyaml
 natsort>=8.1.0
 typing_extensions
 pytest
+doorstop

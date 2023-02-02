@@ -1,0 +1,121 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title>{{ name }}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    {% include "themes/base.css" %}
+    </style>
+</head>
+
+<body>
+    <h1>{{ name }}</h1>
+    <div class="header">
+        {% include "header.html.jinja2" %}
+    </div>
+
+    <div class="main">
+        {% if preamble %}
+                <section class="preamble">
+                    {{ preamble }}
+                </section>
+        {% endif %}
+        <section>
+        {% include "summary.html.jinja2" %}
+        </section>
+        <section>
+            <h2>User stories Summary</h2>
+            <table class="summary table--wide">
+                <thead>
+                    <tr>
+                        <th class="table__col--us-req_id">
+                            <span>ID</span>
+                            <input id="filter"/>
+                        </th>
+                        <th class="table__col--us-test_level">Name</th>
+                        <th class="table__col--us-text">
+                            <span>User story definition</span>
+                            <input id="filter_req"/>
+                        </th>
+                        <th class="table__col--us-active">Status</th>
+                        <th class="table__col--us-test_case_id">Covered by test case</th>
+                        <th class="table__col--us-test_result">Test Result</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for user_story in user_stories %}
+                    <tr class="filterable" data-filter="{{ user_story.name }}" data-filter-req="{{ user_story.story }}">
+                        <td class="req__id table__col--us-req_id" >{{ user_story.name }}</td>
+                        <td class="test_level--{{ user_story.level }} table__col--us-test_level" >{{ user_story.level }}</td>
+                        <td class="table__col--us-text" >{{ user_story.story }}</td>
+                        {% if user_story.status == "ACTIVE" -%}
+                            {% set req_active_class = "req-active" %}
+                        {%- else %}
+                            {% set req_active_class = "req-inactive"%}
+                        {%- endif %}
+                        <td class="{{ req_active_class }} table__col--us-active" >{{ user_story.status }}</td>
+                        <td class="inner_table__td" colspan="4">
+                            <table class="inner_table">
+                                <tbody>
+                                <!-- If user story is not covered, display not covered. Otherwise insert all covering test cases
+                                into the inner table. -->
+                                    {% if not user_story.tests %}
+                                        <td class="req-not-covered">NOT COVERED</td>
+                                    {% endif %}
+                                    {% for test_case in user_story.tests %}
+                                        {% if test_case.result == "PASSED" -%}
+                                            {% set test_result_class = "test--passed" %}
+                                        {%- elif test_case.result == "SKIPPED" %}
+                                            {% set test_result_class = "test--skipped" %}
+                                        {%- elif test_case.result == "ERRORED" %}
+                                            {% set test_result_class = "test--errored" %}
+                                        {%- elif test_case.result == "FAILED" %}
+                                            {% set test_result_class = "test--failed" %}
+                                        {%- elif test_case.result == "JUSTIFIED" %}
+                                            {% set test_result_class = "test--justified" %}
+                                        {%- elif test_case.result == "EXPECTED-FAILURE" %}
+                                            {% set test_result_class = "test--expected-failure" %}
+                                        {%- elif test_case.result == "UNEXPECTED-SUCCESS" %}
+                                            {% set test_result_class = "test--unexpected-success" %}
+                                        {%- elif test_case.result == "EMPTY" %}
+                                            {% set test_result_class = "test--empty" %}
+                                        {%- else %}
+                                            {% set test_result_class = test_case.result|lower %}
+                                        {%- endif %}
+
+                                        {% if test_case.level in test_plan_paths: %}
+                                            {% set test_plan_path = test_plan_paths[test_case.level] %}
+                                        {% else %}
+                                            {% set test_plan_path = test_plan_paths['_'] %}
+                                        {% endif %}
+
+                                        <tr class="test_level--{{ user_story.level }}">
+                                            <td class="req__test-id testcase__inner_table__td table__col--us-test_case_id">
+                                                <a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case['tags']['test-id'][0] }} - {{ test_case.case }}</a>
+                                            </td>
+                                            <td class="{{ test_result_class }} req__test-result testcase__inner_table__td table__col--us-test_result">
+                                                <span class="test__result">
+                                                {% if test_case.result == 'EMPTY' %}
+                                                {% elif test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED_FAILURE') %}
+                                                        <a href="{{ issue_list_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
+                                                {% else %}
+                                                        {{ test_case.result }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>

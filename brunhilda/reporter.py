@@ -3,6 +3,7 @@ import re
 import yaml
 import simplejson as json
 
+from doorstop import Item
 from natsort import natsorted
 from typing import Dict, List, Optional, Union, Tuple
 
@@ -14,12 +15,14 @@ from .html_test_plan_output import HtmlTestPlanOutput
 from .html_index_output import HtmlIndexOutput
 from .html_issue_list_output import HtmlIssueListOutput
 from .html_feature_summary_output import HtmlFeatureSummaryOutput
+from .html_user_stories_summary import HtmlUserStoriesSummaryOutput
 
 
 class Reporter:
-    def __init__(self, requirements: List[str] = [], user_data: Dict[str, str] = {}) -> None:
+    def __init__(self, requirements: List[str] = [], user_data: Dict[str, str] = {}, user_stories: List[Item] = [] ) -> None:
         self._outputs = []
         self._requirements = requirements
+        self._user_stories = user_stories
         self._tests: Dict = {}
         self._issues: Dict = {}
         self._features: Optional[Dict] = None
@@ -198,6 +201,28 @@ class Reporter:
         output = formater.print(name=name,
                                 testsuite=self._tests,
                                 requirements=self._collect_requirements(self._tests),
+                                summary=self._collect_summary(self._tests),
+                                issue_list_path=issue_list_path,
+                                test_plan_paths=test_plan_paths,
+                                user_data=self._user_data)
+        self._write_file(name, path, output)
+
+    def print_user_stories_summary(self, path: str, name: str = 'User stories Coverage Summary',
+                                   preamble: Optional[str] = None) -> None:
+        """
+        Prints user stories summary report from list of doorstop user stories.
+
+        :param path: where to store the output file
+        :param name: name of the produced report used in title
+        :param preamble: path to the HTML document to be used as a document preamble
+        """
+        formater = HtmlUserStoriesSummaryOutput(preamble=preamble)
+        issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
+        test_plan_paths = {level: rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
+
+        output = formater.print(name=name,
+                                testsuite=self._tests,
+                                user_stories=self._user_stories,
                                 summary=self._collect_summary(self._tests),
                                 issue_list_path=issue_list_path,
                                 test_plan_paths=test_plan_paths,

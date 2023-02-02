@@ -340,11 +340,13 @@ runner.save_html_report(result, path)
 BRunhilda Reporter supports creating of advanced reports allowing to combine multiple test runs into single report file.
 
 ```python
-class brunhilda.reporter.Reporter(requirements: List[str] = [], user_data: Dict[str, str] = {})
+class brunhilda.reporter.Reporter(requirements: List[str] = [],
+                                  user_data: Dict[str, str] = {},
+                                  user_stories: List[Item] = [])
 ```
 
 Reporter class. `requirements` is list of requirements ID's, `user_data` dictionary in rendered as a table in the top of
-produced reports.
+produced reports. `user_stories` is a list of [doorstop](https://doorstop.readthedocs.io/en/latest/) Item requirements.
 
 - `brunhilda.reporter.Reporter.load_tests` loads test execution artefact created by `brunhilda.BRunhilda.save_tests` method.
 - `brunhilda.reporter.Reporter.load_issues` loads test execution artefact created by `brunhilda.BRunhilda.save_issues` method.
@@ -353,6 +355,7 @@ produced reports.
 - `brunhilda.reporter.Reporter.print_issue_list` creates report with all issues and justifications.
 - `brunhilda.reporter.Reporter.print_test_plan` creates test plan report.
 - `brunhilda.reporter.Reporter.print_requirements_summary` creates requirements summary report.
+- `brunhilda.reporter.Reporter.print_user_stories_summary` creates user stories summary report.
 - `brunhilda.reporter.Reporter.print_test_summary` creates test summary report.
 - `brunhilda.reporter.Reporter.print_feature_summary` creates feature summary report.
 - `brunhilda.reporter.Reporter.print_index` creates index file referencing all files yet created.
@@ -365,7 +368,9 @@ It is important to keep the order>
 4. print index.
 
 ```python
-reporter = brunhilda.reporter.Reporter(requirements=['REQ_01', 'REQ_02'], user_data={'version': '1.1.2', 'reporter': 'Marry Poppins'})
+reporter = brunhilda.reporter.Reporter(requirements=['REQ_01', 'REQ_02'],
+                                       user_data={'version': '1.1.2', 'reporter': 'Marry Poppins'},
+                                       user_stories=[doorstop.Item])
 reporter.load_tests('tests_run_1.yaml')
 reporter.load_issues('issues_run_1.yaml')
 reporter.load_tests('tests_run_2.yaml')
@@ -400,6 +405,26 @@ feature group 1:            # group of features
 feature group 2:
 - feature C:
     ...
+```
+
+### Doorstop requirements
+
+BRunhilda supports linking of the doorstop requirements to the individual tests. Doorstop requirements are described
+in YAML with the following structure:
+
+```yaml
+active: true
+derived: false
+enabled: true                 # indicates activity status of the requirement
+header: |                     # gives the name of the requirement header
+  header name
+level: 1.0
+links: []                     # gives the link to the children requirements / specs / test cases
+normative: true
+ref: ''
+reviewed:
+text: |
+  As a User, I want a BRunhilda to support a doorstop requirements, so that I can nicely publish requirements links with individual tests.
 ```
 
 Contributing

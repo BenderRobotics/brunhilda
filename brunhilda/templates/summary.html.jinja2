@@ -72,6 +72,29 @@
                 $(".test--hidden_id").removeClass("test--hidden_id");
             }
         });
+
+        /* This filter can be applied as search within the text. No space replacements. Values are case insensitive.
+        Values that do not contain specific input are hidden.
+        */
+        $("#filter_req").on('change keyup paste', function () {
+            if (this.value != "") {
+                const filterValue = this.value.toLowerCase();
+
+                $("tr.filterable").each(function() {
+                    const rowValue = $(this).attr("data-filter-req").toLowerCase();
+
+                    if (rowValue != undefined && rowValue.includes(filterValue)) {
+                        $(this).removeClass("test--hidden_id");
+                    }
+                    else {
+                        $(this).addClass("test--hidden_id");
+                    }
+                });
+            }
+            else {
+                $(".test--hidden_id").removeClass("test--hidden_id");
+            }
+        });
     });
 </script>
 

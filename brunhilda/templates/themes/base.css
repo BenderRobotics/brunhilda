@@ -146,6 +146,8 @@ table {
     --color--unexpected-success-bg: rgba(0, 200, 200, 0.1);
     --color--empty: #808080;
     --color--empty-bg: rgba(128, 128, 128, 0.1);
+    --color--active: green;
+    --color--inactive: orange;
 }
 
 body {
@@ -787,6 +789,39 @@ input.test__expander:checked+.test__detail {
     max-width: 125px;
 }
 
+
+/******************** USER STORIES ********************/
+
+.table__col--us-req_id {
+    min-width: 60px;
+    max-width: 80px;
+}
+
+.table__col--us-test_level {
+    min-width: 120px;
+    max-width: 120px;
+}
+
+.table__col--us-text {
+    min-width: 600px;
+    max-width: 800px;
+}
+
+.table__col--us-active {
+    min-width: 70px;
+    max-width: 80px;
+}
+
+.table__col--us-test_case_id {
+    min-width: 200px;
+    max-width: 350px;
+}
+
+.table__col--us-test_result {
+    min-width: 80px;
+    max-width: 100px;
+}
+
 /********************************************************/
 
 .testdef {
@@ -1113,4 +1148,26 @@ ol.lowerroman {
 
 .feature--errored {
     background-color: var(--color--error-bg);
+}
+
+
+/**************************************/
+/* Style of requirements fields */
+
+.req-active {
+    background-color: var(--color--active);
+    text-align: center;
+    font-weight: bold;
+}
+
+.req-inactive {
+    background-color: var(--color--inactive);
+    text-align: center;
+    font-weight: bold;
+}
+
+.req-not-covered {
+    color: var(--color--fail);
+    text-align: center;
+    font-weight: bold;
 }

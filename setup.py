@@ -37,5 +37,7 @@ setuptools.setup(
         'docutils>=0.15.2',
         'Pillow>=7.2.0',
         'simplejson>=3.17.6',
+        'doorstop==2.2.post1',
+        'natsort>=8.1.0',
     ]
 )
