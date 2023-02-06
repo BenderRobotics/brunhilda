@@ -1,5 +1,10 @@
 # Brunhilda project changelog
 
+## 2.3.4 (2023-02-03)
+
+- Added support for doorstop requirements management (refs [#5559](https://redmine.benderrobotics.com/issues/5559)).
+- Added preamble to index page.
+
 ## 2.3.3 (2022-09-07)
 
 - Use a different colour for passed and justified feature tests (refs [#6249](https://redmine.benderrobotics.com/issues/6249), CBTFM-560).
