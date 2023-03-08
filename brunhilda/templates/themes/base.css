@@ -656,6 +656,10 @@ input.test__expander:checked+.test__detail {
 }
 
 .test__steps__result {
+    width: 3em;
+}
+
+.test__steps__result__icon {
     font-weight: bold;
     margin-left: 0.5em;
     display: inline-block;
