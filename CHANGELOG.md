@@ -1,5 +1,11 @@
 # Brunhilda project changelog
 
+## 2.4.0 (2023-05-10)
+
+- Added support to use multiple files as a document preamble (refs [#7022](https://redmine.benderrobotics.com/issues/7022)).
+- Fix CSS for test-steps result table column.
+- Fixed numpy version required for doorstop (refs [#6890](https://redmine.benderrobotics.com/issues/6890)).
+
 ## 2.3.4 (2023-02-03)
 
 - Added support for doorstop requirements management (refs [#5559](https://redmine.benderrobotics.com/issues/5559)).
