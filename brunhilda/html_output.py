@@ -1,19 +1,25 @@
 import colorama
+from typing import Union, Sequence
 from docutils.core import publish_parts
 
 from .output import Output
 
 class HtmlOutput(Output):
-    def __init__(self, preamble=None, path='output.html'):
+    def __init__(self, preamble: Union[Sequence[str], str, None] = None, path='output.html'):
         """
-        :param preamble: path to file to include as a preamble
+        :param preamble: path or multiple paths to file(s) to include as a preamble
+        :param path: output path where to create the HTML output
         """
-        self._include_preamble = None
+        self._include_preamble = ''
         self.path = path
 
-        if preamble is not None:
-            with open(preamble, encoding='utf-8') as f:
-                self._include_preamble = f.read()
+        if preamble:
+            if not isinstance(preamble, (list, tuple, set)):
+                preamble = [preamble]
+
+            for p in preamble:
+                with open(p, encoding='utf-8') as f:
+                    self._include_preamble += f.read()
 
     def _format_doc(self, description):
         """

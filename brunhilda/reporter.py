@@ -5,7 +5,7 @@ import simplejson as json
 
 from doorstop import Item
 from natsort import natsorted
-from typing import Dict, List, Optional, Union, Tuple
+from typing import Dict, List, Optional, Union, Tuple, Sequence
 
 from .data import Summary
 from .rel_path import rel_path
@@ -186,13 +186,13 @@ class Reporter:
         return summary
 
     def print_requirements_summary(self, path: str, name: str = 'Requirements Coverage Summary',
-                                   preamble: Optional[str] = None) -> None:
+                                   preamble: Union[Sequence[str], str, None] = None) -> None:
         """
         Prints requirements summary report.
 
         :param path: where to store the output file
         :param name: name of the produced report used in title
-        :param preamble: path to the HTML document to be used as a document preamble
+        :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
         formater = HtmlReqSummaryOutput(preamble=preamble)
         issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
@@ -208,13 +208,13 @@ class Reporter:
         self._write_file(name, path, output)
 
     def print_user_stories_summary(self, path: str, name: str = 'User stories Coverage Summary',
-                                   preamble: Optional[str] = None) -> None:
+                                   preamble: Union[Sequence[str], str, None] = None) -> None:
         """
         Prints user stories summary report from list of doorstop user stories.
 
         :param path: where to store the output file
         :param name: name of the produced report used in title
-        :param preamble: path to the HTML document to be used as a document preamble
+        :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
         formater = HtmlUserStoriesSummaryOutput(preamble=preamble)
         issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
@@ -229,13 +229,14 @@ class Reporter:
                                 user_data=self._user_data)
         self._write_file(name, path, output)
 
-    def print_test_summary(self, path: str, name: str = 'Test Summary Report', preamble: Optional[str] = None) -> None:
+    def print_test_summary(self, path: str, name: str = 'Test Summary Report',
+                           preamble: Union[Sequence[str], str, None] = None) -> None:
         """
         Prints test summary report.
 
         :param path: where to store the output file
         :param name: name of the produced report used in title
-        :param preamble: path to the HTML document to be used as a document preamble
+        :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
         formater = HtmlTestSummaryOutput(preamble=preamble)
         issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
@@ -250,14 +251,14 @@ class Reporter:
                                 user_data=self._user_data)
         self._write_file(name, path, output)
 
-    def print_test_plan(self, path: str, name: str = 'Test Plan', preamble: Optional[str] = None,
+    def print_test_plan(self, path: str, name: str = 'Test Plan', preamble: Union[Sequence[str], str, None] = None,
                         level: Union[Tuple[str, ...], str, None] = None) -> None:
         """
         Prints test summary plan.formater
 
         :param path: where to store the output file
         :param name: name of the produced report used in title
-        :param preamble: path to the HTML document to be used as a document preamble
+        :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         :param level: level to filter the tests
         """
         if isinstance(level, (list, set, tuple, frozenset)):
@@ -277,26 +278,26 @@ class Reporter:
         output = formater.print(name=name, testsuite=self._tests, levels=levels, user_data=self._user_data)
         self._write_file(name, path, output)
 
-    def print_issue_list(self, path: str, name: str = 'List of Issues', preamble: Optional[str] = None) -> None:
+    def print_issue_list(self, path: str, name: str = 'List of Issues', preamble: Union[Sequence[str], str, None] = None) -> None:
         """
         Prints list of issues with justifications.
 
         :param path: path where the file shall be created
         :param name: name of the output file
-        :param preamble: path to the HTML document to be used as a document preamble
+        :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
         self._issue_list_path = path
         formater = HtmlIssueListOutput(preamble=preamble, path=path)
         output = formater.print(name=name, issues=self._issues, user_data=self._user_data)
         self._write_file(name, path, output)
 
-    def print_feature_summary(self, path: str, name: str = 'Summary of Features', preamble: Optional[str] = None) -> None:
+    def print_feature_summary(self, path: str, name: str = 'Summary of Features', preamble: Union[Sequence[str], str, None] = None) -> None:
         """
         Prints summary of features with related tests
 
         :param path: path where the file shall be created
         :param name: name of the output file
-        :param preamble: path to the HTML document to be used as a document preamble
+        :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
         self._feature_list_path = path
         formater = HtmlFeatureSummaryOutput(preamble=preamble, path=path)
@@ -304,13 +305,13 @@ class Reporter:
         output = formater.print(name=name, features=self._features, testsuite=self._tests, test_plan_paths=test_plan_paths)
         self._write_file(name, path, output)
 
-    def print_index(self, path: str, name: str = 'Index', preamble: Optional[str] = None) -> None:
+    def print_index(self, path: str, name: str = 'Index', preamble: Union[Sequence[str], str, None] = None) -> None:
         """
         Prints index file for the generated files
 
         :param path: path where the file shall be created
         :param name: name of the output file
-        :param preamble: path to the HTML document to be used as a document preamble
+        :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
         formater = HtmlIndexOutput(preamble=preamble)
         file_list = []
