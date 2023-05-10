@@ -337,7 +337,7 @@ runner.save_html_report(result, path)
 
 ### Reporting
 
-BRunhilda Reporter supports creating of advanced reports allowing to combine multiple test runs into single report file.
+BRunhilda Reporter supports the creation of advanced reports allowing to combine test runs into a single report file.
 
 ```python
 class brunhilda.reporter.Reporter(requirements: List[str] = [],
@@ -345,22 +345,22 @@ class brunhilda.reporter.Reporter(requirements: List[str] = [],
                                   user_stories: List[Item] = [])
 ```
 
-Reporter class. `requirements` is list of requirements ID's, `user_data` dictionary in rendered as a table in the top of
+Reporter class. `requirements` is a list of requirements ID's, `user_data` dictionary is rendered as a table at the top of
 produced reports. `user_stories` is a list of [doorstop](https://doorstop.readthedocs.io/en/latest/) Item requirements.
 
-- `brunhilda.reporter.Reporter.load_tests` loads test execution artefact created by `brunhilda.BRunhilda.save_tests` method.
-- `brunhilda.reporter.Reporter.load_issues` loads test execution artefact created by `brunhilda.BRunhilda.save_issues` method.
+- `brunhilda.reporter.Reporter.load_tests` loads test execution artifact created by `brunhilda.BRunhilda.save_tests` method.
+- `brunhilda.reporter.Reporter.load_issues` loads test execution artifact created by `brunhilda.BRunhilda.save_issues` method.
 - `brunhilda.reporter.Reporter.load_features` loads features linked to the individual tests.
 - `brunhilda.reporter.Reporter.justify_tests` processes loaded tests and issues and applies the justifications.
-- `brunhilda.reporter.Reporter.print_issue_list` creates report with all issues and justifications.
-- `brunhilda.reporter.Reporter.print_test_plan` creates test plan report.
+- `brunhilda.reporter.Reporter.print_issue_list` creates a report with all issues and justifications.
+- `brunhilda.reporter.Reporter.print_test_plan` creates a test plan report.
 - `brunhilda.reporter.Reporter.print_requirements_summary` creates requirements summary report.
 - `brunhilda.reporter.Reporter.print_user_stories_summary` creates user stories summary report.
-- `brunhilda.reporter.Reporter.print_test_summary` creates test summary report.
-- `brunhilda.reporter.Reporter.print_feature_summary` creates feature summary report.
-- `brunhilda.reporter.Reporter.print_index` creates index file referencing all files yet created.
+- `brunhilda.reporter.Reporter.print_test_summary` creates a test summary report.
+- `brunhilda.reporter.Reporter.print_feature_summary` creates a feature summary report.
+- `brunhilda.reporter.Reporter.print_index` creates an index file referencing all files yet created.
 
-It is important to keep the order>
+It is important to keep the order
 
 1. load issues, tests, features,
 2. justify,
@@ -387,7 +387,7 @@ reporter.print_index('index.html')
 
 ### Features
 
-BRunhilda supports linking of the DUT features to the individual tests. Features are described in YAML with the
+BRunhilda supports linking the DUT features to the individual tests. Features are described in YAML with the
 following structure:
 
 ```yaml
@@ -409,7 +409,7 @@ feature group 2:
 
 ### Doorstop requirements
 
-BRunhilda supports linking of the doorstop requirements to the individual tests. Doorstop requirements are described
+BRunhilda supports linking the doorstop requirements to the individual tests. Doorstop requirements are described
 in YAML with the following structure:
 
 ```yaml
@@ -430,8 +430,8 @@ text: |
 Contributing
 ------------
 
-Here is a short guide to environment setup to ease you up contributing to the
-project. Start by installing and creating virtual environment
+Here is a short guide to the environment setup to ease you up contributing to the
+project. Start by installing and creating a virtual environment
 
 ```shell
 pip install virtualenv
@@ -446,13 +446,13 @@ source venv/bin/activate    # Linux
 venv\Scripts\activate.bat   # Windows
 ```
 
-After that you should see `(venv)` as prefix to your command line cursor. You
-have to to repeat activation every time you close the terminal. To install
+After that you should see `(venv`)` as a prefix to your command line cursor. You
+have to repeat activation every time you close the terminal. To install the
 package in development mode call:
 
 ```shell
 pip install -e .
 ```
 
-Now you can use `BRunhilda` package directly from command line and all changes
-to source code are instantly applied.
+Now you can use `BRunhilda` package directly from the command line and all
+changes to the source code are instantly applied.
