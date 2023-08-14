@@ -135,9 +135,10 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                                             if self._covers_param(test, parameter, params[parameter]):
                                                 test_case = deepcopy(test)
                                                 requirement_tests[requirement].append(test_case_id)
-                                                entry['links'][link][test_group]['tests'].append(test_case)
-                                                entry['links'][link][test_group]['results'].add(test_case['result'])
-                                                feature_results.add(test_case['result'])
+                                                if test_case not in entry['links'][link][test_group]['tests']:
+                                                    entry['links'][link][test_group]['tests'].append(test_case)
+                                                    entry['links'][link][test_group]['results'].add(test_case['result'])
+                                                    feature_results.add(test_case['result'])
                                                 unlinked_tests[index] = None
                                     else:
                                         test_group = test['test_id']
@@ -151,9 +152,10 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
 
                                         test_case = deepcopy(test)
                                         requirement_tests[requirement].append(test_case_id)
-                                        entry['links'][link][test_group]['tests'].append(test_case)
-                                        entry['links'][link][test_group]['results'].add(test_case['result'])
-                                        feature_results.add(test_case['result'])
+                                        if test_case not in entry['links'][link][test_group]['tests']:
+                                            entry['links'][link][test_group]['tests'].append(test_case)
+                                            entry['links'][link][test_group]['results'].add(test_case['result'])
+                                            feature_results.add(test_case['result'])
                                         unlinked_tests[index] = None
 
 
