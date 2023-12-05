@@ -587,7 +587,6 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         else:
             self.skip_reason = reason
             self.last_result = SKIPPED
-            self.summary.results += SKIPPED
 
     def addExpectedFailure(self, test, err):
         """
