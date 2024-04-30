@@ -110,6 +110,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                  extra_data_path='./extra',
                  user_data=None):
         super().__init__(stream, descriptions, verbosity)
+        self.errors_strings = []
         self.stream_buffer = io.StringIO()
         self.stream = CatchedStream(stream, self.stream_buffer)
         self._tests = []
