@@ -38,14 +38,14 @@ setuptools.setup(
     python_requires='>=3.7',
     install_requires=[
         'Jinja2>=2.10.3',
-        'numpy>=1.17.3,<1.24',
+        'numpy>=1.17.3',
         'ddt>=1.2.2',
         'colorama>=0.4.1',
         'docutils>=0.15.2',
         'Pillow>=7.2.0',
         'pyyaml',
         'simplejson>=3.17.6',
-        'doorstop==2.2.post1',
         'natsort>=8.1.0',
-    ]
+    ],
+    extras_require={'doorstop-user-stories': ['doorstop==2.2.1']},
 )

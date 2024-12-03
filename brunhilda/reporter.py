@@ -3,7 +3,6 @@ import re
 import yaml
 import simplejson as json
 
-from doorstop import Item
 from natsort import natsorted
 from typing import Dict, List, Optional, Union, Tuple, Sequence
 
@@ -15,11 +14,10 @@ from .html_test_plan_output import HtmlTestPlanOutput
 from .html_index_output import HtmlIndexOutput
 from .html_issue_list_output import HtmlIssueListOutput
 from .html_feature_summary_output import HtmlFeatureSummaryOutput
-from .html_user_stories_summary import HtmlUserStoriesSummaryOutput
 
 
 class Reporter:
-    def __init__(self, requirements: List[str] = [], user_data: Dict[str, str] = {}, user_stories: List[Item] = [] ) -> None:
+    def __init__(self, requirements: List[str] = [], user_data: Dict[str, str] = {}, user_stories: List['doorstop.Item'] = [] ) -> None:
         self._outputs = []
         self._requirements = requirements
         self._user_stories = user_stories
@@ -216,6 +214,11 @@ class Reporter:
         :param name: name of the produced report used in title
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
+        try:
+            from .html_user_stories_summary import HtmlUserStoriesSummaryOutput
+        except ImportError as ex:
+            raise ImportError(f"Missing pip dependencies. Reason: {ex}")
+
         formater = HtmlUserStoriesSummaryOutput(preamble=preamble)
         issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
         test_plan_paths = {level: rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}

@@ -454,5 +454,11 @@ package in development mode call:
 pip install -e .
 ```
 
+If you want to use Brunhilda for user stories defined by doorstop artifacts then install BRunhilda by calling a command below. Please note that BRunhilda with doorstop feature requires **Python >= 3.9**.
+
+```shell
+pip install -e .[doorstop-user-stories]
+```
+
 Now you can use `BRunhilda` package directly from the command line and all
 changes to the source code are instantly applied.
