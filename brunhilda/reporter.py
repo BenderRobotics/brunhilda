@@ -183,6 +183,21 @@ class Reporter:
 
         return summary
 
+    def _add_index_link(self, path: str) -> None:
+        """
+        Add link to index page into every generated file.
+
+        :param path: index path
+        """
+        for _, file_path in self._outputs:
+            with open(file_path, "r", encoding="utf-8") as file:
+                content = file.read()
+
+            content = content.replace('href="#index"', f'href="{ rel_path(file_path, path) }"')
+
+            with open(file_path, "w", encoding="utf-8") as file:
+                file.write(content)
+
     def print_requirements_summary(self, path: str, name: str = 'Requirements Coverage Summary',
                                    preamble: Union[Sequence[str], str, None] = None) -> None:
         """
@@ -323,4 +338,5 @@ class Reporter:
             file_list.append((file_name, rel_path(path, file_path)))
 
         output = formater.print(name, file_list)
+        self._add_index_link(path)
         self._write_file(name, path, output)
