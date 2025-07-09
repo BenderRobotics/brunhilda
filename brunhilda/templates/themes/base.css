@@ -152,7 +152,6 @@ table {
 
 body {
     padding: 1rem 2rem;
-    padding-bottom: 4rem;
 }
 
 @media print {
@@ -1183,10 +1182,10 @@ ol.lowerroman {
 
 .index-link-button {
     position: fixed;
-    bottom: 1rem;
-    left: 2rem;
-    padding: 0.75rem 1.25rem;
-    background-color: #007bff;
+    top: 2rem;
+    right: 2rem;
+    padding: 0.75rem 0.75rem;
+    background-color: #00c3ff;
     color: white;
     border-radius: 1rem;
     text-decoration: none;
@@ -1194,6 +1193,7 @@ ol.lowerroman {
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s;
     z-index: 9999;
+    font-size: 1.5rem;
 }
 
 .index-link-button:hover {
