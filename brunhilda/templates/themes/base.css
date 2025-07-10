@@ -496,6 +496,10 @@ input.testcase__expander:checked+.testcase__description {
     width: calc(100% - 18rem)
 }
 
+.test__issue a{
+    text-decoration: none;
+}
+
 .test__time {
     text-align: right;
     width: 9rem;

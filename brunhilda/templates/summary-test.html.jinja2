@@ -50,6 +50,7 @@
                         </th>
                         <th>Requirements</th>
                         <th>Test Result</th>
+                        <th>Issue</th>
                         <th>Bug ID</th>
                         <th>Comment</th>
                     </tr>
@@ -96,10 +97,13 @@
                 {% if loop.first %}
                             <td class="test__result" rowspan="{{ loop.length }}">
                     {% if test_case.result == 'EMPTY' %}
-                    {% elif test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED_FAILURE') %}
-                                <a href="{{ issue_list_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
                     {% else %}
-                                {{ test_case.result }}
+                            <a href="{{ test_case.html_report_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
+                    {% endif %}
+                            </td>
+                            <td class="test__issue" rowspan="{{ loop.length }}">
+                    {% if test_case.result in ('ERRORED', 'FAILED', 'JUSTIFIED')%}
+                            <a href="{{ issue_list_path }}#{{ test_case.test_id }}">🔗</a>
                     {% endif %}
                             </td>
                             <td class="test__bug-id" rowspan="{{ loop.length }}">
@@ -134,10 +138,13 @@
                     <td class="test__requirement"></td>
                     <td class="test__result">
                     {% if test_case.result == 'EMPTY' %}
-                    {% elif test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED_FAILURE') %}
-                        <a href="{{ issue_list_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
                     {% else %}
-                        {{ test_case.result }}
+                        <a href="{{ test_case.html_report_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
+                    {% endif %}
+                    </td>
+                    <td class="test__issue">
+                    {% if test_case.result in ('ERRORED', 'FAILED', 'JUSTIFIED')%}
+                    <a href="{{ issue_list_path }}#{{ test_case.test_id }}">🔗</a>
                     {% endif %}
                     </td>
                     <td class="test__bug-id">{{ test_case.bug_id }}</td>
@@ -152,6 +159,7 @@
                         <th>Total tests: {{ summary.results.total }}</th>
                         <th>Total requirements: {{ ns.refered_requirements|unique|list|length }}</th>
                         <th class="test__result">{{ summary.result }}</th>
+                        <th></th>
                         <th></th>
                         <th></th>
                     </tr>

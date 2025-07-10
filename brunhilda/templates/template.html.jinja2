@@ -96,6 +96,18 @@
                         }
                     }
                 });
+
+                // === Checkbox activation by hash ===
+                const hash = window.location.hash;
+                if (!hash) return;
+
+                const testId = hash.substring(1); // remove # from hash
+                const checkboxId = 'test_expand.' + testId;
+                const $checkbox = $('#' + CSS.escape(checkboxId));
+
+                if ($checkbox.length && !$checkbox.prop('checked')) {
+                    $checkbox.prop('checked', true);
+                }
             });
         </script>
     </head>
@@ -168,7 +180,7 @@
                                     </span>
                                     <span class="test__time">{{ '%0.3f'|format(test.time|float) }}s</span>
                                 </label>
-                                <input type="checkbox" id="test_expand_{{count.value}}" class="test__expander">
+                                <input type="checkbox" id="test_expand.{{ testcase.name }}.{{ test.name }}" class="test__expander">
                                 <div class="test__detail">
                                     <div class="test__detail__content">
                                         {% if test.skip_reason %}

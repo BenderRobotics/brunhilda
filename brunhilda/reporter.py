@@ -78,13 +78,19 @@ class Reporter:
                     test['comment'] = [comment for comment in comments if comment]
                     test['bug_id'] = list(bug_ids)
 
-    def load_tests(self, path: str) -> None:
+    def load_tests(self, path: str, report_path: str = "") -> None:
         """
-        Loads serialized tests file
+        Loads serialized tests file and store path to their html report
 
-        :param path: path to the file
+        :param path: path to the test file
+        :param report_path: path to the test html report file
         """
-        self._tests[path] = self._load(path)
+        tests_list = self._load(path)
+
+        for test in tests_list:
+            test["html_report_path"] = report_path
+
+        self._tests[path] = tests_list
 
     def load_issues(self, path: str) -> None:
         """
@@ -260,8 +266,17 @@ class Reporter:
         issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
         test_plan_paths = {level: rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
 
+        # Update path to test run report to relative one
+        updated_tests = {
+            k: [
+                {**test, "html_report_path": rel_path(path, test["html_report_path"])}
+                for test in tests
+            ]
+            for k, tests in self._tests.items()
+        }
+
         output = formater.print(name=name,
-                                testsuite=self._tests,
+                                testsuite=updated_tests,
                                 requirements=self._collect_requirements(self._tests),
                                 summary=self._collect_summary(self._tests),
                                 issue_list_path=issue_list_path,

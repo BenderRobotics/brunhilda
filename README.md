@@ -348,7 +348,7 @@ class brunhilda.reporter.Reporter(requirements: List[str] = [],
 Reporter class. `requirements` is a list of requirements ID's, `user_data` dictionary is rendered as a table at the top of
 produced reports. `user_stories` is a list of [doorstop](https://doorstop.readthedocs.io/en/latest/) Item requirements.
 
-- `brunhilda.reporter.Reporter.load_tests` loads test execution artifact created by `brunhilda.BRunhilda.save_tests` method.
+- `brunhilda.reporter.Reporter.load_tests` loads test execution artifact created by `brunhilda.BRunhilda.save_tests` method and store tests html report created by `brunhilda.BRunhilda.save_html_report`.
 - `brunhilda.reporter.Reporter.load_issues` loads test execution artifact created by `brunhilda.BRunhilda.save_issues` method.
 - `brunhilda.reporter.Reporter.load_features` loads features linked to the individual tests.
 - `brunhilda.reporter.Reporter.justify_tests` processes loaded tests and issues and applies the justifications.
@@ -371,9 +371,9 @@ It is important to keep the order
 reporter = brunhilda.reporter.Reporter(requirements=['REQ_01', 'REQ_02'],
                                        user_data={'version': '1.1.2', 'reporter': 'Marry Poppins'},
                                        user_stories=[doorstop.Item])
-reporter.load_tests('tests_run_1.yaml')
+reporter.load_tests('tests_run_1.yaml', 'test_run_1_report.html')
 reporter.load_issues('issues_run_1.yaml')
-reporter.load_tests('tests_run_2.yaml')
+reporter.load_tests('tests_run_2.yaml', 'test_run_2_report.html')
 reporter.load_issues('issues_run_2.yaml')
 reporter.load_features('features.yaml')
 reporter.justify_tests()
