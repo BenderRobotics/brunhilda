@@ -362,23 +362,26 @@ produced reports. `user_stories` is a list of [doorstop](https://doorstop.readth
 
 It is important to keep the order
 
-1. load issues, tests, features,
-2. justify,
-3. print reports,
-4. print index.
+1. load tests,
+2. load issues, features,
+3. justify,
+4. print test plan report,
+5. print issues report,
+6. print rest of reports,
+7. print index.
 
 ```python
 reporter = brunhilda.reporter.Reporter(requirements=['REQ_01', 'REQ_02'],
                                        user_data={'version': '1.1.2', 'reporter': 'Marry Poppins'},
                                        user_stories=[doorstop.Item])
 reporter.load_tests('tests_run_1.yaml', 'test_run_1_report.html')
-reporter.load_issues('issues_run_1.yaml')
 reporter.load_tests('tests_run_2.yaml', 'test_run_2_report.html')
+reporter.load_issues('issues_run_1.yaml')
 reporter.load_issues('issues_run_2.yaml')
 reporter.load_features('features.yaml')
 reporter.justify_tests()
-reporter.print_issue_list('issues.html')
 reporter.print_test_plan('plan.html', preamble='preamble.html')
+reporter.print_issue_list('issues.html')
 reporter.print_requirements_summary('requirements.html', preamble=['preamble1.html', 'preamble2.html'])
 reporter.print_test_summary('tests.html')
 reporter.print_feature_summary('features.html')

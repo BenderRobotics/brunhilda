@@ -53,16 +53,21 @@
                 {% else %}
                     {% set class_justification = 'issue--not-justified' %}
                 {% endif %}
+                {% if report.run.level in test_plan_paths: %}
+                    {% set test_plan_path = test_plan_paths[report.run.level] %}
+                {% else %}
+                    {% set test_plan_path = test_plan_paths['_'] %}
+                {% endif %}
                     <tr class="{{ class_justification }}">
                         <td>{{ report.run.dut }}</td>
                         <td>{{ report.run.level }}</td>
-                        <td>{{ issue['sub-test'] or issue.test }}</td>
+                        <td><a href="{{ test_plan_path }}#{{ issue.test }}">{{ issue['sub-test'] or issue.test }}</a></td>
                         <td><ul>
                             {% for spec in issue.tags.spec%}
                             <li>{{ spec }}</li>
                             {% endfor %}
                         </ul></td>
-                        <td>ERROR</td>
+                        <td><a href="{{ issue.html_report_path }}#{{ issue.test }}">ERROR</a></td>
                         <td colspan="{{ 1 if issue.extra else 2 }}">
                             <pre>{{ issue.message }}</pre>
                         </td>
@@ -110,7 +115,7 @@
                             <li>{{ spec }}</li>
                             {% endfor %}
                         </ul></td>
-                        <td>FAIL</td>
+                        <td><a href="{{ issue.html_report_path }}#{{ issue.test }}">FAIL</a></td>
                         <td colspan="{{ 1 if issue.extra else 2 }}">
                             <pre>{{ issue.message }}</pre>
                         </td>

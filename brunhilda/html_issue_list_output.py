@@ -1,9 +1,9 @@
-from typing import Dict
+from typing import Dict, Optional
 from .html_output import HtmlOutput
 
 
 class HtmlIssueListOutput(HtmlOutput):
-    def print(self, name: str, issues: Dict, user_data: Dict[str, str] = None):
+    def print(self, name: str, issues: Dict, test_plan_paths: Optional[Dict[str, str]] = None, user_data: Dict[str, str] = None):
         """
         Prints issue list
 
@@ -18,5 +18,6 @@ class HtmlIssueListOutput(HtmlOutput):
                                    preamble=self._include_preamble,
                                    reports=issues,
                                    user_data=user_data,
+                                   test_plan_paths=test_plan_paths,
                                    document_path=self.path)
         return rendered

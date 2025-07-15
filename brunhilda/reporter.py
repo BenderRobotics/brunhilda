@@ -203,6 +203,23 @@ class Reporter:
 
             with open(file_path, "w", encoding="utf-8") as file:
                 file.write(content)
+    
+    def _add_test_run_report_path_to_issues(self) -> None:
+        """
+        Add key with test result html report path to every issue dict
+        """
+        test_name_to_html_report_path = {}
+        for tests in self._tests.values():
+            for test in tests:
+                test_id = test["test_id"]
+                report_path = test["html_report_path"]
+                test_name_to_html_report_path[test_id] = rel_path(self._issue_list_path, report_path)
+
+        for file_issues in self._issues.values():
+            for result in ("errors", "failures"):
+                for issue in file_issues[result]:
+                    test_id = issue["test"]
+                    issue["html_report_path"] = test_name_to_html_report_path[test_id]
 
     def print_requirements_summary(self, path: str, name: str = 'Requirements Coverage Summary',
                                    preamble: Union[Sequence[str], str, None] = None) -> None:
@@ -321,7 +338,10 @@ class Reporter:
         """
         self._issue_list_path = path
         formater = HtmlIssueListOutput(preamble=preamble, path=path)
-        output = formater.print(name=name, issues=self._issues, user_data=self._user_data)
+        self._add_test_run_report_path_to_issues()
+        test_plan_paths = {level: rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
+
+        output = formater.print(name=name, issues=self._issues, test_plan_paths=test_plan_paths, user_data=self._user_data)
         self._write_file(name, path, output)
 
     def print_feature_summary(self, path: str, name: str = 'Summary of Features', preamble: Union[Sequence[str], str, None] = None) -> None:
