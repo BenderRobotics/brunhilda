@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites
+    name="{{env_info.name}}"
+    errors="{{summary.results.errored}}"
+    skipped="{{summary.results.skipped}}"
+    tests="{{summary.results.total}}"
+    failures="{{summary.results.failed}}"
+    time="{{env_info.execution_time}}"
+    timestamp="{{env_info.timestamp_start}}"
+    hostname="{{env_info.hostname}}">
+{% for suite in result.testcases.values() %}
+    <testsuite
+        id="{{suite.id}}"
+        name="{{suite.name}}"
+        errors="{{suite.errored}}"
+        skipped="{{suite.skipped}}"
+        tests="{{suite.tests|length}}"
+        failures="{{suite.failed}}"
+        time="{{suite.time}}"
+        timestamp="{{suite.timestamp}}">
+        <properties>
+            <property name="python" value="{{ env_info.pyversion }}" />
+            <property name="system" value="{{ env_info.system }}" />
+        </properties>
+    {% for test in suite.tests %}
+        <testcase classname="{{suite.name}}" name="{{test.name}}" time="{{'%0.1f'|format(test.time|float)}}">
+            <properties>
+                <property name="result" value="{{ test.result|lower }}" />
+        {% for tag, value in test.tags.items() %}
+                <property name="{{ tag }}" value="{{ value|join(';')|replace('"', "'") }}" />
+        {% endfor %}
+            </properties>
+            <system-out>{{ test.output|e }}</system-out>
+        {% for error in test.errors %}
+            <system-err>{{ error|e }}</system-err>
+        {% endfor %}
+        {% if test.result == "SKIPPED" %}
+            <skipped />
+        {% elif test.result == "FAILED" %}
+            {% for error in test.errors %}
+            <failure>{{ error|e }}</failure>
+            {% endfor %}
+        {% elif test.result == "ERRORED" %}
+            {% for error in test.errors %}
+            <error>{{ error|e }}</error>
+            {% endfor %}
+        {% endif %}
+        </testcase>
+    {% endfor %}
+    </testsuite>
+{% endfor %}
+</testsuites>

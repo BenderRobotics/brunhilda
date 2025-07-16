@@ -1,18 +1,15 @@
 
 .PHONY: all target clean install uninstall reinstall
 
-TARGET:=dist/brunhilda*.whl
+TARGET := dist/*.whl
 
 all: $(TARGET)
 
 $(TARGET):
-	python setup.py bdist_wheel
+	python -m build --wheel
 
 clean:
-	rm -rf build
-	rm -rf dist
-	rm -rf *.egg-info
-	rm -rf docs/_build
+	rm -rf build dist *.egg-info docs/_build brunhilda/_version.py
 
 install: $(TARGET)
 	pip install --user dist/*.whl

@@ -1,0 +1,240 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <title>Traceability</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            html, body, div, span, applet, object, iframe,
+            h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+            a, abbr, acronym, address, big, cite, code,
+            del, dfn, em, img, ins, kbd, q, s, samp,
+            small, strike, strong, sub, sup, tt, var,
+            b, u, i, center,
+            dl, dt, dd, ol, ul, li,
+            fieldset, form, label, legend,
+            table, caption, tbody, tfoot, thead, tr, th, td,
+            article, aside, canvas, details, embed,
+            figure, figcaption, footer, header, hgroup,
+            menu, nav, output, ruby, section, summary,
+            time, mark, audio, video {
+                margin: 0;
+                padding: 0;
+                border: 0;
+                font-size: 100%;
+                font: inherit;
+                vertical-align: baseline;
+            }
+            /* HTML5 display-role reset for older browsers */
+            article, aside, details, figcaption, figure,
+            footer, header, hgroup, menu, nav, section {
+                display: block;
+            }
+            body {
+                line-height: 1;
+            }
+            blockquote, q {
+                quotes: none;
+            }
+            blockquote:before, blockquote:after,
+            q:before, q:after {
+                content: '';
+                content: none;
+            }
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+
+            /**************************************/
+
+            :root {
+                --color--pass: green;
+                --color--pass-bg: rgba(0, 128, 0, 0.1);
+                --color--fail: rgb(220, 0, 0);
+                --color--fail-bg: rgba(220, 0, 0, 0.1);
+                --color--error: rgb(167, 0, 209);
+                --color--error-bg: rgba(167, 0, 209, 0.1);
+                --color--skip: orange;
+                --color--skip-bg: rgba(255, 166, 0, 0.1);
+                --color--expected-failure: rgb(64, 0, 240);
+                --color--expected-failure-bg: rgba(64, 0, 240, 0.1);
+                --color--unexpected-success: rgb(0, 200, 200);
+                --color--unexpected-success-bg: rgba(0, 200, 200, 0.1);
+            }
+
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 14px;
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2em;
+                font-weight: bold;
+                margin: 1.25rem 0;
+            }
+
+            h2 {
+                font-size: 1.75em;
+                font-weight: bold;
+                margin: 1.0rem 0;
+            }
+
+            h3 {
+                font-size: 1.25em;
+                font-weight: bold;
+                margin: 0.5rem 0;
+            }
+
+            h4 {
+                font-size: 1em;
+                font-weight: bold;
+                margin: 0.25rem 0;
+            }
+
+            p, ol, ul {
+                margin-bottom: 0.5em;
+                line-height: 1.25;
+            }
+
+            ol, ul {
+                padding-left: 1rem;
+            }
+
+            li {
+                padding-left: 0.5rem;
+            }
+
+            th {
+                text-align: left;
+                font-weight: bold;
+            }
+
+            th, td {
+                padding: 0.25em;
+                border: 1px solid #a0a0a0;
+            }
+
+            strong {
+                font-weight: bold;
+            }
+
+            em {
+                font-style: italic;
+            }
+
+            tt, pre {
+                font-family: 'Consolas', 'Courier New', Courier, monospace;
+            }
+
+            td {
+                text-align: center;
+            }
+
+            .vertical {
+                text-align: center;
+                white-space: nowrap;
+                transform-origin: 50% 50%;
+                -webkit-transform: rotate(90deg);
+                -moz-transform: rotate(90deg);
+                -ms-transform: rotate(90deg);
+                -o-transform: rotate(90deg);
+                transform: rotate(90deg);
+            }
+
+            .vertical:before {
+                content: '';
+                padding-top: 110%;/* takes width as reference, + 10% for faking some extra padding */
+                display: inline-block;
+                vertical-align :middle;
+            }
+
+            .test--passed {
+                color: var(--color--pass);
+            }
+
+            .test--skipped {
+                color: var(--color--skip);
+            }
+
+            .test--errored {
+                color: var(--color--error);
+            }
+
+            .test--failed  {
+                color: var(--color--fail);
+            }
+
+            .test--expected-failure {
+                color: var(--color--expected-failure);
+            }
+
+            .test--unexpected-success {
+                color: var(--color--unexpected-success);
+            }
+
+            .test--result--text {
+                display: none;
+            }
+
+            .test--result--symbol::before {
+                font-weight: bold;
+            }
+
+            .test--failed .test--result--symbol::before {
+                content: "\d7";
+            }
+
+            .test--passed .test--result--symbol::before {
+                content: "\2713";
+            }
+
+            .test--skipped .test--result--symbol::before {
+                content: "s";
+            }
+
+            .test--errored .test--result--symbol::before {
+                content: "e";
+            }
+
+            .test--expected-failure .test--result--symbol::before {
+                content: "+";
+            }
+
+            .test--unexpected-success .test--result--symbol::before {
+                content: "u";
+            }
+        </style>
+    </head>
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    {% for ref in refs %}
+                    <th class="vertical">{{ ref }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for test in tests %}
+                <tr>
+                    <th><a href="{{ paths.test_plan }}#{{ test.test_id }}">{{ test.case }} {{ test.test }}</a></th>
+                    {% for ref in refs %}
+                    {% if loop.index0 in test.ref_indexes %}
+                    <td class="test--{{ test.result|lower|replace(' ', '-') }}">
+                        <span class="test--result--text">{{ test.result }}</span>
+                        <span class="test--result--symbol" title="{{ test.result }}"></span>
+                    </td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

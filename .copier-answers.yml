@@ -1,0 +1,16 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: af6c29c
+_src_path: https://gitlab.benderrobotics.com/br/templates/python.git
+author_email: kumpan@benderrobotics.com
+author_name: Pavel Kumpan
+ci: gitlab
+project_name: BRunhilda
+project_slug: brunhilda
+project_url: https://gitlab.benderrobotics.com/br/tools/brunhilda
+test_env: pytest
+use_ci: true
+use_coverage: true
+use_isort: true
+use_mypy: true
+use_precommit: true
+use_yapf: true

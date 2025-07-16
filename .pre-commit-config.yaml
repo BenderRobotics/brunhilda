@@ -1,0 +1,44 @@
+# File introduces automated checks triggered on git events
+# to enable run `pip install pre-commit && pre-commit install`
+
+repos:
+
+  - repo: https://github.com/pre-commit/mirrors-yapf
+    rev: v0.32.0
+    hooks:
+      - id: yapf
+        name: yapf
+        language: python
+        entry: yapf
+        exclude: ^dev/
+        args: [-i]
+        types: [python]
+        additional_dependencies: [toml]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^dev/
+      - id: check-docstring-first
+        exclude: ^dev/
+      - id: check-json
+        exclude: ^dev/
+      - id: check-yaml
+        exclude: ^dev/
+      - id: requirements-txt-fixer
+        exclude: ^dev/
+      - id: double-quote-string-fixer
+        exclude: ^dev/
+      - id: end-of-file-fixer
+        exclude: ^dev/
+  - repo: meta
+    hooks:
+      - id: check-useless-excludes
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        name: isort (python)
+        exclude: ^dev/
