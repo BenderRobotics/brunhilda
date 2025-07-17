@@ -46,6 +46,10 @@
                         </th>
                         <th>
                             <span>Test ID</span>
+                            <input id="filter-id">
+                        </th>
+                        <th>
+                            <span>Test Name</span>
                             <input id="filter"/>
                         </th>
                         <th>Requirements</th>
@@ -88,10 +92,11 @@
         {% if test_case.requirements %}
             {% for requirement in test_case.requirements %}
                 {{ ns.refered_requirements.append(requirement)|default("", True) }}
-                        <tr class="test_level--{{ test_case.level }} {{ test_result_class }} filterable" data-filter="{{ test_case.test_id }}">
+                        <tr class="test_level--{{ test_case.level }} {{ test_result_class }} filterable" data-filter="{{ test_case.test_id }}" data-filter-id="{{ test_case["tags"].get("test-id", [])[0] if test_case["tags"].get("test-id") else "" }}">
                 {% if loop.first %}
                             <td class="test__level" rowspan="{{ loop.length }}">{{ test_case.level|capitalize }}</td>
-                            <td class="test__id" rowspan="{{ loop.length }}"><a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }}</a></td>
+                            <td class="test__id" rowspan="{{ loop.length }}">{{ test_case["tags"].get("test-id", [])[0] if test_case["tags"].get("test-id") else "" }}</td>
+                            <td class="test__name" rowspan="{{ loop.length }}"><a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }}</a></td>
                 {% endif %}
                             <td class="test__requirement">{{ requirement }}</td>
                 {% if loop.first %}
@@ -132,9 +137,10 @@
                         </tr>
             {% endfor %}
         {% else %}
-                <tr class="test_level--{{ test_case.level }} {{ test_result_class }} filterable" data-filter="{{ test_case.test_id }}">
+                <tr class="test_level--{{ test_case.level }} {{ test_result_class }} filterable" data-filter="{{ test_case.test_id }} data-filter-id="{{ test_case["tags"].get("test-id", [])[0] if test_case["tags"].get("test-id") else "" }}">
                     <td class="test__level">{{ test_case.level|capitalize }}</td>
-                    <td class="test__id"><a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }}</a></td>
+                    <td class="test__id">{{ test_case["tags"].get("test-id", [])[0] if test_case["tags"].get("test-id") else "" }}</td>
+                    <td class="test__name"><a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }}</a></td>
                     <td class="test__requirement"></td>
                     <td class="test__result">
                     {% if test_case.result == 'EMPTY' %}
@@ -156,7 +162,7 @@
                 <tfoot>
                     <tr class="test--{{ summary.result|lower|replace(' ', '-') }}">
                         <th>Total levels: {{ summary.levels.keys()|length }}</th>
-                        <th>Total tests: {{ summary.results.total }}</th>
+                        <th colspan="2">Total tests: {{ summary.results.total }}</th>
                         <th>Total requirements: {{ ns.refered_requirements|unique|list|length }}</th>
                         <th class="test__result">{{ summary.result }}</th>
                         <th></th>
