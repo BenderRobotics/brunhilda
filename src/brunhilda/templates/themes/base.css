@@ -496,6 +496,15 @@ input.testcase__expander:checked+.testcase__description {
     width: calc(100% - 18rem)
 }
 
+.test__name a {
+    word-break: break-all;
+    white-space: normal;
+}
+
+.test__name {
+    min-width: 300px;
+}
+
 .test__issue a{
     text-decoration: none;
 }
@@ -555,6 +564,15 @@ input.testcase__expander:checked+.testcase__description {
 .test--empty .test__result a,
 .run-summary--empty {
     color: var(--color--empty);
+}
+
+.run-summary{
+    width: 96%;
+}
+
+.run-summary .main {
+    width: 80%;
+    max-width: 90%;
 }
 
 .test__detail {
@@ -626,10 +644,6 @@ input.test__expander:checked+.test__detail {
 
 .test__bug-id input {
     width: 50px;
-}
-
-.test__comment .textarea {
-    min-height: 1em;
 }
 
 .test__steps__table {
@@ -1124,7 +1138,7 @@ ol.lowerroman {
 }
 
 .piechart {
-    max-width: 1200px;
+    max-width: 100%;
     width: 100%;
     display: flex;
     flex-flow: row;
@@ -1202,4 +1216,61 @@ ol.lowerroman {
 
 .index-link-button:hover {
     background-color: #0056b3;
+}
+
+/**************************************/
+/* Scrollable cell */
+
+.scrollable-cell {
+    overflow-y: auto;
+    padding: 0 1rem 0 0;
+    margin: 0;
+    box-sizing: border-box;
+    font: inherit;
+    font-size: inherit;
+    color: inherit;
+    background: transparent;
+    border: none;
+}
+
+.test__comment .scrollable-cell {
+    min-height: 1rem;
+}
+
+/**************************************/
+/* Resizable table */
+.resizer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    cursor: col-resize;
+    user-select: none;
+    background-color: #eeeeee;
+    z-index: 100;
+}
+
+.row-resizer {
+    height: 2px;
+    cursor: row-resize;
+    user-select: none;
+    background-color: #eeeeee;
+}
+
+.row-resizer td {
+    line-height: 0;
+    padding: 0;
+}
+
+.resizing {
+    background-color: #4b4b4b !important;
+}
+
+.resizable-table th,
+.resizable-table td {
+    position: relative;
+}
+
+.resizable-table tfoot tr {
+    border-top: none;
 }
