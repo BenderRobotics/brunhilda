@@ -37,3 +37,28 @@
     </tbody>
 </table>
 {% endif %}
+
+<script id="color_palette">
+    const colorPaletteTestResult = {
+        passed: 'green',
+        failed: '#dc0000',
+        errored: '#a700d1',
+        justified: 'orange',
+        skipped: '#74ad09',
+        expectedFailure: '#4000f0',
+        unexpectedSuccess: '#00c8c8'
+    };
+
+    const colorPaletteTestExecution = {
+        automatic: 'CornflowerBlue',
+        manual: '#64D8ED',
+        notspecified: '#7964ED'
+    };
+
+    const colorPaletteTestLevels = {
+        component: 'CornflowerBlue',
+        module: 'Chocolate',
+        system: 'Coral',
+        visual: 'DarkKhaki'
+    };
+</script>

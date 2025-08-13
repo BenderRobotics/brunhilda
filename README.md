@@ -388,6 +388,54 @@ reporter.print_feature_summary('features.html')
 reporter.print_index('index.html')
 ```
 
+#### Custom colors
+
+BRunhilda Reporter supports custom color pallete for pie charts. In generated html files are constants for each pie chart (`colorPaletteTestResult`, `colorPaletteTestExecution`, `colorPaletteTestLevels`) which defines colors for relevant pie chart.
+
+```html
+<script id="color_palette">
+  const colorPaletteTestResult = {
+      passed: 'green',
+      failed: '#dc0000',
+      errored: '#a700d1',
+      justified: 'orange',
+      skipped: '#74ad09',
+      expectedFailure: '#4000f0',
+      unexpectedSuccess: '#00c8c8'
+  };
+
+  const colorPaletteTestExecution = {
+      automatic: 'CornflowerBlue',
+      manual: 'green',
+      notspecified: 'red'
+  };
+
+  const colorPaletteTestLevels = {
+      component: 'CornflowerBlue',
+      module: 'Chocolate',
+      system: 'Coral',
+      visual: 'DarkKhaki'
+  };
+</script>
+```
+
+To change color palette, the constant need to be **updated** in report preamble. In case that any execution or level is missing in default color palette, the missing one can be added to the dict with lowercase key name without spaces.
+
+```html
+<!-- preamble.html -->
+<script>
+  colorPaletteTestResult.passed = 'black'
+  colorPaletteTestExecution.notspecified = '#A9A9A9'
+  colorPaletteTestLevels.undefinedlevel = 'yellow'
+</script>
+```
+
+Setting the preamble:
+
+```py
+reporter.print_test_summary('tests.html', preamble="preamble.html")
+```
+
 ### Features
 
 BRunhilda supports linking the DUT features to the individual tests. Features are described in YAML with the

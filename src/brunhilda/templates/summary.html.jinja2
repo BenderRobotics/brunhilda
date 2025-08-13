@@ -284,6 +284,10 @@
 
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
+    function randomColor() {
+        return "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+    }
+
     google.charts.load('current', {'packages': ['corechart']});
     google.charts.setOnLoadCallback(drawChart);
 
@@ -299,7 +303,7 @@
             ['unexpected success', {{ summary.results.unexpected_successes }}]
         ]);
 
-        var dataExecution = google.visualization.arrayToDataTable([
+        var executionArray = [
             ['Execution', 'Amount'],
         {% for execution, count in summary.execution.items() %}
             ['{{ execution|capitalize }}', {{ count }}],
@@ -307,14 +311,28 @@
         {% if summary.execution.values()|sum != summary.results.total %}
             ['Not Specified', {{ summary.results.total - summary.execution.values()|sum }}]
         {% endif %}
-        ]);
+        ];
 
-        var dataLevel = google.visualization.arrayToDataTable([
+        const colorsForExecutionChart = executionArray.slice(1).map(row => {
+            const name = row[0].toLowerCase().replace(/\s+/g, '');
+            return colorPaletteTestExecution[name] || randomColor();
+        });
+
+        var dataExecution = google.visualization.arrayToDataTable(executionArray);
+
+        var levelArray = [
             ['Level', 'Amount'],
         {% for name, level in summary.levels.items() %}
             ['{{ name|capitalize }}', {{ level.tests }}],
         {% endfor %}
-        ]);
+        ];
+
+        const colorsForLevelChart = levelArray.slice(1).map(row => {
+            const name = row[0].toLowerCase().replace(/\s+/g, '');
+            return colorPaletteTestLevels[name] || randomColor();
+        });
+
+        var dataLevel = google.visualization.arrayToDataTable(levelArray);
 
         var chartResult = new google.visualization.PieChart(document.getElementById('piechart_result'));
         var chartExecution = new google.visualization.PieChart(document.getElementById('piechart_execution'));
@@ -324,17 +342,19 @@
             title: 'Test Result',
             chartArea: {width: '95%', height: '80%'},
             pieHole: 0.3,
-            colors: ['green','#dc0000', '#a700d1', 'orange', '#74ad09', '#4000f0', '#00c8c8']
+            colors: Object.values(colorPaletteTestResult)
         });
         chartExecution.draw(dataExecution, {
             title: 'Test Execution',
             chartArea: {width: '95%', height: '80%'},
-            pieHole: 0.3
+            pieHole: 0.3,
+            colors: colorsForExecutionChart
         });
         chartLevel.draw(dataLevel, {
             title: 'Levels',
             chartArea: {width: '95%', height: '80%'},
-            pieHole: 0.3
+            pieHole: 0.3,
+            colors: colorsForLevelChart
         });
     }
 </script>
