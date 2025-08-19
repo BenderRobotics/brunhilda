@@ -102,12 +102,14 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
 
         for group in features:
             entries[group] = []
-
             for feature_group in features[group]:
                 for feature_name in feature_group:
                     requirement_tests = {}
                     order = feature_group[feature_name]['order']
                     links = feature_group[feature_name]['link']
+                    links = {
+                        k.rstrip('_'): v for k, v in links.items()
+                    }  # Remove bypassing character for backward compatibility
                     entry = {'group': group, 'name': feature_name, 'order': order, 'result': '', 'links': {}}
                     feature_results = set()
 
@@ -119,11 +121,15 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                             test_case_id = test['test_id'] + test['subtest_id']
 
                             for requirement in test['requirements']:
-                                if requirement not in requirement_tests:
-                                    requirement_tests[requirement] = []
+                                # Get only important part of the requirement (INTF_001.1 (indirect) -> INTF_001.1) and remove bypassing character for backward compatibility
+                                shortened_requirement = requirement.split()[0].rstrip('_')
 
-                                if requirement.startswith(link
-                                                         ) and (test_case_id not in requirement_tests[requirement]):
+                                if shortened_requirement not in requirement_tests:
+                                    requirement_tests[shortened_requirement] = []
+
+                                if link == shortened_requirement and (
+                                    test_case_id not in requirement_tests[shortened_requirement]
+                                ):
                                     if params:
                                         for parameter in params:
                                             test_group = test['test_id'] + f' {parameter}:{params[parameter]}'
@@ -137,7 +143,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
 
                                             if self._covers_param(test, parameter, params[parameter]):
                                                 test_case = deepcopy(test)
-                                                requirement_tests[requirement].append(test_case_id)
+                                                requirement_tests[shortened_requirement].append(test_case_id)
                                                 if test_case not in entry['links'][link][test_group]['tests']:
                                                     entry['links'][link][test_group]['tests'].append(test_case)
                                                     entry['links'][link][test_group]['results'].add(test_case['result'])
@@ -154,7 +160,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                                             }
 
                                         test_case = deepcopy(test)
-                                        requirement_tests[requirement].append(test_case_id)
+                                        requirement_tests[shortened_requirement].append(test_case_id)
                                         if test_case not in entry['links'][link][test_group]['tests']:
                                             entry['links'][link][test_group]['tests'].append(test_case)
                                             entry['links'][link][test_group]['results'].add(test_case['result'])
