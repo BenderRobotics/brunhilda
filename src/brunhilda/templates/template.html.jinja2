@@ -10,10 +10,10 @@
         </style>
         <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
         <script>
-            const results = ['passed', 'failed', 'errored', 'skipped', 'expected-failure', 'unexpected-success'];
+            const possibleResults = ['passed', 'failed', 'errored', 'skipped', 'expected-failure', 'unexpected-success'];
 
             $(document).ready(function() {
-                for (const result of results) {
+                for (const result of possibleResults) {
                     (function(r) {
                         $("#run-summary--" + r).change(function() {
                             if (this.checked) {
@@ -53,6 +53,11 @@
                     else if (event.which == 85 || event.which == 117) {
                         selector = ".test--unexpected-success";
                     }
+                    /* C */
+                    else if (event.which == 67 || event.which == 99) {
+                        $('.test__expander').prop('checked', false);
+                    }
+
 
                     if (selector != null) {
                         var current = $(".test--current");
@@ -136,6 +141,7 @@
                         <span class="keyboard__key">U</span> &ndash; next unexpected success,
                         <span class="keyboard__key">Shift + &hellip;</span> &ndash; previous.
                     </p>
+                    <p>Use <span class="keyboard__key">C</span> for closing all details.</p>
                 </div>
 
                 <div class="testsuites">
