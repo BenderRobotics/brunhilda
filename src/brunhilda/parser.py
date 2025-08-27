@@ -69,7 +69,6 @@ def parse_steps(test_steps, description):
     step = None
     reg_step_description = re.compile(r'^\s*(?P<num>\d+)\)\s*>')
     reg_step_expectation = re.compile(r'^\s*>')
-    indent_spaces = '            '
 
     if description and isinstance(description, str):
         for line in description.splitlines():
@@ -85,7 +84,7 @@ def parse_steps(test_steps, description):
 
                     step = {'number': 0, 'description': '', 'expectation': ''}
                     step['number'] = int(reg_step_description.match(line).group('num'))
-                    step['description'] = reg_step_description.sub(indent_spaces, line)
+                    step['description'] = reg_step_description.sub('', line).strip()
                     step['expectation'] = ''
                     step['result'] = ''
                     step['comment'] = ''
@@ -97,13 +96,13 @@ def parse_steps(test_steps, description):
                 # check if line stars with "  >"
                 elif reg_step_expectation.match(line):
                     step_description_active = False
-                    step['expectation'] = reg_step_expectation.sub(indent_spaces, line)
+                    step['expectation'] = reg_step_expectation.sub('', line).strip()
                 # if still in description, append to description
                 elif step_description_active:
-                    step['description'] += '\n' + line
+                    step['description'] += '\n' + line.strip()
                 # otherwise append to expectation
                 elif step:
-                    step['expectation'] += '\n' + line
+                    step['expectation'] += '\n' + line.strip()
     if step:
         steps.append(step)
 
