@@ -1,13 +1,13 @@
 import os
 import re
-from typing import Dict, List, Optional, Sequence, Tuple, Union
+from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union
 
 import simplejson as json
 import yaml
 from natsort import natsorted
 
 from .data import Summary
-from .html_feature_summary_output import HtmlFeatureSummaryOutput
+from .html_feature_summary_output import FeatureCoveragePolicy, HtmlFeatureSummaryOutput
 from .html_index_output import HtmlIndexOutput
 from .html_issue_list_output import HtmlIssueListOutput
 from .html_req_summary_output import HtmlReqSummaryOutput
@@ -371,7 +371,11 @@ class Reporter:
         self._write_file(name, path, output)
 
     def print_feature_summary(
-        self, path: str, name: str = 'Summary of Features', preamble: Union[Sequence[str], str, None] = None
+        self,
+        path: str,
+        name: str = 'Summary of Features',
+        preamble: Union[Sequence[str], str, None] = None,
+        feature_coverage_policy: Union[FeatureCoveragePolicy, Callable[[List[str]], str]] = FeatureCoveragePolicy.STRICT
     ) -> None:
         """
         Prints summary of features with related tests
@@ -384,7 +388,11 @@ class Reporter:
         formater = HtmlFeatureSummaryOutput(preamble=preamble, path=path)
         test_plan_paths = {level: rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
         output = formater.print(
-            name=name, features=self._features, testsuite=self._tests, test_plan_paths=test_plan_paths
+            name=name,
+            features=self._features,
+            testsuite=self._tests,
+            test_plan_paths=test_plan_paths,
+            feature_coverage_policy=feature_coverage_policy
         )
         self._write_file(name, path, output)
 
