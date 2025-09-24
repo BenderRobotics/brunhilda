@@ -640,6 +640,7 @@ input.test__expander:checked+.test__detail {
 
 .test__comment {
     min-width: 300px;
+    word-break: break-all;
 }
 
 .test__bug-id input {
@@ -1072,6 +1073,12 @@ ol.lowerroman {
 .summary th {
     position: sticky;
     top: 0;
+}
+
+.summary thead th {
+    position: sticky !important;
+    top: 0;
+    z-index: 100;
 }
 
 /**************************************/
