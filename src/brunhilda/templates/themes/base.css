@@ -1281,3 +1281,42 @@ ol.lowerroman {
 .resizable-table tfoot tr {
     border-top: none;
 }
+
+/**************************************/
+/* Issues table */
+
+.issues-table {
+    width: 100%;
+    table-layout: auto;
+}
+
+.issues-table pre {
+    overflow: hidden;
+    word-break: normal;
+}
+
+/**************************************/
+/* Test steps table */
+.test__steps__description .document,
+.test__steps__expectation .document,
+.test__steps__comments .document,
+.test__steps__obtained .document {
+    max-height: 8rem;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding-right: 5px;
+}
+
+/**************************************/
+/* Subtests table */
+.subtests .subtest__detail pre,
+.subtests .subtest__extra pre.subtest__extra__text {
+    max-height: 10rem;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding-right: 5px;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    min-width: 20rem;
+}

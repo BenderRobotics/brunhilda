@@ -220,12 +220,14 @@
                                                                 <td class="test__steps__number">{{ step.number }}</td>
                                                                 <td class="test__steps__description">{{ step.description }}</td>
                                                                 <td class="test__steps__expectation">{{ step.expectation }}</td>
-                                                                <td class="test__steps__obtained">{{ step.obtained }}</td>
+                                                                <td class="test__steps__obtained">
+                                                                    <div class="document">{{ step.obtained }}</div>
+                                                                    </td>
                                                                 <td class="test__steps__result test__steps__result--{{ step.result|lower|replace(' ', '-') }}">
                                                                     {{ step.result }}
                                                                 </td>
                                                                 <td class="test__steps__comments">
-                                                                    {{ step.comment }}
+                                                                    <div class="document">{{ step.comment }}</div>
                                                                 </td>
                                                             </tr>
                                                 {% endfor %}
