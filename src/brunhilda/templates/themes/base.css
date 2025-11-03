@@ -1303,8 +1303,10 @@ ol.lowerroman {
 .test__steps__obtained .document {
     max-height: 8rem;
     overflow-y: auto;
+    overflow-x: hidden;
     box-sizing: border-box;
     padding-right: 5px;
+    min-width: 8rem;
 }
 
 /**************************************/
@@ -1313,6 +1315,7 @@ ol.lowerroman {
 .subtests .subtest__extra pre.subtest__extra__text {
     max-height: 10rem;
     overflow-y: auto;
+    overflow-x: hidden;
     box-sizing: border-box;
     padding-right: 5px;
     margin: 0;
