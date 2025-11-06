@@ -1,5 +1,27 @@
 # Brunhilda project changelog
 
+## 2.5.0 (2025-11-06)
+
+- Added pyyaml to install_requires dependencies (refs #7560)
+- Added link to index page to all reports (refs #11707)
+- Added link between summary report and test result (refs #11708)
+- Added link between issue list and test result (refs #11709)
+- Added test ID column to test summary (refs #7562)
+- Added custom color palette support (refs #11902)
+- Added shortcut for closing all details (refs #12082)
+- Added support for multi paragraph entries (refs #12083)
+- Added support for custom coverage policy (refs #12081)
+- Moved home link button to right top corner, update button style (refs #11707)
+- Updated package structure to use pyproject.toml (refs #11792)
+- Improved width and maximum height of narrow table cells in reports (refs #11793)
+- Improved readability of cells in reports (refs #11793)
+- Changed doorstop user story feature to optional (refs #7560, #6890)
+- Fixed HTML code in error message (refs #10824)
+- Fixed reference matching (refs #12043)
+- Fixed duplicate references in feature summary (refs #7561)
+- Fixed counting of skipped tests
+- Fixed missing errors_strings field of test result object
+
 ## 2.4.0 (2023-05-10)
 
 - Added support to use multiple files as a document preamble (refs [#7022](https://redmine.benderrobotics.com/issues/7022)).
