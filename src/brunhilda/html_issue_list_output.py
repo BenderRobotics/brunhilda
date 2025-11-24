@@ -2,6 +2,11 @@ from typing import Dict, Optional
 
 from .html_output import HtmlOutput
 
+try:
+    from .__version__ import version as brunhilda_version
+except ImportError:
+    brunhilda_version = 'unknown'
+
 
 class HtmlIssueListOutput(HtmlOutput):
 
@@ -28,6 +33,7 @@ class HtmlIssueListOutput(HtmlOutput):
             reports=issues,
             user_data=user_data,
             test_plan_paths=test_plan_paths,
-            document_path=self.path
+            document_path=self.path,
+            brunhilda_version=brunhilda_version
         )
         return rendered

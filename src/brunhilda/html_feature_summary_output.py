@@ -5,6 +5,11 @@ from typing import Callable, Dict, List, Optional, OrderedDict, Union
 from .data import Summary
 from .html_output import HtmlOutput
 
+try:
+    from .__version__ import version as brunhilda_version
+except ImportError:
+    brunhilda_version = 'unknown'
+
 
 class FeatureCoveragePolicy(Enum):
     """
@@ -335,6 +340,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
             preamble=self._include_preamble,
             features=entries,
             summary=summary,
-            test_plan_paths=test_plan_paths
+            test_plan_paths=test_plan_paths,
+            brunhilda_version=brunhilda_version
         )
         return rendered

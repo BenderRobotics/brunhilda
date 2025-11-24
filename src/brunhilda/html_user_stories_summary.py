@@ -6,6 +6,11 @@ from doorstop import Item
 from .data import Summary
 from .html_output import HtmlOutput
 
+try:
+    from .__version__ import version as brunhilda_version
+except ImportError:
+    brunhilda_version = 'unknown'
+
 
 class HtmlUserStoriesSummaryOutput(HtmlOutput):
     """
@@ -80,7 +85,8 @@ class HtmlUserStoriesSummaryOutput(HtmlOutput):
             groups=groups,
             issue_list_path=issue_list_path,
             test_plan_paths=test_plan_paths,
-            user_data=user_data
+            user_data=user_data,
+            brunhilda_version=brunhilda_version
         )
 
         return rendered

@@ -4,6 +4,11 @@ from typing import Dict
 from .data import Summary
 from .html_output import HtmlOutput
 
+try:
+    from .__version__ import version as brunhilda_version
+except ImportError:
+    brunhilda_version = 'unknown'
+
 
 class HtmlResultOutput(HtmlOutput):
 
@@ -44,6 +49,7 @@ class HtmlResultOutput(HtmlOutput):
             user_data=user_data,
             result=result,
             summary=summary,
-            document_path=self.path
+            document_path=self.path,
+            brunhilda_version=brunhilda_version
         )
         return rendered

@@ -13,7 +13,7 @@
 
 <body>
     <h1>{{ name }}</h1>
-    <p>Generated {{ now().strftime('%Y-%m-%d %H:%M:%S') }}.</p>
+    <p>generated {{ now().strftime('%Y-%m-%d %H:%M:%S') }} by BRunhilda-{{ brunhilda_version }}</p>
     <ol>
         {% for name, path in outputs %}
         <li><a href="{{ path }}">{{ name }}</a></li>

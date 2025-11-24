@@ -3,6 +3,11 @@ from typing import Dict, Optional, Tuple
 
 from .html_output import HtmlOutput
 
+try:
+    from .__version__ import version as brunhilda_version
+except ImportError:
+    brunhilda_version = 'unknown'
+
 
 class HtmlTestPlanOutput(HtmlOutput):
 
@@ -33,5 +38,11 @@ class HtmlTestPlanOutput(HtmlOutput):
 
                     entries.append(deepcopy(test))
 
-        rendered = template.render(name=name, preamble=self._include_preamble, tests=entries, user_data=user_data)
+        rendered = template.render(
+            name=name,
+            preamble=self._include_preamble,
+            tests=entries,
+            user_data=user_data,
+            brunhilda_version=brunhilda_version
+        )
         return rendered

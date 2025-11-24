@@ -4,6 +4,11 @@ from typing import Dict, List, Optional
 from .data import Summary
 from .html_output import HtmlOutput
 
+try:
+    from .__version__ import version as brunhilda_version
+except ImportError:
+    brunhilda_version = 'unknown'
+
 
 class HtmlReqSummaryOutput(HtmlOutput):
     """
@@ -76,6 +81,7 @@ class HtmlReqSummaryOutput(HtmlOutput):
             requirements=entries,
             issue_list_path=issue_list_path,
             test_plan_paths=test_plan_paths,
-            user_data=user_data
+            user_data=user_data,
+            brunhilda_version=brunhilda_version
         )
         return rendered

@@ -2,6 +2,11 @@ from typing import List, Tuple, Union
 
 from .html_output import HtmlOutput
 
+try:
+    from .__version__ import version as brunhilda_version
+except ImportError:
+    brunhilda_version = 'unknown'
+
 
 class HtmlIndexOutput(HtmlOutput):
     """
@@ -17,5 +22,7 @@ class HtmlIndexOutput(HtmlOutput):
         :return: HTML string
         """
         template = self.load_template('index.html.jinja2')
-        rendered = template.render(name=name, outputs=outputs, preamble=self._include_preamble)
+        rendered = template.render(
+            name=name, outputs=outputs, brunhilda_version=brunhilda_version, preamble=self._include_preamble
+        )
         return rendered
