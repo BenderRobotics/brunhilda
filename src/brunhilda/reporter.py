@@ -24,7 +24,7 @@ class Reporter:
         user_data: Dict[str, str] = {},
         user_stories: List['doorstop.Item'] = []
     ) -> None:
-        self._outputs = []
+        self._outputs: List[Tuple[str, str, bool]] = []  # Tuple contains name, path, is generated
         self._requirements = requirements
         self._user_stories = user_stories
         self._tests: Dict = {}
@@ -129,7 +129,7 @@ class Reporter:
         with open(path, 'w', encoding='utf-8') as f:
             f.write(content)
 
-        self._outputs.append((name, path))
+        self._outputs.append((name, path, True))
         print(f'... created output {path}')
 
     def _collect_requirements(self, testsuite: Dict) -> List[str]:
@@ -199,14 +199,15 @@ class Reporter:
 
         :param path: index path
         """
-        for _, file_path in self._outputs:
-            with open(file_path, 'r', encoding='utf-8') as file:
-                content = file.read()
+        for _, file_path, is_generated in self._outputs:
+            if is_generated:
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    content = file.read()
 
-            content = content.replace('href="#index"', f'href="{ rel_path(file_path, path) }"')
+                content = content.replace('href="#index"', f'href="{ rel_path(file_path, path) }"')
 
-            with open(file_path, 'w', encoding='utf-8') as file:
-                file.write(content)
+                with open(file_path, 'w', encoding='utf-8') as file:
+                    file.write(content)
 
     def _add_test_run_report_path_to_issues(self) -> None:
         """
@@ -396,6 +397,16 @@ class Reporter:
         )
         self._write_file(name, path, output)
 
+    def add_index_link(self, path: str, name: str) -> None:
+        """
+        Adds not generated file link to index page.
+
+        :param path: path to the file
+        :param name: name of the file that will be displayed on index page
+        """
+        self._outputs.append((name, path, False))
+        print(f'... added index page file {path}')
+
     def print_index(self, path: str, name: str = 'Index', preamble: Union[Sequence[str], str, None] = None) -> None:
         """
         Prints index file for the generated files
@@ -407,7 +418,7 @@ class Reporter:
         formater = HtmlIndexOutput(preamble=preamble)
         file_list = []
 
-        for file_name, file_path in self._outputs:
+        for file_name, file_path, _ in self._outputs:
             file_list.append((file_name, rel_path(path, file_path)))
 
         output = formater.print(name, file_list)

@@ -358,6 +358,7 @@ produced reports. `user_stories` is a list of [doorstop](https://doorstop.readth
 - `brunhilda.reporter.Reporter.print_user_stories_summary` creates user stories summary report.
 - `brunhilda.reporter.Reporter.print_test_summary` creates a test summary report.
 - `brunhilda.reporter.Reporter.print_feature_summary` creates a feature summary report.
+- `brunhilda.reporter.Reporter.add_index_link` adds not generated file link to index page.
 - `brunhilda.reporter.Reporter.print_index` creates an index file referencing all files yet created.
 
 It is important to keep the order
@@ -368,7 +369,8 @@ It is important to keep the order
 4. print test plan report,
 5. print issues report,
 6. print rest of reports,
-7. print index.
+7. add links to index page,
+8. print index.
 
 ```python
 reporter = brunhilda.reporter.Reporter(requirements=['REQ_01', 'REQ_02'],
@@ -385,6 +387,7 @@ reporter.print_issue_list('issues.html')
 reporter.print_requirements_summary('requirements.html', preamble=['preamble1.html', 'preamble2.html'])
 reporter.print_test_summary('tests.html')
 reporter.print_feature_summary('features.html')
+reporter.add_index_link('table.xlsx', 'Table')
 reporter.print_index('index.html')
 ```
 
