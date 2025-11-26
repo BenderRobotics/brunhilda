@@ -41,6 +41,13 @@ class HtmlResultOutput(HtmlOutput):
                     for i, step in enumerate(test['steps']):
                         test['steps'][i]['description'] = self._format_doc(step['description'])
                         test['steps'][i]['expectation'] = self._format_doc(step['expectation'])
+                if test['subtests']:
+                    stats = {'FAILED': 0, 'ERRORED': 0, 'SKIPPED': 0}
+                    for subtest in test['subtests']:
+                        if subtest['result'] in stats:
+                            stats[subtest['result']] += 1
+                    stats = {k: v for k, v in stats.items() if v > 0}
+                    test['subtests_stats'] = stats
 
         template = self.load_template('template.html.jinja2')
         rendered = template.render(

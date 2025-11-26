@@ -182,7 +182,14 @@
                                     <span class="test__result">{{ test.result|lower }}</span>
                                     <span class="test__name">
                                         <strong>{{ test.name }}</strong>
-                                        {% if test.subtests %}({{ test.subtests|length }} sub-tests){% endif %}
+                                        {% if test.subtests %}({{ test.subtests|length }} sub-tests
+                                        {%- if test.subtests_stats -%}
+                                            : {% for state, count in test.subtests_stats.items() -%}
+                                                {{ count }} {{ state|lower }}
+                                                {%- if not loop.last %}, {% endif -%}
+                                            {%- endfor -%}
+                                        {%- endif -%})
+                                        {% endif %}
                                     </span>
                                     <span class="test__time">{{ '%0.3f'|format(test.time|float) }}s</span>
                                 </label>
