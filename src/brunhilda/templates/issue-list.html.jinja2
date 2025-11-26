@@ -68,11 +68,11 @@
                             {% endfor %}
                         </ul></td>
                         <td><a href="{{ issue.html_report_path }}#{{ issue.test }}">ERROR</a></td>
-                        <td colspan="{{ 1 if issue.extra else 2 }}">
+                        <td class="issues-table__message" colspan="{{ 1 if issue.extra else 2 }}">
                             <pre>{{ issue.message }}</pre>
                         </td>
                 {% if issue.extra %}
-                        <td>
+                        <td class="issues-table__extra">
                         {% for extra in issue.extra %}
                             {% if extra.type.startswith('image/') %}
                             <p><img class="issue__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" /></p>
@@ -116,11 +116,11 @@
                             {% endfor %}
                         </ul></td>
                         <td><a href="{{ issue.html_report_path }}#{{ issue.test }}">FAIL</a></td>
-                        <td colspan="{{ 1 if issue.extra else 2 }}">
+                        <td class="issues-table__message" colspan="{{ 1 if issue.extra else 2 }}">
                             <pre>{{ issue.message }}</pre>
                         </td>
                     {% if issue.extra %}
-                        <td>
+                        <td class="issues-table__extra">
                         {% for extra in issue.extra %}
                             {% if extra.type.startswith('image/') %}
                             <p><img class="issue__extra__image" src="data:{{extra.type}};base64,{{extra.value}}" /></p>

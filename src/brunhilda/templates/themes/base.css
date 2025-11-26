@@ -1092,7 +1092,7 @@ ol.lowerroman {
 }
 
 .issue__extra__image {
-    max-width: 50vw;
+    max-width: 100%;
     width: 720px;
 }
 
@@ -1294,6 +1294,13 @@ ol.lowerroman {
     overflow: hidden;
     word-break: normal;
 }
+
+.issues-table__message,
+.issues-table__extra {
+    max-width: 25vw;
+}
+
+
 
 /**************************************/
 /* Test steps table */
