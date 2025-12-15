@@ -102,14 +102,14 @@
                                 <tr class="{{ test_result_class }} test_level--{{ level_name }}">
                                     <td class="req__test-level testcase__inner_table__td table__col--test_level" >{{ level_name|capitalize }}</td>
                                     <td class="req__test-id testcase__inner_table__td table__col--req_name">
-                                        <a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }}</a>
+                                        <a href="{{ test_plan_path }}#{{ test_case.test_id_with_level }}">{{ test_case.test_id }}</a>
                                     </td>
                                     <td class="req__test-coverage testcase__inner_table__td table__col--cov_p">{{ (100 / requirement.count)|round|int }}</td>
                                     <td class="{{ test_result_class }} req__test-result testcase__inner_table__td table__col--test_result">
                                         <span class="test__result">
                                     {% if test_case.result == 'EMPTY' %}
                                     {% elif test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED_FAILURE') %}
-                                            <a href="{{ issue_list_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
+                                            <a href="{{ issue_list_path }}#{{ test_case.test_id_with_level }}">{{ test_case.result }}</a>
                                     {% else %}
                                             {{ test_case.result }}
                                     {% endif %}

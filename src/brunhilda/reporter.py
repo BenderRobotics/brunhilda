@@ -95,6 +95,8 @@ class Reporter:
 
         for test in tests_list:
             test['html_report_path'] = report_path
+            # More unique ID for handling the running of a single test from multiple levels
+            test['test_id_with_level'] = f"{test['test_id']}{test['level']}"
 
         self._tests[path] = tests_list
 
@@ -216,14 +218,14 @@ class Reporter:
         test_name_to_html_report_path = {}
         for tests in self._tests.values():
             for test in tests:
-                test_id = test['test_id']
+                test_id = test['test_id_with_level']
                 report_path = test['html_report_path']
                 test_name_to_html_report_path[test_id] = rel_path(self._issue_list_path, report_path)
 
         for file_issues in self._issues.values():
             for result in ('errors', 'failures'):
                 for issue in file_issues[result]:
-                    test_id = issue['test']
+                    test_id = f"{ issue['test'] }{ file_issues['run']['level'] }"
                     issue['html_report_path'] = test_name_to_html_report_path[test_id]
 
     def print_requirements_summary(

@@ -229,7 +229,7 @@
                                                         {% endif %}
                                                     {% endfor %}
 
-                                                    <button type="button" class="collapsible">{{ test_group }} ({{ test_cases_ok.value }}/{{ feature.links[link][test_group].tests|length }} tests)</button>
+                                                    <button type="button" class="collapsible">{{ test_group|replace(feature.links[link][test_group].level, "") }} ({{ test_cases_ok.value }}/{{ feature.links[link][test_group].tests|length }} tests)</button>
                                                     <div class="collapsible__content">
                                                     <ul>
                                                     {% for test_case in feature.links[link][test_group].tests %}
@@ -239,7 +239,7 @@
                                                             {% set test_plan_path = test_plan_paths['_'] %}
                                                         {% endif %}
                                                         <li>
-                                                            <a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }} {{ test_case.subtest_id }}</a>
+                                                            <a href="{{ test_plan_path }}#{{ test_case.test_id_with_level }}">{{ test_case.test_id }} {{ test_case.subtest_id }}</a>
                                                             {% if test_case.result|lower == 'passed' %}
                                                                 <i class="fa-solid fa-check test__steps__result__icon test__steps__result--passed" title="passed"></i>
                                                             {% elif test_case.result|lower == 'justified' %}

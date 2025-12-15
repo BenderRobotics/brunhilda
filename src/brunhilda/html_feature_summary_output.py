@@ -264,7 +264,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                         entry['links'][link] = {}
 
                         for index, test in enumerate(all_tests):
-                            test_case_id = test['test_id'] + test['subtest_id']
+                            test_case_id = test['test_id_with_level'] + test['subtest_id']
 
                             for requirement in test['requirements']:
                                 # Get only important part of the requirement (INTF_001.1 (indirect) -> INTF_001.1) and remove bypassing character for backward compatibility
@@ -296,7 +296,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                                                     feature_results.append(test_case['result'])
                                                 unlinked_tests[index] = None
                                     else:
-                                        test_group = test['test_id']
+                                        test_group = test['test_id_with_level']
 
                                         if test_group not in entry['links'][link]:
                                             entry['links'][link][test_group] = {

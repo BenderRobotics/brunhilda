@@ -96,7 +96,7 @@
                 {% if loop.first %}
                             <td class="test__level" rowspan="{{ loop.length }}">{{ test_case.level|capitalize }}</td>
                             <td class="test__id" rowspan="{{ loop.length }}">{{ test_case["tags"].get("test-id", [])[0] if test_case["tags"].get("test-id") else "" }}</td>
-                            <td class="test__name" rowspan="{{ loop.length }}"><a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }}</a></td>
+                            <td class="test__name" rowspan="{{ loop.length }}"><a href="{{ test_plan_path }}#{{ test_case.test_id_with_level }}">{{ test_case.test_id }}</a></td>
                 {% endif %}
                             <td class="test__requirement">{{ requirement }}</td>
                 {% if loop.first %}
@@ -108,7 +108,7 @@
                             </td>
                             <td class="test__issue" rowspan="{{ loop.length }}">
                     {% if test_case.result in ('ERRORED', 'FAILED', 'JUSTIFIED')%}
-                            <a href="{{ issue_list_path }}#{{ test_case.test_id }}">🔗</a>
+                            <a href="{{ issue_list_path }}#{{ test_case.test_id_with_level }}">🔗</a>
                     {% endif %}
                             </td>
                             <td class="test__bug-id" rowspan="{{ loop.length }}">
