@@ -1,5 +1,6 @@
 import sys
 import unittest
+from typing import Dict
 from unittest.suite import TestSuite
 
 from .loader import iter_suite
@@ -38,10 +39,26 @@ class BRunhilda(unittest.TextTestRunner):
             buffer=buffer,
             warnings=warnings
         )
-        self.name = name
-        self.dut = dut
-        self.user_data = user_data
-        self.extra_data_output = extra_data_output
+        self._name = name
+        self._dut = dut
+        self._user_data = user_data
+        self._extra_data_output = extra_data_output
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def dut(self) -> str:
+        return self._dut
+
+    @property
+    def user_data(self) -> Dict[str, str]:
+        return self._user_data
+
+    @property
+    def extra_data_output(self) -> str:
+        return self._extra_data_output
 
     def dryrun(self, suite: TestSuite) -> BRunhildaTestResult:
         """
@@ -56,7 +73,7 @@ class BRunhilda(unittest.TextTestRunner):
 
         for test in iter_suite(suite):
             result.startTest(test)
-            result.last_result = EMPTY  # override since we do not execute the test
+            result._last_result = EMPTY  # override since we do not execute the test
             result.stopTest(test)
 
         result.stopTestRun()
@@ -67,10 +84,10 @@ class BRunhilda(unittest.TextTestRunner):
             self.stream,
             self.descriptions,
             self.verbosity,
-            self.name,
-            self.dut,
-            extra_data_path=self.extra_data_output,
-            user_data=self.user_data
+            self._name,
+            self._dut,
+            extra_data_path=self._extra_data_output,
+            user_data=self._user_data
         )
 
     def save_html_report(self, result, output_path):

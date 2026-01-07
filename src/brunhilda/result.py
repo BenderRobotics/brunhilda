@@ -10,7 +10,7 @@ import time
 import unittest
 from copy import deepcopy
 from io import BytesIO
-from typing import List
+from typing import Dict, List
 
 import colorama
 import simplejson as json
@@ -102,25 +102,45 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
     def __init__(self, stream, descriptions, verbosity, name='', dut='', extra_data_path='./extra', user_data=None):
         super().__init__(stream, descriptions, verbosity)
-        self.errors_strings = []
+        self._errors_strings = []
         self.stream_buffer = io.StringIO()
         self.stream = CatchedStream(stream, self.stream_buffer)
         self._tests = []
         self._issues = {}
         self._requirements = set()
-        self.extra_data_path = extra_data_path
-        self.last_result: Result = EMPTY
-        self.name = name
-        self.dut = dut
-        self.user_data = user_data
-        self.summary = Summary()
-        self.env_info = {
+        self._extra_data_path = extra_data_path
+        self._last_result: Result = EMPTY
+        self._name = name
+        self._dut = dut
+        self._user_data = user_data
+        self._summary = Summary()
+        self._env_info = {
             'pyversion': sys.version,
             'system': platform.platform(),
             'hostname': socket.gethostname(),
-            'name': self.name,
+            'name': self._name,
         }
         self._clean()
+
+    @property
+    def env_info(self) -> Dict[str, str]:
+        return self._env_info
+
+    @property
+    def summary(self) -> Summary:
+        return self._summary
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def user_data(self) -> Dict[str, str]:
+        return self._user_data
+
+    @property
+    def dut(self) -> str:
+        return self._dut
 
     def _clean(self):
         self._stdout_backup = None
@@ -136,8 +156,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self._requirements.clear()
         self._tests.clear()
         self._issues = {'errors': [], 'failures': [], 'run': {}}
-        self.summary = Summary()
-        self.last_result = EMPTY
+        self._summary = Summary()
+        self._last_result = EMPTY
         self.run_start_timestamp = datetime.datetime.now()
 
     def _process_test_extra(self, test, test_id: str) -> None:
@@ -295,8 +315,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         invalid_path_characters = ("'", '"', '/', '\\', '?', '<', '>', ':', '|', '*')
 
         try:
-            if not os.path.exists(self.extra_data_path):
-                os.makedirs(self.extra_data_path)
+            if not os.path.exists(self._extra_data_path):
+                os.makedirs(self._extra_data_path)
 
             for char in invalid_path_characters:
                 filename = filename.replace(char, '')
@@ -307,7 +327,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
             while (save_path is None) or os.path.isfile(save_path):
                 num += 1
-                save_path = os.path.join(self.extra_data_path, f'{filename}-{num:03}.jpg')
+                save_path = os.path.join(self._extra_data_path, f'{filename}-{num:03}.jpg')
 
             im = Image.open(BytesIO(image))
             im.save(save_path, format='jpeg')
@@ -321,7 +341,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         Returns result of the whole test run.
         """
-        return self.summary.result
+        return self._summary.result
 
     def startTestRun(self):
         self._clean()
@@ -330,9 +350,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def stopTestRun(self):
         super().stopTestRun()
         self.run_finish_timestamp = datetime.datetime.now()
-        self.env_info['timestamp_start'] = self.run_start_timestamp
-        self.env_info['timestamp_finish'] = self.run_finish_timestamp
-        self.env_info['execution_time'] = self.total_execution_time
+        self._env_info['timestamp_start'] = self.run_start_timestamp
+        self._env_info['timestamp_finish'] = self.run_finish_timestamp
+        self._env_info['execution_time'] = self.total_execution_time
 
     def startTest(self, test):
         """
@@ -361,10 +381,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             self.suite_execution_time = 0
 
         self.test_start_time = time.perf_counter()
-        self.errors_strings = []
+        self._errors_strings = []
         self.subtests = []
         self.skip_reason = ''
-        self.last_result = PASSED
+        self._last_result = PASSED
         # Hold reference to the stdout and stderr streams,
         # it has to be done now since super method can change
         # theses for buffering
@@ -395,17 +415,17 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         sys.stdout = self._stdout_backup
         sys.stderr = self._stderr_backup
 
-        if self.last_result == PASSED:
+        if self._last_result == PASSED:
             self.results['testcases'][testcase_name]['passed'] += 1
-        elif self.last_result == SKIPPED:
+        elif self._last_result == SKIPPED:
             self.results['testcases'][testcase_name]['skipped'] += 1
-        elif self.last_result == FAILED:
+        elif self._last_result == FAILED:
             self.results['testcases'][testcase_name]['failed'] += 1
-        elif self.last_result == ERRORED:
+        elif self._last_result == ERRORED:
             self.results['testcases'][testcase_name]['errored'] += 1
-        elif self.last_result == EXPECTED_FAILURE:
+        elif self._last_result == EXPECTED_FAILURE:
             self.results['testcases'][testcase_name]['expected_failures'] += 1
-        elif self.last_result == UNEXPECTED_SUCCESS:
+        elif self._last_result == UNEXPECTED_SUCCESS:
             self.results['testcases'][testcase_name]['unexpected_successes'] += 1
 
         # over all test case result
@@ -430,17 +450,17 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'description': parse_description(test._testMethodDoc),
                 'steps': parse_steps(test.steps, test._testMethodDoc),
                 'tags': parse_tags(test._testMethodDoc),
-                'result': self.last_result,
+                'result': self._last_result,
                 'output': self.stream_buffer.read(),
-                'errors': self.errors_strings,
+                'errors': self._errors_strings,
                 'extra': test.extra
             }
         )
 
-        self.summary.results += self.last_result
+        self._summary.results += self._last_result
 
         self._record(
-            testcase_name, test_id, test.steps, test._testMethodDoc, self.last_result, self.skip_reason, self.subtests
+            testcase_name, test_id, test.steps, test._testMethodDoc, self._last_result, self.skip_reason, self.subtests
         )
 
     def addSuccess(self, test):
@@ -482,8 +502,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         except AttributeError:
             pass
         finally:
-            self.errors_strings.append(self._exc_info_to_string(err, test))
-            self.last_result = ERRORED
+            self._errors_strings.append(self._exc_info_to_string(err, test))
+            self._last_result = ERRORED
 
     def addFailure(self, test, err):
         """
@@ -511,8 +531,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'tags': parse_tags(test._testMethodDoc)
             }
         )
-        self.errors_strings.append(self._exc_info_to_string(err, test))
-        self.last_result = FAILED
+        self._errors_strings.append(self._exc_info_to_string(err, test))
+        self._last_result = FAILED
 
     def addSubTest(self, test, subtest, err):
         """
@@ -544,31 +564,31 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             err_str = self._exc_info_to_string(err, test)
             self.subtests[-1]['error'] = err_str
             # Append error to list of errors, first line is the subtest name with black background.
-            self.errors_strings.append(f'{colorama.Back.BLACK}{subtest}{colorama.Back.RESET}\n{err_str}')
+            self._errors_strings.append(f'{colorama.Back.BLACK}{subtest}{colorama.Back.RESET}\n{err_str}')
 
             # Subtest errored if the exception is not a failure or derived exception
             if not issubclass(err[0], test.failureException):
                 self.subtests[-1]['result'] = ERRORED
-                self.last_result = ERRORED
+                self._last_result = ERRORED
             else:
                 self.subtests[-1]['result'] = FAILED
                 # We want to keep overall test result ERRORED if already set, ERRORED means that test is not working.
-                if self.last_result != ERRORED:
-                    self.last_result = FAILED
+                if self._last_result != ERRORED:
+                    self._last_result = FAILED
 
             issue = {
                 'test': test_id,
                 'sub-test': subtest_id,
                 'message': err_str,
                 'extra': subtest.extra,
-                'result': self.last_result,
+                'result': self._last_result,
                 'bug-id': '',
                 'comment': '',
                 'justified': '',
                 'tags': parse_tags(test._testMethodDoc)
             }
 
-            self._issues['errors' if self.last_result == ERRORED else 'failures'].append(issue)
+            self._issues['errors' if self._last_result == ERRORED else 'failures'].append(issue)
 
         super().addSubTest(test, subtest, err)
 
@@ -591,22 +611,22 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             )
         else:
             self.skip_reason = reason
-            self.last_result = SKIPPED
+            self._last_result = SKIPPED
 
     def addExpectedFailure(self, test, err):
         """
         This method is called when test marked with @expectedFailure decorator fails.
         """
         super().addExpectedFailure(test, err)
-        self.errors_strings.append(self._exc_info_to_string(err, test))
-        self.last_result = EXPECTED_FAILURE
+        self._errors_strings.append(self._exc_info_to_string(err, test))
+        self._last_result = EXPECTED_FAILURE
 
     def addUnexpectedSuccess(self, test):
         """
         This method is called when test marked with @expectedFailure decorator succeeds.
         """
         super().addUnexpectedSuccess(test)
-        self.last_result = UNEXPECTED_SUCCESS
+        self._last_result = UNEXPECTED_SUCCESS
 
     def _record(self, testcase_name, test_id, test_steps, description, result, comment='', subtests=[]):
         """
@@ -634,7 +654,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'requirements': requirements,
                 'test_id': test_id,
                 'comment': comment,
-                'level': self.name,
+                'level': self._name,
                 'subtests': deepcopy(subtests),
             }
         )
@@ -692,10 +712,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param filename: filename to put the serialized form into
         """
         self._issues['run'] = {
-            'user data': self.user_data,
+            'user data': self._user_data,
             'date-time': self.run_start_timestamp,
-            'level': self.name,
-            'dut': self.dut
+            'level': self._name,
+            'dut': self._dut
         }
 
         issues = self._issues_relative_to(filename)
@@ -711,10 +731,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'tests': self._tests,
             'run':
                 {
-                    'user data': self.user_data,
+                    'user data': self._user_data,
                     'date-time': self.run_start_timestamp,
-                    'level': self.name,
-                    'dut': self.dut
+                    'level': self._name,
+                    'dut': self._dut
                 }
         }
 
@@ -726,5 +746,5 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         if filename is not None:
             output_formater.path = filename
-            output = output_formater.print(self.env_info, self.user_data, self.results, self.summary)
+            output = output_formater.print(self._env_info, self._user_data, self.results, self._summary)
             self._write_file(filename, output)
