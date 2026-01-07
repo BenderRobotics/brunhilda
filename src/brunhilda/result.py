@@ -707,7 +707,18 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         :param filename: filename to put the serialized form into
         """
-        self._serialize(self._tests, filename)
+        tests_output = {
+            'tests': self._tests,
+            'run':
+                {
+                    'user data': self.user_data,
+                    'date-time': self.run_start_timestamp,
+                    'level': self.name,
+                    'dut': self.dut
+                }
+        }
+
+        self._serialize(tests_output, filename)
 
     def print(self, output_formater, filename):
         """

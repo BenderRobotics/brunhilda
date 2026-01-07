@@ -95,7 +95,7 @@ class Reporter:
 
         for path, report_path in paths:
 
-            tests_list = self._load(path)
+            tests_list = self._load(path)['tests']
 
             for test in tests_list:
                 test['html_report_path'] = report_path

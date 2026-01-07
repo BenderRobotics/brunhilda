@@ -61,7 +61,7 @@ def test_load_tests_single_tuple(reporter):
     path = 'tests/run.json'
     report = 'reports/run.html'
 
-    mock_test_data = [{'test_id': 'T1', 'level': 1}]
+    mock_test_data = {'tests': [{'test_id': 'T1', 'level': 1}]}
 
     with patch.object(reporter, '_load', return_value=mock_test_data) as mock_load:
         reporter.load_tests((path, report))
@@ -78,8 +78,8 @@ def test_load_tests_list_of_tuples(reporter):
     """Test loading multiple test files input as a list."""
     inputs = [('run1.json', 'rep1.html'), ('run2.json', 'rep2.html')]
 
-    data1 = [{'test_id': 'T1', 'level': 1}]
-    data2 = [{'test_id': 'T2', 'level': 2}]
+    data1 = {'tests': [{'test_id': 'T1', 'level': 1}]}
+    data2 = {'tests': [{'test_id': 'T2', 'level': 2}]}
 
     with patch.object(reporter, '_load', side_effect=[data1, data2]) as mock_load:
         reporter.load_tests(inputs)
