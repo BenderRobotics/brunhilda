@@ -3,7 +3,7 @@ from typing import List, Tuple, Union
 from .html_output import HtmlOutput
 
 try:
-    from .__version__ import version as brunhilda_version
+    from ..__version__ import version as brunhilda_version
 except ImportError:
     brunhilda_version = 'unknown'
 

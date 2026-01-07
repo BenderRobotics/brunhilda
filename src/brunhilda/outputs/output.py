@@ -4,7 +4,7 @@ import urllib.parse
 
 import jinja2
 
-from .rel_path import rel_path
+from ..rel_path import rel_path
 
 
 def _quote_path(path):
@@ -28,7 +28,7 @@ class Output:
         :return: HTML string
         :rtype: str
         """
-        template_dir = os.path.join(os.path.dirname(__file__), 'templates')
+        template_dir = os.path.join(os.path.dirname(__file__), '..', 'templates')
         template_path = os.path.join(template_dir, template)
 
         with open(template_path, encoding='utf-8') as f:

@@ -2,9 +2,9 @@ import sys
 import unittest
 from unittest.suite import TestSuite
 
-from .html_result_output import HtmlResultOutput
-from .junit_result_output import JUnitResultOutput
 from .loader import iter_suite
+from .outputs.html_result_output import HtmlResultOutput
+from .outputs.junit_result_output import JUnitResultOutput
 from .result import EMPTY, BRunhildaTestResult
 
 __unittest = True

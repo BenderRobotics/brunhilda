@@ -1,11 +1,11 @@
 import copy
 from typing import Dict
 
-from .data import Summary
+from ..data import Summary
 from .html_output import HtmlOutput
 
 try:
-    from .__version__ import version as brunhilda_version
+    from ..__version__ import version as brunhilda_version
 except ImportError:
     brunhilda_version = 'unknown'
 

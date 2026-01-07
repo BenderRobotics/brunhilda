@@ -7,12 +7,12 @@ import yaml
 from natsort import natsorted
 
 from .data import Summary
-from .html_feature_summary_output import FeatureCoveragePolicy, HtmlFeatureSummaryOutput
-from .html_index_output import HtmlIndexOutput
-from .html_issue_list_output import HtmlIssueListOutput
-from .html_req_summary_output import HtmlReqSummaryOutput
-from .html_test_plan_output import HtmlTestPlanOutput
-from .html_test_summary_output import HtmlTestSummaryOutput
+from .outputs.html_feature_summary_output import FeatureCoveragePolicy, HtmlFeatureSummaryOutput
+from .outputs.html_index_output import HtmlIndexOutput
+from .outputs.html_issue_list_output import HtmlIssueListOutput
+from .outputs.html_req_summary_output import HtmlReqSummaryOutput
+from .outputs.html_test_plan_output import HtmlTestPlanOutput
+from .outputs.html_test_summary_output import HtmlTestSummaryOutput
 from .rel_path import rel_path
 
 
@@ -270,7 +270,7 @@ class Reporter:
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
         try:
-            from .html_user_stories_summary import HtmlUserStoriesSummaryOutput
+            from .outputs.html_user_stories_summary import HtmlUserStoriesSummaryOutput
         except ImportError as ex:
             raise ImportError(f'Missing pip dependencies. Reason: {ex}')
 

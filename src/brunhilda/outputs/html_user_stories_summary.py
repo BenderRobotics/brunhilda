@@ -3,11 +3,11 @@ from typing import Dict, List, Optional
 
 from doorstop import Item
 
-from .data import Summary
+from ..data import Summary
 from .html_output import HtmlOutput
 
 try:
-    from .__version__ import version as brunhilda_version
+    from ..__version__ import version as brunhilda_version
 except ImportError:
     brunhilda_version = 'unknown'
 

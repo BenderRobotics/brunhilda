@@ -2,7 +2,7 @@ import copy
 import re
 from typing import Dict
 
-from .data import Summary
+from ..data import Summary
 from .output import Output
 
 

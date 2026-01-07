@@ -1,6 +1,6 @@
 from .brunhilda import BRunhilda
-from .html_feature_summary_output import FeatureCoveragePolicy
 from .loader import BRunhildaTestLoader
+from .outputs.html_feature_summary_output import FeatureCoveragePolicy
 from .reporter import Reporter
 from .result import BRunhildaTestResult
 

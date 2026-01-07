@@ -2,11 +2,11 @@ from copy import deepcopy
 from enum import Enum
 from typing import Callable, Dict, List, Optional, OrderedDict, Union
 
-from .data import Summary
+from ..data import Summary
 from .html_output import HtmlOutput
 
 try:
-    from .__version__ import version as brunhilda_version
+    from ..__version__ import version as brunhilda_version
 except ImportError:
     brunhilda_version = 'unknown'
 
