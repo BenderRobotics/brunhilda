@@ -84,29 +84,37 @@ class Reporter:
                     test['comment'] = [comment for comment in comments if comment]
                     test['bug_id'] = list(bug_ids)
 
-    def load_tests(self, path: str, report_path: str = '') -> None:
+    def load_tests(self, paths: Union[Tuple[str, str], List[Tuple[str, str]]]) -> None:
         """
         Loads serialized tests file and store path to their html report
 
-        :param path: path to the test file
-        :param report_path: path to the test html report file
+        :param paths: tuple or list of tuples with path to the test file and path to the test html report file
         """
-        tests_list = self._load(path)
+        if not isinstance(paths, list):
+            paths = [paths]
 
-        for test in tests_list:
-            test['html_report_path'] = report_path
-            # More unique ID for handling the running of a single test from multiple levels
-            test['test_id_with_level'] = f"{test['test_id']}{test['level']}"
+        for path, report_path in paths:
 
-        self._tests[path] = tests_list
+            tests_list = self._load(path)
 
-    def load_issues(self, path: str) -> None:
+            for test in tests_list:
+                test['html_report_path'] = report_path
+                # More unique ID for handling the running of a single test from multiple levels
+                test['test_id_with_level'] = f"{test['test_id']}{test['level']}"
+
+            self._tests[path] = tests_list
+
+    def load_issues(self, paths: Union[List[str], str]) -> None:
         """
-        Loads serialized issues file
+        Loads serialized issues file(s)
 
-        :param path: path to the file
+        :param paths: path or list of paths to the file(s)
         """
-        self._issues[path] = self._load(path)
+        if not isinstance(paths, list):
+            paths = [paths]
+
+        for path in paths:
+            self._issues[path] = self._load(path)
 
     def load_features(self, path: str) -> None:
         """

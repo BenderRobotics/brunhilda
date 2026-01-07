@@ -1,6 +1,6 @@
 import pytest
 
-from brunhilda.html_feature_summary_output import HtmlFeatureSummaryOutput
+from brunhilda.outputs.html_feature_summary_output import HtmlFeatureSummaryOutput
 
 
 @pytest.mark.parametrize(
