@@ -38,13 +38,15 @@ test-unit:
   extends: .test
   artifacts:
     expire_in: 1 day
+    paths:
+      - htmlcov/
     reports:
       coverage_report:
         coverage_format: cobertura
         path: coverage.xml
       junit: report.xml
   script:
-    - pytest test/unit --pyargs --tb=short --cov=. --cov-config=.coveragerc --cov-report xml:coverage.xml --cov-report term --junitxml=report.xml
+    - pytest test/unit --pyargs --tb=short --cov=. --cov-config=.coveragerc --cov-report xml:coverage.xml --cov-report html:htmlcov --cov-report term --junitxml=report.xml
   coverage: /^TOTAL.+?\s(\d+\.?\d*\%)$/
 
 build:
