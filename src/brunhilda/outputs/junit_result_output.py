@@ -1,6 +1,6 @@
 import copy
 import re
-from typing import Dict
+from typing import Any, Dict
 
 from ..data import Summary
 from .output import Output
@@ -8,7 +8,7 @@ from .output import Output
 
 class JUnitResultOutput(Output):
 
-    def _format_terminal(self, text):
+    def _format_terminal(self, text: str) -> str:
         """
         Removes colorama terminal output control sequence from the text
         """
@@ -24,7 +24,7 @@ class JUnitResultOutput(Output):
 
         return text
 
-    def _sanitize_xml_text(self, text):
+    def _sanitize_xml_text(self, text: str) -> str:
         """
         Replaces invalid XML characters with the '?'
 
@@ -45,7 +45,7 @@ class JUnitResultOutput(Output):
         text = re.sub(xml_illegal_character_regex, '?', text)
         return text
 
-    def print(self, env_info: Dict, user_data: Dict, result, summary: Summary):
+    def print(self, env_info: Dict, user_data: Dict[str, Any], result: Dict, summary: Summary) -> str:
         result = copy.deepcopy(result)
 
         for case in sorted(result['testcases'].values(), key=lambda item: item['id']):

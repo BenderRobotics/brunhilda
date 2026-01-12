@@ -3,7 +3,7 @@ import re
 from typing import Callable, Dict, Sequence
 
 
-def _num_compare(tag_values: Sequence[str], expression: str, operator: Callable):
+def _num_compare(tag_values: Sequence[str], expression: str, operator: Callable) -> bool:
     try:
         lh = eval_time(tag_values[0])
         rh = eval_time(expression)
@@ -62,39 +62,39 @@ def eval_time(expression: str) -> float:
     return sum_
 
 
-def equal(tag_values: Sequence[str], value: str):
+def equal(tag_values: Sequence[str], value: str) -> bool:
     return (len(tag_values) == 1) and (value == tag_values[0])
 
 
-def not_equal(tag_values: Sequence[str], value: str):
+def not_equal(tag_values: Sequence[str], value: str) -> bool:
     return (len(tag_values) == 1) and (value != tag_values[0])
 
 
-def contains(tag_values: Sequence[str], value: str):
+def contains(tag_values: Sequence[str], value: str) -> bool:
     return value in tag_values
 
 
-def not_contains(tag_values: Sequence[str], value: str):
+def not_contains(tag_values: Sequence[str], value: str) -> bool:
     return value not in tag_values
 
 
-def gt(tag_values: Sequence[str], value: str):
+def gt(tag_values: Sequence[str], value: str) -> bool:
     return _num_compare(tag_values, value, operator.gt)
 
 
-def ge(tag_values: Sequence[str], value: str):
+def ge(tag_values: Sequence[str], value: str) -> bool:
     return _num_compare(tag_values, value, operator.ge)
 
 
-def lt(tag_values: Sequence[str], value: str):
+def lt(tag_values: Sequence[str], value: str) -> bool:
     return _num_compare(tag_values, value, operator.lt)
 
 
-def le(tag_values: Sequence[str], value: str):
+def le(tag_values: Sequence[str], value: str) -> bool:
     return _num_compare(tag_values, value, operator.le)
 
 
-def eval_condition(condition: str, tags: Dict[str, Sequence[str]]):
+def eval_condition(condition: str, tags: Dict[str, Sequence[str]]) -> bool:
     """
     Evaluates logical operators in the condition.
 
@@ -134,7 +134,7 @@ def eval_condition(condition: str, tags: Dict[str, Sequence[str]]):
         raise ValueError(f'Invalid operator in condition "{condition}".')
 
 
-def eval_and(condition: str, tags: Dict[str, Sequence[str]]):
+def eval_and(condition: str, tags: Dict[str, Sequence[str]]) -> bool:
     """
     Evaluates AND logical operation in the condition.
 
@@ -151,7 +151,7 @@ def eval_and(condition: str, tags: Dict[str, Sequence[str]]):
     return result
 
 
-def eval_or(condition: str, tags: Dict[str, Sequence[str]]):
+def eval_or(condition: str, tags: Dict[str, Sequence[str]]) -> bool:
     """
     Evaluates OR logical operation in the condition.
 
@@ -168,7 +168,7 @@ def eval_or(condition: str, tags: Dict[str, Sequence[str]]):
     return result
 
 
-def eval_tags(condition: str, tags: Dict[str, Sequence[str]]):
+def eval_tags(condition: str, tags: Dict[str, Sequence[str]]) -> bool:
     """
     Checks if given tags matches the set tag_filter
 

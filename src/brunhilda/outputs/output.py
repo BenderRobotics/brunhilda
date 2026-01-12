@@ -7,7 +7,7 @@ import jinja2
 from ..rel_path import rel_path
 
 
-def _quote_path(path):
+def _quote_path(path: str) -> str:
     """
     Quotes given path to be useable as browser URL
 
@@ -20,13 +20,12 @@ def _quote_path(path):
 
 class Output:
 
-    def load_template(self, template):
+    def load_template(self, template: str) -> jinja2.Template:
         """
-        Prints testresult to HTML document.
+        Loads a Jinja2 template from the templates directory.
 
-        :param testresult: BRunhilda test result from the test run,
-        :return: HTML string
-        :rtype: str
+        :param template: filename of the template
+        :return: Jinja2 Template object
         """
         template_dir = os.path.join(os.path.dirname(__file__), '..', 'templates')
         template_path = os.path.join(template_dir, template)

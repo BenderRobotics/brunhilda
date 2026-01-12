@@ -1,6 +1,9 @@
 import sys
 import unittest
-from typing import Dict
+from pathlib import Path
+from typing import Dict, Union
+from unittest import TextTestResult
+from unittest.case import TestCase
 from unittest.suite import TestSuite
 
 from .loader import iter_suite
@@ -60,6 +63,12 @@ class BRunhilda(unittest.TextTestRunner):
     def extra_data_output(self) -> str:
         return self._extra_data_output
 
+    def run(self, test: Union[TestSuite, TestCase]) -> BRunhildaTestResult:
+        """
+        Run the given test case or test suite.
+        """
+        return super().run(test)  # type: ignore
+
     def dryrun(self, suite: TestSuite) -> BRunhildaTestResult:
         """
         Executes a dry run of the test suite. Creates the same artifacts as a normal run but without
@@ -79,7 +88,7 @@ class BRunhilda(unittest.TextTestRunner):
         result.stopTestRun()
         return result
 
-    def _makeResult(self):
+    def _makeResult(self) -> BRunhildaTestResult:
         return BRunhildaTestResult(
             self.stream,
             self.descriptions,
@@ -90,38 +99,38 @@ class BRunhilda(unittest.TextTestRunner):
             user_data=self._user_data
         )
 
-    def save_html_report(self, result, output_path):
+    def save_html_report(self, result: BRunhildaTestResult, output_path: Union[str, Path]):
         """
         Prints the HTML report of the last result
         """
         try:
-            result.print(HtmlResultOutput(), output_path)
+            result.print(HtmlResultOutput(), str(output_path))
         except Exception as ex:
             print(ex)
 
-    def save_junit_report(self, result, output_path):
+    def save_junit_report(self, result: BRunhildaTestResult, output_path: Union[str, Path]):
         """
         Prints the jUnit report of the last result
         """
         try:
-            result.print(JUnitResultOutput(), output_path)
+            result.print(JUnitResultOutput(), str(output_path))
         except Exception as ex:
             print(ex)
 
-    def save_issues(self, result, output_path):
+    def save_issues(self, result: BRunhildaTestResult, output_path: Union[str, Path]):
         """
         Serializes issues from the last result.
         """
         try:
-            result.serialize_issues(output_path)
+            result.serialize_issues(str(output_path))
         except Exception as ex:
             print(ex)
 
-    def save_tests(self, result, output_path):
+    def save_tests(self, result: BRunhildaTestResult, output_path: Union[str, Path]):
         """
         Serializes executed tests from the last result.
         """
         try:
-            result.serialize_tests(output_path)
+            result.serialize_tests(str(output_path))
         except Exception as ex:
             print(ex)

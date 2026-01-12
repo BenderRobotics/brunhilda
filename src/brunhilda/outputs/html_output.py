@@ -24,7 +24,7 @@ class HtmlOutput(Output):
                 with open(p, encoding='utf-8') as f:
                     self._include_preamble += f.read()
 
-    def _format_doc(self, description):
+    def _format_doc(self, description: str) -> str:
         """
         This method formats python docstring to HTML.
         :param str description: python docstring of the method or class
@@ -43,7 +43,7 @@ class HtmlOutput(Output):
             description = description.replace(' *.', ' \*.')
             return publish_parts(description, writer_name='html')['html_body']  # convert from RST to HTML
 
-    def _format_logging(self, text):
+    def _format_logging(self, text: str) -> str:
         """
         Wraps output of the python logging into HTML spans with the severity classes.
         """
@@ -63,7 +63,7 @@ class HtmlOutput(Output):
                     lines[i] = f'{formatting[f]}{lines[i]}</span>'
         return '\n'.join(lines)
 
-    def _format_terminal(self, text):
+    def _format_terminal(self, text: str) -> str:
         """
         Converts colorama terminal output into HTML string with the classes.
         """

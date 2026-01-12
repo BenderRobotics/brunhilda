@@ -35,7 +35,6 @@ class HtmlReqSummaryOutput(HtmlOutput):
         :param test_plan_path: path to the issue list
         :param user_data: additional data passed by a user
         :return: HTML string
-        :rtype: str
         """
         entries = []
         count = 0

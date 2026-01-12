@@ -239,7 +239,6 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
         :param testsuite: suite of the executed tests
         :param test_plan_path: path to the test plans
         :return: HTML string
-        :rtype: str
         """
         entries = OrderedDict()
         all_tests = self._flatten_tests(testsuite)

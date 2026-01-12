@@ -10,7 +10,7 @@ import time
 import unittest
 from copy import deepcopy
 from io import BytesIO
-from typing import Dict, List
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, TextIO, Tuple, Union
 
 import colorama
 import simplejson as json
@@ -18,8 +18,12 @@ import yaml
 from PIL import Image
 
 from .data import Result, Summary
+from .outputs.output import Output
 from .parser import parse_description, parse_requirements, parse_steps, parse_tags
 from .rel_path import rel_path
+
+if TYPE_CHECKING:
+    import numpy
 
 __unittest = True
 
@@ -50,7 +54,7 @@ class CatchedStream():
     to catch all stream outputs in the chronological order.
     """
 
-    def __init__(self, stream, buffer):
+    def __init__(self, stream: TextIO, buffer: TextIO):
         """
         :param stream: stream to catch
         :param buffer: instance of the buffer stream
@@ -58,7 +62,7 @@ class CatchedStream():
         self._buffer = buffer
         self.stream = stream
 
-    def __getattr__(self, attr):
+    def __getattr__(self, attr: str):
         """
         Allowes to act transparently as a stream substitution.
         """
@@ -66,14 +70,14 @@ class CatchedStream():
             raise AttributeError(attr)
         return getattr(self.stream, attr)
 
-    def write(self, arg):
+    def write(self, arg: str) -> int:
         """
         All stream writes are also written to the shared buffer.
         """
         self._buffer.write(arg)
         return self.stream.write(arg)
 
-    def writeln(self, arg=None):
+    def writeln(self, arg: Optional[str] = None):
         """
         Original test runner uses custom decorator with `writeln` method,
         we have to implemented as well to keep compatible interface.
@@ -100,13 +104,22 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     _renderers = None
     EMBEDDED_IMAGES = False  #: controls embeding images as base64
 
-    def __init__(self, stream, descriptions, verbosity, name='', dut='', extra_data_path='./extra', user_data=None):
+    def __init__(
+        self,
+        stream: TextIO,
+        descriptions: bool,
+        verbosity: int,
+        name='',
+        dut='',
+        extra_data_path='./extra',
+        user_data: Optional[Dict[str, Any]] = None
+    ):
         super().__init__(stream, descriptions, verbosity)
-        self._errors_strings = []
+        self._errors_strings: List[str] = []
         self.stream_buffer = io.StringIO()
         self.stream = CatchedStream(stream, self.stream_buffer)
-        self._tests = []
-        self._issues = {}
+        self._tests: List[Dict[str, Any]] = []
+        self._issues: Dict[str, Any] = {}
         self._requirements = set()
         self._extra_data_path = extra_data_path
         self._last_result: Result = EMPTY
@@ -142,6 +155,13 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def dut(self) -> str:
         return self._dut
 
+    @property
+    def result(self):
+        """
+        Returns result of the whole test run.
+        """
+        return self._summary.result
+
     def _clean(self):
         self._stdout_backup = None
         self._stderr_backup = None
@@ -160,7 +180,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self._last_result = EMPTY
         self.run_start_timestamp = datetime.datetime.now()
 
-    def _process_test_extra(self, test, test_id: str) -> None:
+    def _process_test_extra(self, test: unittest.TestCase, test_id: str):
         """
         Process extra data of the given subtest and replaces it with the processed one.
 
@@ -176,7 +196,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         except Exception:
             test.extra = []
 
-    def _process_extra_data(self, extra: List, test_id: str) -> List:
+    def _process_extra_data(self, extra: List, test_id: str) -> List[Dict[str, Any]]:
         """
         Goes through the extra data list, renderers images to base64 or stores them to the filesystem.
 
@@ -203,7 +223,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         return processed_extras
 
-    def _get_test_id(self, test):
+    def _get_test_id(self, test: unittest.TestCase) -> str:
         """
         Gets test ID in the unified format
         """
@@ -211,7 +231,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         return '.'.join(chunk for chunk in test_id.split('.') if chunk != test.__module__)
 
     @classmethod
-    def _render_img(cls, img, fmt='jpg', height=612):
+    def _render_img(cls, img, fmt='jpg', height=612) -> Optional[Tuple[Union[bytes, 'numpy.ndarray'], str]]:
         """
         Tries to create renderers for OpenCV, PIL and PyPlot images.
         """
@@ -305,7 +325,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         return None
 
-    def _store_img(self, filename, image):
+    def _store_img(self, filename: str, image: Union[bytes, 'numpy.ndarray']) -> str:
         """
         Stores image into extra data folder as an jpeg file
 
@@ -336,13 +356,6 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         finally:
             return save_path
 
-    @property
-    def result(self):
-        """
-        Returns result of the whole test run.
-        """
-        return self._summary.result
-
     def startTestRun(self):
         self._clean()
         super().startTestRun()
@@ -354,7 +367,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self._env_info['timestamp_finish'] = self.run_finish_timestamp
         self._env_info['execution_time'] = self.total_execution_time
 
-    def startTest(self, test):
+    def startTest(self, test: unittest.TestCase):
         """
         This method is called before execution of the given test.
         """
@@ -382,7 +395,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         self.test_start_time = time.perf_counter()
         self._errors_strings = []
-        self.subtests = []
+        self.subtests: List[Dict[str, Any]] = []
         self.skip_reason = ''
         self._last_result = PASSED
         # Hold reference to the stdout and stderr streams,
@@ -398,7 +411,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         test.steps = []
         super().startTest(test)
 
-    def stopTest(self, test):
+    def stopTest(self, test: unittest.TestCase):
         """
         This method is called after execution of the given test
         """
@@ -463,13 +476,13 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             testcase_name, test_id, test.steps, test._testMethodDoc, self._last_result, self.skip_reason, self.subtests
         )
 
-    def addSuccess(self, test):
+    def addSuccess(self, test: unittest.TestCase):
         """
         This method is called after successfull end of the test method.
         """
         super().addSuccess(test)
 
-    def addError(self, test, err):
+    def addError(self, test: unittest.TestCase, err):
         """
         This method is called when error occurs.
         """
@@ -505,7 +518,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             self._errors_strings.append(self._exc_info_to_string(err, test))
             self._last_result = ERRORED
 
-    def addFailure(self, test, err):
+    def addFailure(self, test: unittest.TestCase, err):
         """
         This method is called upon assertion failure.
         """
@@ -534,7 +547,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self._errors_strings.append(self._exc_info_to_string(err, test))
         self._last_result = FAILED
 
-    def addSubTest(self, test, subtest, err):
+    def addSubTest(self, test: unittest.TestCase, subtest: unittest.TestCase, err):
         """
         This method is called after sub-test is done.
         """
@@ -592,7 +605,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         super().addSubTest(test, subtest, err)
 
-    def addSkip(self, test, reason):
+    def addSkip(self, test: unittest.TestCase, reason: str):
         """
         This method is called after skip of the test.
         """
@@ -613,7 +626,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             self.skip_reason = reason
             self._last_result = SKIPPED
 
-    def addExpectedFailure(self, test, err):
+    def addExpectedFailure(self, test: unittest.TestCase, err):
         """
         This method is called when test marked with @expectedFailure decorator fails.
         """
@@ -621,14 +634,23 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self._errors_strings.append(self._exc_info_to_string(err, test))
         self._last_result = EXPECTED_FAILURE
 
-    def addUnexpectedSuccess(self, test):
+    def addUnexpectedSuccess(self, test: unittest.TestCase):
         """
         This method is called when test marked with @expectedFailure decorator succeeds.
         """
         super().addUnexpectedSuccess(test)
         self._last_result = UNEXPECTED_SUCCESS
 
-    def _record(self, testcase_name, test_id, test_steps, description, result, comment='', subtests=[]):
+    def _record(
+        self,
+        testcase_name: str,
+        test_id: str,
+        test_steps: List[Dict[str, Any]],
+        description: str,
+        result: Result,
+        comment='',
+        subtests: List[Dict[str, Any]] = []
+    ):
         """
         Adds executed test to the trace record
 
@@ -659,7 +681,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             }
         )
 
-    def _write_file(self, filename, content):
+    def _write_file(self, filename: str, content: str):
         """
         Writes content to the given filename
 
@@ -676,7 +698,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         print(f'... created output {filename}')
 
-    def _serialize(self, content, filename):
+    def _serialize(self, content, filename: str):
         """
         Serializes given content into yaml/json file
         """
@@ -690,7 +712,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         self._write_file(filename, serialized)
 
-    def _issues_relative_to(self, base_path):
+    def _issues_relative_to(self, base_path: str) -> Dict[str, Any]:
         """
         Modifies paths in the issues to be relative to the given filename
 
@@ -740,7 +762,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         self._serialize(tests_output, filename)
 
-    def print(self, output_formater, filename):
+    def print(self, output_formater: Output, filename: str):
         """
         Prints test results with the given result output.
         """

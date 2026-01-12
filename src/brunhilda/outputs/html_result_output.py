@@ -12,7 +12,7 @@ except ImportError:
 
 class HtmlResultOutput(HtmlOutput):
 
-    def print(self, env_info: Dict, user_data: Dict, result, summary: Summary):
+    def print(self, env_info: Dict, user_data: Dict, result, summary: Summary) -> str:
         """
         Prints test result to HTML document.
 
@@ -21,7 +21,6 @@ class HtmlResultOutput(HtmlOutput):
         :param result: BRunhilda test result from the test run
         :param summary: BRunhilda test result summary
         :return: HTML string
-        :rtype: str
         """
         result = copy.deepcopy(result)
 

@@ -1,6 +1,7 @@
 import brunhilda
 import os
 import sys
+from pathlib import Path
 
 if __name__ == '__main__':
     information = {
@@ -40,7 +41,7 @@ if __name__ == '__main__':
     #reporter.load_tests('dev/tests-visual.json')
     #reporter.load_tests('dev/tests-system.yaml')
     #reporter.load_tests('dev/tests-visual.yaml')
-    reporter.load_tests('dev/tests.yaml', 'dev/report.html')
+    reporter.load_tests('dev/tests.yaml', Path('dev/report.html'))
     reporter.load_issues('dev/issues.yaml')
     reporter.load_features('dev/features.yaml')
     reporter.justify_tests()

@@ -1,13 +1,13 @@
 import re
+from typing import Any, Dict, List
 
 
-def parse_tags(description):
+def parse_tags(description: str) -> Dict[str, str]:
     """
     Extracts tags from the test description.
 
-    :param str description: test description (docstring)
+    :param description: test description (docstring)
     :return: dictionary of tags, key is the tag name, value is the tag value
-    :rtype: Dict[str, str]
     """
     excluded_tags = ('steps', 'endsteps')
     tags = {}
@@ -33,11 +33,11 @@ def parse_tags(description):
     return tags
 
 
-def parse_requirements(description):
+def parse_requirements(description: str) -> List[str]:
     """
     Extracts requirements from the test description.
 
-    :param str description: test description (docstring)
+    :param description: test description (docstring)
     """
     specs = None
 
@@ -57,7 +57,7 @@ def parse_requirements(description):
     return specs
 
 
-def parse_steps(test_steps, description):
+def parse_steps(test_steps: List[Dict[str, Any]], description: str) -> List[Dict[str, Any]]:
     """
     Extracts test description without tags from the docstring.
 
@@ -116,11 +116,11 @@ def parse_steps(test_steps, description):
     return steps
 
 
-def parse_description(description):
+def parse_description(description: str) -> str:
     """
     Extracts test description without tags from the docstring.
 
-    :param str description: test description (docstring)
+    :param description: test description (docstring)
     """
     lines = []
     block_active = False

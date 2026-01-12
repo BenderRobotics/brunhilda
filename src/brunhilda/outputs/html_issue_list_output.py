@@ -16,7 +16,7 @@ class HtmlIssueListOutput(HtmlOutput):
         issues: Dict,
         test_plan_paths: Optional[Dict[str, str]] = None,
         user_data: Dict[str, str] = None
-    ):
+    ) -> str:
         """
         Prints issue list
 
@@ -24,7 +24,6 @@ class HtmlIssueListOutput(HtmlOutput):
         :param issues: BRunhilda issues
         :param user_data: additional data passed by a user
         :return: HTML string
-        :rtype: str
         """
         template = self.load_template('issue-list.html.jinja2')
         rendered = template.render(

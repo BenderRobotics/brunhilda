@@ -1,6 +1,7 @@
 import os
 import re
-from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union
+from pathlib import Path
+from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union, overload
 
 import simplejson as json
 import yaml
@@ -35,7 +36,14 @@ class Reporter:
         self._test_plan_paths = {'_': ''}
         self._user_data = user_data
 
-    def _load(self, path: str) -> Dict:
+    def _load(self, path: Union[str, Path]) -> Dict:
+        """
+        Load JSON or yaml file.
+
+        :param path: path to the file being loaded
+        :return: dictionary of values loaded from the file
+        """
+        path = str(path)
         print(f'... loading {path}')
 
         with open(path, 'r', encoding='utf-8') as f:
@@ -84,16 +92,32 @@ class Reporter:
                     test['comment'] = [comment for comment in comments if comment]
                     test['bug_id'] = list(bug_ids)
 
-    def load_tests(self, paths: Union[Tuple[str, str], List[Tuple[str, str]]]) -> None:
+    @overload
+    def load_tests(self, path: Union[str, Path], report_path: Union[str, Path] = '') -> None:
+        ...
+
+    @overload
+    def load_tests(self, *args: Union[str, Path]) -> None:
+        ...
+
+    def load_tests(self, *args: Union[str, Path]) -> None:
         """
         Loads serialized tests file and store path to their html report
 
-        :param paths: tuple or list of tuples with path to the test file and path to the test html report file
-        """
-        if not isinstance(paths, list):
-            paths = [paths]
+        Accepts variable number of arguments where:
+        - Odd arguments (1st, 3rd...) are paths to test files.
+        - Even arguments (2nd, 4th...) are paths to html reports.
 
-        for path, report_path in paths:
+        Example:
+            load_tests("run1.json", "run1.html", "run2.json", "run2.html")
+
+        :param path: path to the test file
+        :param report_path: path to the test html report file
+        """
+
+        for i in range(0, len(args), 2):
+            path = str(args[i])
+            report_path = str(args[i + 1] if i + 1 < len(args) else '')
 
             tests_list = self._load(path)['tests']
 
@@ -104,19 +128,27 @@ class Reporter:
 
             self._tests[path] = tests_list
 
-    def load_issues(self, paths: Union[List[str], str]) -> None:
-        """
-        Loads serialized issues file(s)
+    @overload
+    def load_issues(self, path: Union[str, Path]) -> None:
+        ...
 
-        :param paths: path or list of paths to the file(s)
-        """
-        if not isinstance(paths, list):
-            paths = [paths]
+    @overload
+    def load_issues(self, *paths: Union[str, Path]) -> None:
+        ...
 
+    def load_issues(self, *paths: Union[str, Path]) -> None:
+        """
+        Loads serialized issues file(s).
+
+        Accepts variable number of paths as arguments.
+
+        :param paths: path(s) to the file(s)
+        """
         for path in paths:
+            path = str(path)
             self._issues[path] = self._load(path)
 
-    def load_features(self, path: str) -> None:
+    def load_features(self, path: Union[str, Path]) -> None:
         """
         Loads serialized feature list
 
@@ -128,7 +160,8 @@ class Reporter:
         """
         Writes content to the given filename
 
-        :param filename: name of the file
+        :param name: name of the file
+        :param path: path to the file
         :param content: content of the file
         """
         dir_name = os.path.dirname(os.path.abspath(path))
@@ -147,6 +180,7 @@ class Reporter:
         Collects all requirements mentioned in the testsuite
 
         :param testsuite: testsuite to process
+        :return: list of collected requirements from test suite
         """
         requirements = set()
 
@@ -170,6 +204,7 @@ class Reporter:
         Collects summary about the testsuite
 
         :param testsuite: testsuite to process
+        :return: test suite summary
         """
         summary = Summary()
 
@@ -238,7 +273,7 @@ class Reporter:
 
     def print_requirements_summary(
         self,
-        path: str,
+        path: Union[str, Path],
         name: str = 'Requirements Coverage Summary',
         preamble: Union[Sequence[str], str, None] = None
     ) -> None:
@@ -249,6 +284,7 @@ class Reporter:
         :param name: name of the produced report used in title
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
+        path = str(path)
         formater = HtmlReqSummaryOutput(preamble=preamble)
         issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
         test_plan_paths = {level: rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
@@ -266,7 +302,7 @@ class Reporter:
 
     def print_user_stories_summary(
         self,
-        path: str,
+        path: Union[str, Path],
         name: str = 'User stories Coverage Summary',
         preamble: Union[Sequence[str], str, None] = None
     ) -> None:
@@ -282,6 +318,7 @@ class Reporter:
         except ImportError as ex:
             raise ImportError(f'Missing pip dependencies. Reason: {ex}')
 
+        path = str(path)
         formater = HtmlUserStoriesSummaryOutput(preamble=preamble)
         issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
         test_plan_paths = {level: rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
@@ -298,7 +335,10 @@ class Reporter:
         self._write_file(name, path, output)
 
     def print_test_summary(
-        self, path: str, name: str = 'Test Summary Report', preamble: Union[Sequence[str], str, None] = None
+        self,
+        path: Union[str, Path],
+        name: str = 'Test Summary Report',
+        preamble: Union[Sequence[str], str, None] = None
     ) -> None:
         """
         Prints test summary report.
@@ -307,6 +347,7 @@ class Reporter:
         :param name: name of the produced report used in title
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
+        path = str(path)
         formater = HtmlTestSummaryOutput(preamble=preamble)
         issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
         test_plan_paths = {level: rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
@@ -321,7 +362,6 @@ class Reporter:
         output = formater.print(
             name=name,
             testsuite=updated_tests,
-            requirements=self._collect_requirements(self._tests),
             summary=self._collect_summary(self._tests),
             issue_list_path=issue_list_path,
             test_plan_paths=test_plan_paths,
@@ -331,7 +371,7 @@ class Reporter:
 
     def print_test_plan(
         self,
-        path: str,
+        path: Union[str, Path],
         name: str = 'Test Plan',
         preamble: Union[Sequence[str], str, None] = None,
         level: Union[Tuple[str, ...], str, None] = None
@@ -344,6 +384,8 @@ class Reporter:
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         :param level: level to filter the tests
         """
+        path = str(path)
+
         if isinstance(level, (list, set, tuple, frozenset)):
             levels = level
         elif isinstance(level, str):
@@ -362,7 +404,10 @@ class Reporter:
         self._write_file(name, path, output)
 
     def print_issue_list(
-        self, path: str, name: str = 'List of Issues', preamble: Union[Sequence[str], str, None] = None
+        self,
+        path: Union[str, Path],
+        name: str = 'List of Issues',
+        preamble: Union[Sequence[str], str, None] = None
     ) -> None:
         """
         Prints list of issues with justifications.
@@ -371,6 +416,7 @@ class Reporter:
         :param name: name of the output file
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
+        path = str(path)
         self._issue_list_path = path
         formater = HtmlIssueListOutput(preamble=preamble, path=path)
         self._add_test_run_report_path_to_issues()
@@ -383,7 +429,7 @@ class Reporter:
 
     def print_feature_summary(
         self,
-        path: str,
+        path: Union[str, Path],
         name: str = 'Summary of Features',
         preamble: Union[Sequence[str], str, None] = None,
         feature_coverage_policy: Union[FeatureCoveragePolicy, Callable[[List[str]], str]] = FeatureCoveragePolicy.STRICT
@@ -395,6 +441,7 @@ class Reporter:
         :param name: name of the output file
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
+        path = str(path)
         self._feature_list_path = path
         formater = HtmlFeatureSummaryOutput(preamble=preamble, path=path)
         test_plan_paths = {level: rel_path(path, plan_path) for level, plan_path in self._test_plan_paths.items()}
@@ -407,17 +454,20 @@ class Reporter:
         )
         self._write_file(name, path, output)
 
-    def add_index_link(self, path: str, name: str) -> None:
+    def add_index_link(self, path: Union[str, Path], name: str) -> None:
         """
         Adds not generated file link to index page.
 
         :param path: path to the file
         :param name: name of the file that will be displayed on index page
         """
+        path = str(path)
         self._outputs.append((name, path, False))
         print(f'... added index page file {path}')
 
-    def print_index(self, path: str, name: str = 'Index', preamble: Union[Sequence[str], str, None] = None) -> None:
+    def print_index(
+        self, path: Union[str, Path], name: str = 'Index', preamble: Union[Sequence[str], str, None] = None
+    ) -> None:
         """
         Prints index file for the generated files
 
@@ -425,6 +475,7 @@ class Reporter:
         :param name: name of the output file
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
+        path = str(path)
         formater = HtmlIndexOutput(preamble=preamble)
         file_list = []
 

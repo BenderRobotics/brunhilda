@@ -1,4 +1,6 @@
 import unittest
+from pathlib import Path
+from typing import Optional, Union
 
 from .parser import parse_tags
 from .tag_filter import eval_tags
@@ -18,7 +20,13 @@ def iter_suite(suite: unittest.TestSuite):
 
 class BRunhildaTestLoader:
 
-    def discover(self, start_dir, pattern='test*.py', top_level_dir=None, tag_filter=None):
+    def discover(
+        self,
+        start_dir: Union[str, Path],
+        pattern='test*.py',
+        top_level_dir: Optional[Union[str, Path]] = None,
+        tag_filter: Optional[str] = None
+    ) -> unittest.TestSuite:
         """Find and return all test modules from the specified start
         directory, recursing into subdirectories to find them and return all
         tests found within them. Only test files that match the pattern will
@@ -50,7 +58,10 @@ class BRunhildaTestLoader:
         tests = unittest.TestSuite()
 
         for pattern in patterns:
-            suite = unittest.defaultTestLoader.discover(start_dir, pattern.strip(), top_level_dir)
+            suite = unittest.defaultTestLoader.discover(
+                str(start_dir), pattern.strip(),
+                str(top_level_dir) if top_level_dir else None
+            )
 
             for test in iter_suite(suite):
                 if tag_filter is None:
@@ -65,17 +76,3 @@ class BRunhildaTestLoader:
         # this ugly thing is added for the compatibility with Brest which expects suite in the suite
         suite = unittest.TestSuite(tests=[tests])
         return unittest.TestSuite(tests=[suite])
-
-    def _filter_by_tags(self, conditions, tags):
-        """
-        Checks if given tags matches the set tag_filter
-
-        :param dict tags: parsed tags from the description
-        :return: True if the tags matching filter, False if not
-        """
-        if conditions is not None:
-            for tag, value in conditions.items():
-                if (tag not in tags) or ((tag in tags) and (value not in tags[tag])):
-                    return False
-
-        return True
