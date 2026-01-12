@@ -196,10 +196,15 @@ TAGS = {
         ('D<=20s', True),
         ('F<=5s', False),
         ('G<=5s', False),
+        ('?A', ValueError),
     ]
 )
 def test_tag_filter_eval_condition(condition, expected_result):
-    assert tag_filter.eval_condition(condition, TAGS) == expected_result
+    if not isinstance(expected_result, type):
+        assert tag_filter.eval_condition(condition, TAGS) == expected_result
+    else:
+        with pytest.raises(expected_result):
+            tag_filter.eval_condition(condition, TAGS)
 
 
 @pytest.mark.parametrize(

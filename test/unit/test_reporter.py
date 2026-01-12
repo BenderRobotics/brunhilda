@@ -56,15 +56,15 @@ def test_load_unsupported(reporter):
 # --- Testing load_tests ---
 
 
-def test_load_tests_single_tuple(reporter):
-    """Test loading a single test file input as a tuple."""
+def test_load_tests(reporter):
+    """Test loading a single test file input."""
     path = 'tests/run.json'
     report = 'reports/run.html'
 
     mock_test_data = {'tests': [{'test_id': 'T1', 'level': 1}]}
 
     with patch.object(reporter, '_load', return_value=mock_test_data) as mock_load:
-        reporter.load_tests((path, report))
+        reporter.load_tests(path, report)
 
         mock_load.assert_called_once_with(path)
 
@@ -74,15 +74,13 @@ def test_load_tests_single_tuple(reporter):
         assert stored_data[0]['test_id_with_level'] == 'T11'
 
 
-def test_load_tests_list_of_tuples(reporter):
-    """Test loading multiple test files input as a list."""
-    inputs = [('run1.json', 'rep1.html'), ('run2.json', 'rep2.html')]
-
+def test_load_tests_multiple(reporter):
+    """Test loading multiple test files input."""
     data1 = {'tests': [{'test_id': 'T1', 'level': 1}]}
     data2 = {'tests': [{'test_id': 'T2', 'level': 2}]}
 
     with patch.object(reporter, '_load', side_effect=[data1, data2]) as mock_load:
-        reporter.load_tests(inputs)
+        reporter.load_tests('run1.json', 'rep1.html', 'run2.json', 'rep2.html')
 
         assert mock_load.call_count == 2
         mock_load.assert_has_calls([call('run1.json'), call('run2.json')])
@@ -110,17 +108,14 @@ def test_load_issues_single_path(reporter):
         assert reporter._issues[path] == mock_data
 
 
-def test_load_issues_list_of_paths(reporter):
-    """Test loading multiple issues files input as a list."""
-
-    paths = ['data/issues_part1.json', 'data/issues_part2.json']
-
+def test_load_issues_multiple_paths(reporter):
+    """Test loading multiple issues files input."""
     data1 = {'failures': ['issue1']}
     data2 = {'failures': ['issue2']}
 
     with patch.object(reporter, '_load', side_effect=[data1, data2]) as mock_load:
 
-        reporter.load_issues(paths)
+        reporter.load_issues('data/issues_part1.json', 'data/issues_part2.json')
 
         assert mock_load.call_count == 2
         mock_load.assert_has_calls([call('data/issues_part1.json'), call('data/issues_part2.json')])

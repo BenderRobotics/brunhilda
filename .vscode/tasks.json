@@ -2,19 +2,30 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "test-lint",
+            "label": "static-type-check",
             "type": "shell",
             "command": "mypy src/brunhilda",
             "problemMatcher": []
         },
         {
-            "label": "test-unit",
+            "label": "test-with-coverage",
             "type": "shell",
-            "command": "source ${workspaceFolder}/venv/bin/activate && pytest test/unit --pyargs --tb=short --cov=. --cov-config=.coveragerc --cov-report html --cov-report term:skip-covered -s --junitxml=.coverage_html/junit.xml",
-            "windows": {
-                "command": "${workspaceFolder}/venv/Scripts/activate.bat; pytest test/unit --pyargs --tb=short --cov=. --cov-config=.coveragerc --cov-report html --cov-report term:skip-covered -s --junitxml=.coverage_html/junit.xml"
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "-m",
+                "pytest",
+                "--cov=src",
+                "test"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
             },
-            "problemMatcher": []
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$python"
         }
     ]
 }

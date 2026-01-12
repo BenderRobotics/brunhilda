@@ -539,7 +539,7 @@ source venv/bin/activate    # Linux
 venv\Scripts\activate.bat   # Windows
 ```
 
-After that you should see `(venv`)` as a prefix to your command line cursor. You
+After that you should see `(venv)` as a prefix to your command line cursor. You
 have to repeat activation every time you close the terminal. To install the
 package in development mode call:
 
@@ -555,3 +555,12 @@ pip install -e .[doorstop-user-stories]
 
 Now you can use `BRunhilda` package directly from the command line and all
 changes to the source code are instantly applied.
+
+### Visual Studio Code tasks
+
+To speed up the execution of useful operations for development, vscode tasks are implemented.
+
+- `static-type-check` Static type checking using `mypy`
+- `test-with-coverage` Running unit tests including measuring code coverage.
+
+> Tasks can be run within vscode `Terminal -> Run Tasks...`
