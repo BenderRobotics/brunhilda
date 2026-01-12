@@ -12,6 +12,7 @@ except ImportError:
 
 class HtmlReqSummaryOutput(HtmlOutput):
     """
+    Generates an HTML report summarizing requirements.
     """
 
     def print(

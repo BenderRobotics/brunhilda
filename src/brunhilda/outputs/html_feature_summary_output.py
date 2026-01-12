@@ -25,6 +25,11 @@ class FeatureCoveragePolicy(Enum):
 
 class HtmlFeatureSummaryOutput(HtmlOutput):
     """
+    Generates an HTML report summarizing feature coverage based on test results.
+
+    This class processes the test suite to link individual tests (and subtests)
+    to specific features or requirements. It evaluates the overall result of each
+    feature group using a specified `FeatureCoveragePolicy` (e.g., STRICT, MAJORITY).
     """
 
     def _flatten_tests(self, testsuite: Dict) -> List:
@@ -32,7 +37,8 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
         Converts test-suite into list of tests.
 
         If there are sub-tests in the test, it puts individual sub-tests to the list.
-        :param testsuite: testsuite
+
+        :param testsuite: testsuite dict
         :return: list of tests
         """
         flat_tests = []
@@ -238,6 +244,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
         :param features: collected features
         :param testsuite: suite of the executed tests
         :param test_plan_path: path to the test plans
+        :param feature_coverage_policy: evaluation policy
         :return: HTML string
         """
         entries = OrderedDict()

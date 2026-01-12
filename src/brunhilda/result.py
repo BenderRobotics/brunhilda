@@ -226,6 +226,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def _get_test_id(self, test: unittest.TestCase) -> str:
         """
         Gets test ID in the unified format
+
+        :param test: test case whose ID will be get
+        :return: test ID
         """
         test_id = test.id()
         return '.'.join(chunk for chunk in test_id.split('.') if chunk != test.__module__)
@@ -234,6 +237,11 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def _render_img(cls, img, fmt='jpg', height=612) -> Optional[Tuple[Union[bytes, 'numpy.ndarray'], str]]:
         """
         Tries to create renderers for OpenCV, PIL and PyPlot images.
+
+        :param img: image to be rendered
+        :param fmt: format of the image
+        :param height: height of the image
+        :return: tuple of rendered image and mimetype
         """
         if not cls._renderers:
             cls._renderers = []
@@ -331,6 +339,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         :param filename: name of the file
         :param image: image bytes
+        :return: path of saved image
         """
         invalid_path_characters = ("'", '"', '/', '\\', '?', '<', '>', ':', '|', '*')
 
@@ -370,6 +379,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def startTest(self, test: unittest.TestCase):
         """
         This method is called before execution of the given test.
+
+        :param test: executed test
         """
         testcase_name = test.__class__.__name__
         # Check if the test case class name was already here,
@@ -414,6 +425,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def stopTest(self, test: unittest.TestCase):
         """
         This method is called after execution of the given test
+
+        :param test: executed test
         """
         testcase_name = test.__class__.__name__
         self.test_execution_time = time.perf_counter() - self.test_start_time
@@ -479,12 +492,17 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def addSuccess(self, test: unittest.TestCase):
         """
         This method is called after successfull end of the test method.
+
+        :param test: successful test
         """
         super().addSuccess(test)
 
     def addError(self, test: unittest.TestCase, err):
         """
         This method is called when error occurs.
+
+        :param test: errored test
+        :param err: test error
         """
         super().addError(test, err)
 
@@ -521,6 +539,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def addFailure(self, test: unittest.TestCase, err):
         """
         This method is called upon assertion failure.
+
+        :param test: failed test
+        :param err: test error
         """
         super().addFailure(test, err)
 
@@ -550,6 +571,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def addSubTest(self, test: unittest.TestCase, subtest: unittest.TestCase, err):
         """
         This method is called after sub-test is done.
+
+        :param test: test
+        :param subtest: tests subtest
+        :param err: test error
         """
         if not hasattr(subtest, 'extra'):
             subtest.extra = []
@@ -608,6 +633,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def addSkip(self, test: unittest.TestCase, reason: str):
         """
         This method is called after skip of the test.
+
+        :param test: skipped test
+        :param reason: reason of test skip
         """
         super().addSkip(test, reason)
         # When sub test is skipped, this method is called as well, so only way how to
@@ -629,6 +657,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def addExpectedFailure(self, test: unittest.TestCase, err):
         """
         This method is called when test marked with @expectedFailure decorator fails.
+
+        :param test: expected failure test
+        :param err: test error
         """
         super().addExpectedFailure(test, err)
         self._errors_strings.append(self._exc_info_to_string(err, test))
@@ -637,6 +668,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def addUnexpectedSuccess(self, test: unittest.TestCase):
         """
         This method is called when test marked with @expectedFailure decorator succeeds.
+
+        :param test: unexpectly succeeded test
         """
         super().addUnexpectedSuccess(test)
         self._last_result = UNEXPECTED_SUCCESS
@@ -654,10 +687,12 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         """
         Adds executed test to the trace record
 
-        :param str testcase_name: name of the test case class
-        :param str test_name: name of the test method
+        :param testcase_name: name of the test case class
+        :param test_id: id of the test
+        :param test_steps: steps of the test
         :param description: test docstring
         :param result: result of the test execution
+        :param comment: test comment
         :param subtests: all subtests of this test
         """
         requirements = parse_requirements(description)
@@ -701,6 +736,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def _serialize(self, content, filename: str):
         """
         Serializes given content into yaml/json file
+
+        :param content: content to be serialized
+        :param filename: name of new serialized file
         """
         if filename.lower().endswith(('yaml', 'yml')):
             yaml.add_representer(str, yaml_str_presenter)
@@ -717,6 +755,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         Modifies paths in the issues to be relative to the given filename
 
         :param base_path: new path to be used as a base path
+        :return: updated issues
         """
         issues = deepcopy(self._issues)
 
@@ -753,7 +792,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             'tests': self._tests,
             'run':
                 {
-                    'user data': self._user_data,
+                    'user-data': self._user_data,
                     'date-time': self.run_start_timestamp,
                     'level': self._name,
                     'dut': self._dut
@@ -765,6 +804,9 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
     def print(self, output_formater: Output, filename: str):
         """
         Prints test results with the given result output.
+
+        :param output_formater: output formater
+        :param filename: name of the new file
         """
         if filename is not None:
             output_formater.path = filename

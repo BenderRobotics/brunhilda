@@ -7,10 +7,16 @@ from .output import Output
 
 
 class JUnitResultOutput(Output):
+    """
+    Generates test execution results in JUnit XML format.
+    """
 
     def _format_terminal(self, text: str) -> str:
         """
         Removes colorama terminal output control sequence from the text
+
+        :param text: input text containing potential terminal control sequences
+        :return: cleaned text without formatting codes
         """
         CSI = '\033['  # this is start of the ASCII escape sequences
         start = 0
@@ -28,9 +34,8 @@ class JUnitResultOutput(Output):
         """
         Replaces invalid XML characters with the '?'
 
-        :param str text: text to clean up
+        :param text: text to clean up
         :return: cleaned text
-        :rtype: str
         """
         illegal_characters = [
             (0x00, 0x08), (0x0B, 0x0C), (0x0E, 0x1F), (0x7F, 0x84), (0x86, 0x9F), (0xFDD0, 0xFDDF), (0xFFFE, 0xFFFF),
@@ -46,6 +51,15 @@ class JUnitResultOutput(Output):
         return text
 
     def print(self, env_info: Dict, user_data: Dict[str, Any], result: Dict, summary: Summary) -> str:
+        """
+        Prints test result to JUnit XML.
+
+        :param env_info: environment info dictionary
+        :param user_data: user data dictionary
+        :param result: test result from the test run
+        :param summary: BRunhilda test result summary
+        :return: JUnit XML string
+        """
         result = copy.deepcopy(result)
 
         for case in sorted(result['testcases'].values(), key=lambda item: item['id']):

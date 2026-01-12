@@ -7,6 +7,15 @@ from .output import Output
 
 
 class HtmlOutput(Output):
+    """
+    Base class for all HTML-based output generators.
+
+    It provides utility methods for:
+    - Loading and embedding HTML preambles.
+    - Converting Python docstrings (RST) into HTML.
+    - Formatting Python logging records with CSS classes.
+    - Converting ANSI terminal color codes into HTML `<span>` elements with corresponding classes.
+    """
 
     def __init__(self, preamble: Union[Sequence[str], str, None] = None, path='output.html'):
         """
@@ -27,8 +36,9 @@ class HtmlOutput(Output):
     def _format_doc(self, description: str) -> str:
         """
         This method formats python docstring to HTML.
-        :param str description: python docstring of the method or class
-        :return: HTML string representation.
+
+        :param description: python docstring of the method or class
+        :return: HTML string representation
         """
         if not isinstance(description, str):
             return ''
@@ -46,6 +56,9 @@ class HtmlOutput(Output):
     def _format_logging(self, text: str) -> str:
         """
         Wraps output of the python logging into HTML spans with the severity classes.
+
+        :param text: python log string
+        :return: HTML string
         """
         formatting = {
             'DEBUG': '<span class="log log--debug">',
@@ -66,6 +79,9 @@ class HtmlOutput(Output):
     def _format_terminal(self, text: str) -> str:
         """
         Converts colorama terminal output into HTML string with the classes.
+
+        :param text: colorama terminal string
+        :return: HTML string with classes
         """
         formatting = {
             colorama.Fore.BLACK: '<span class="fore fore--black">',

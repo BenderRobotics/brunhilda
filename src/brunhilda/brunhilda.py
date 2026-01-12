@@ -66,6 +66,9 @@ class BRunhilda(unittest.TextTestRunner):
     def run(self, test: Union[TestSuite, TestCase]) -> BRunhildaTestResult:
         """
         Run the given test case or test suite.
+
+        :param test: test suite or case to be run
+        :return: test result
         """
         return super().run(test)  # type: ignore
 
@@ -89,6 +92,11 @@ class BRunhilda(unittest.TextTestRunner):
         return result
 
     def _makeResult(self) -> BRunhildaTestResult:
+        """
+        Overridden method for creating test result.
+
+        :return: formated test result
+        """
         return BRunhildaTestResult(
             self.stream,
             self.descriptions,
@@ -101,7 +109,10 @@ class BRunhilda(unittest.TextTestRunner):
 
     def save_html_report(self, result: BRunhildaTestResult, output_path: Union[str, Path]):
         """
-        Prints the HTML report of the last result
+        Prints the HTML report of the result.
+
+        :param result: result whose report will be printed
+        :param output_path: printed report path
         """
         try:
             result.print(HtmlResultOutput(), str(output_path))
@@ -110,7 +121,10 @@ class BRunhilda(unittest.TextTestRunner):
 
     def save_junit_report(self, result: BRunhildaTestResult, output_path: Union[str, Path]):
         """
-        Prints the jUnit report of the last result
+        Prints the jUnit report of the result.
+
+        :param result: result whose report will be printed
+        :param output_path: printed report path
         """
         try:
             result.print(JUnitResultOutput(), str(output_path))
@@ -119,7 +133,10 @@ class BRunhilda(unittest.TextTestRunner):
 
     def save_issues(self, result: BRunhildaTestResult, output_path: Union[str, Path]):
         """
-        Serializes issues from the last result.
+        Serializes issues from the result.
+
+        :param result: result whose report will be printed
+        :param output_path: printed file path
         """
         try:
             result.serialize_issues(str(output_path))
@@ -128,7 +145,10 @@ class BRunhilda(unittest.TextTestRunner):
 
     def save_tests(self, result: BRunhildaTestResult, output_path: Union[str, Path]):
         """
-        Serializes executed tests from the last result.
+        Serializes executed tests from the result.
+
+        :param result: result whose report will be printed
+        :param output_path: printed file path
         """
         try:
             result.serialize_tests(str(output_path))

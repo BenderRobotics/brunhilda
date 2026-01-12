@@ -7,6 +7,7 @@ def rel_path(base_path: str, target_path: str) -> str:
 
     :param base_path: path (filename) from where the path originates
     :param target_path: path (filename) where the target is located
+    :return: relative path by given base and target path
     """
     target_dir = os.path.dirname(target_path)
     base_dir = os.path.dirname(base_path)

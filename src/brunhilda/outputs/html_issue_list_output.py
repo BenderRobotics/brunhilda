@@ -9,6 +9,9 @@ except ImportError:
 
 
 class HtmlIssueListOutput(HtmlOutput):
+    """
+    Generates an HTML issue list page listing all tests issues.
+    """
 
     def print(
         self,

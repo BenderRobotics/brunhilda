@@ -11,6 +11,9 @@ except ImportError:
 
 
 class HtmlResultOutput(HtmlOutput):
+    """
+    Generates a detailed HTML report of the executed test run.
+    """
 
     def print(self, env_info: Dict, user_data: Dict, result, summary: Summary) -> str:
         """
@@ -18,7 +21,7 @@ class HtmlResultOutput(HtmlOutput):
 
         :param env_info: environment info dictionary
         :param user_data: user data dictionary
-        :param result: BRunhilda test result from the test run
+        :param result: test result from the test run
         :param summary: BRunhilda test result summary
         :return: HTML string
         """

@@ -12,13 +12,13 @@ except ImportError:
 
 class HtmlTestSummaryOutput(HtmlOutput):
     """
+    Generates an HTML report summarizing all executed tests from a test run.
     """
 
     def print(
         self,
         name: str,
         testsuite: Dict,
-        requirements: List[str],
         summary: Summary,
         issue_list_path: Optional[str] = None,
         test_plan_paths: Optional[Dict[str, str]] = None,
@@ -46,7 +46,6 @@ class HtmlTestSummaryOutput(HtmlOutput):
             name=name,
             preamble=self._include_preamble,
             tests=entries,
-            requirements=requirements,
             summary=summary,
             issue_list_path=issue_list_path,
             test_plan_paths=test_plan_paths,

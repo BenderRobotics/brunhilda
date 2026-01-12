@@ -38,6 +38,7 @@ def parse_requirements(description: str) -> List[str]:
     Extracts requirements from the test description.
 
     :param description: test description (docstring)
+    :return: list of test requirements
     """
     specs = None
 
@@ -61,7 +62,9 @@ def parse_steps(test_steps: List[Dict[str, Any]], description: str) -> List[Dict
     """
     Extracts test description without tags from the docstring.
 
-    :param str description: test description (docstring)
+    :param test_steps: list of executed steps
+    :param description: test description (docstring)
+    :return: list of parsed test steps enriched with execution results.
     """
     steps = []
     steps_active = False
@@ -121,6 +124,7 @@ def parse_description(description: str) -> str:
     Extracts test description without tags from the docstring.
 
     :param description: test description (docstring)
+    :return: description text stripped of tags and step blocks
     """
     lines = []
     block_active = False

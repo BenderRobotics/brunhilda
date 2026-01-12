@@ -19,6 +19,13 @@ def _quote_path(path: str) -> str:
 
 
 class Output:
+    """
+    Base class for all result output generators.
+
+    Responsible for setting up the Jinja2 environment, loading templates from
+    the file system, and injecting common global helper functions (like `now`,
+    `rel_path`, `quote`) into the template context.
+    """
 
     def load_template(self, template: str) -> jinja2.Template:
         """

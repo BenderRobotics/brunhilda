@@ -11,6 +11,11 @@ Result = Literal['PASSED', 'FAILED', 'ERRORED', 'JUSTIFIED', 'SKIPPED', 'UNEXPEC
 
 @dataclass(eq=True, unsafe_hash=True)
 class ResultsSummary:
+    """
+    Dataclass representing summary of results.
+
+    Contains number of passed, failed, ... tests.
+    """
     passed: int
     failed: int
     errored: int
@@ -56,6 +61,11 @@ class ResultsSummary:
         return (self.unexpected_successes / self.total * 100.0) if (self.total != 0) else 0.0
 
     def __add__(self, result: Result):
+        """
+        Add result to summary.
+
+        :param result: result that will be add to summary
+        """
         result = str(result).upper().replace(' ', '-').replace('_', '-').strip()
 
         if result == 'PASSED':
@@ -81,6 +91,9 @@ class ResultsSummary:
 
 
 class Summary:
+    """
+    Class representing summary of test run.
+    """
 
     def __init__(self):
         self.results = ResultsSummary(0, 0, 0, 0, 0, 0, 0, 0)

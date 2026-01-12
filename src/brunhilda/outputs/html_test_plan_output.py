@@ -10,6 +10,9 @@ except ImportError:
 
 
 class HtmlTestPlanOutput(HtmlOutput):
+    """
+    Generates an HTML report containing test plan description.
+    """
 
     def print(
         self, name: str, testsuite: Dict, levels: Optional[Tuple[str, ...]], user_data: Dict[str, str] = None
@@ -19,6 +22,7 @@ class HtmlTestPlanOutput(HtmlOutput):
 
         :param name: name of the output report
         :param testsuite: BRunhilda test suite,
+        :param levels: level of tests which plan will be printed
         :param user_data: additional data passed by a user
         :return: HTML string
         """

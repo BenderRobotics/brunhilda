@@ -9,6 +9,8 @@ from .tag_filter import eval_tags
 def iter_suite(suite: unittest.TestSuite):
     """
     Iterate through test suites, and yield individual tests
+
+    :param suite: test suite to be iterated
     """
     for test in suite:
         if isinstance(test, unittest.TestSuite):
@@ -53,6 +55,12 @@ class BRunhildaTestLoader:
 
         Paths are sorted before being imported to ensure reproducible execution
         order even on filesystems with non-alphabetical ordering like ext3/4.
+
+        :param start_dir: directory where discovery will start
+        :param pattern: shell style pattern of searching test files
+        :param top_level_dir: top level directory
+        :param tag_filter: tag filter condition
+        :return: test suite
         """
         patterns = pattern.split(',')
         tests = unittest.TestSuite()
