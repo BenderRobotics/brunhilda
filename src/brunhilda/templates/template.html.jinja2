@@ -256,7 +256,15 @@
                                             </thead>
                                             <tbody>
                                                 {% for subtest in test.subtests %}
-                                                <tr class="subtest subtest--{{ subtest.result|lower|replace(' ', '-') }}"
+                                                {% set ns = namespace(has_image=False) %}
+                                                {% if subtest.extra %}
+                                                    {% for extra in subtest.extra %}
+                                                        {% if extra.type and (extra.type.startswith('image/') or extra.type == 'image-reference') %}
+                                                            {% set ns.has_image = True %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                                <tr class="subtest subtest--{{ subtest.result|lower|replace(' ', '-') }} {% if ns.has_image %}subtest__has_image{% endif %}"
                                                     id="{{ subtest.id|replace(' ', '_') }}">
                                                     <td class="subtest__num">{{ subtest.num }}</td>
                                                     <td class="subtest__name">{{ subtest.name }}</td>

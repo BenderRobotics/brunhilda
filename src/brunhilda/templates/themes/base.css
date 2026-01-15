@@ -1329,4 +1329,14 @@ ol.lowerroman {
     white-space: pre-wrap;
     word-break: break-all;
     min-width: 20rem;
+    line-height: normal; /* Hack for hiding scrollbar (overflow-y alone doesn't work) */
+}
+
+.subtest__has_image .subtest__detail {
+    height: 1px;
+}
+
+.subtest__has_image .subtest__detail pre {
+    height: 100%;
+    max-height: none;
 }
