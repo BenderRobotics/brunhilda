@@ -200,7 +200,7 @@ def test_threshold_policy(test_input, expected_result):
                 'ERRORED'
             ], 'ERRORED'
         ),
-        ([], 'EMPTY'),
+        ([], 'NOT-EXECUTED'),
     ]
 )
 def test_result(test_input, expected_result):

@@ -39,13 +39,13 @@ Test suite `dryrun` allows to generate artifacts without actually executing the 
 to create the reports and do not want to execute the entire test suite.
 
 ```python
-    loader = brunhilda.BRunhildaTestLoader()
-    suite = loader.discover('.', pattern='test*.py')
-    result = runner.dryrun(suite)
-    runner.save_issues(result, 'issues.yaml')
-    runner.save_tests(result, 'tests.yaml')
-    runner.save_junit_report(result, 'report.junit')
-    runner.save_html_report(result, 'report.html')
+loader = brunhilda.BRunhildaTestLoader()
+suite = loader.discover('.', pattern='test*.py')
+result = runner.dryrun(suite)
+runner.save_issues(result, 'issues.yaml')
+runner.save_tests(result, 'tests.yaml')
+runner.save_junit_report(result, 'report.junit')
+runner.save_html_report(result, 'report.html')
 ```
 
 ### Extended Test Docstring format
@@ -312,7 +312,7 @@ import sys
 import brunhilda
 
 # create the test runner
-runner = brunhilda.BRunhilda(user_data={'version': '1.0.0'},    # this is
+runner = brunhilda.BRunhilda(user_data={'version': '1.0.0'},
                              verbosity=3,
                              stream=sys.stdout,
                              name='system',
@@ -345,8 +345,7 @@ class brunhilda.reporter.Reporter(requirements: List[str] = [],
                                   user_stories: List[Item] = [])
 ```
 
-Reporter class. `requirements` is a list of requirements ID's, `user_data` dictionary is rendered as a table at the top of
-produced reports. `user_stories` is a list of [doorstop](https://doorstop.readthedocs.io/en/latest/) Item requirements.
+Reporter class. `requirements` is a list of requirements ID's, `user_data` dictionary is rendered as a table at the top of produced reports. `user_stories` is a list of [doorstop](https://doorstop.readthedocs.io/en/latest/) Item requirements.
 
 - `brunhilda.reporter.Reporter.load_tests` loads test execution artifact created by `brunhilda.BRunhilda.save_tests` method and store tests html report created by `brunhilda.BRunhilda.save_html_report`.
 - `brunhilda.reporter.Reporter.load_issues` loads test execution artifact created by `brunhilda.BRunhilda.save_issues` method.
@@ -391,6 +390,17 @@ reporter.add_index_link('table.xlsx', 'Table')
 reporter.print_index('index.html')
 ```
 
+Dry run results can be combined with actually executed tests, this is usefull in a situation where the customer requests only a part of the suite. Keep in mind that the dry run and executed suite **must be disjoint**.
+
+```python
+executed_suite = loader.discover('dev', pattern='test*.py', tag_filter='priority!=high || !priority')
+dryrun_suite = loader.discover('dev', pattern='test*.py', tag_filter='priority==high')
+...
+reporter.load_tests('dev/dry_run_tests.yaml', Path('dev/dry_run_report.html'))
+reporter.load_tests('dev/executed_tests.yaml', Path('dev/report.html'))
+```
+
+
 #### Custom colors
 
 BRunhilda Reporter supports custom color pallete for pie charts. In generated html files are constants for each pie chart (`colorPaletteTestResult`, `colorPaletteTestExecution`, `colorPaletteTestLevels`) which defines colors for relevant pie chart.
@@ -404,7 +414,8 @@ BRunhilda Reporter supports custom color pallete for pie charts. In generated ht
       justified: 'orange',
       skipped: '#74ad09',
       expectedFailure: '#4000f0',
-      unexpectedSuccess: '#00c8c8'
+      unexpectedSuccess: '#00c8c8',
+      notExecuted: '#808080'
   };
 
   const colorPaletteTestExecution = {
@@ -441,8 +452,7 @@ reporter.print_test_summary('tests.html', preamble="preamble.html")
 
 ### Features
 
-BRunhilda supports linking the DUT features to the individual tests. Features are described in YAML with the
-following structure:
+BRunhilda supports linking DUT features to individual test requirements. Each feature can contain a number of requirements. Features linked to a specific requirement are evaluated based on the tests covering that requirement. Features are described in YAML with the following structure:
 
 ```yaml
 feature group 1:            # group of features
@@ -460,6 +470,8 @@ feature group 2:
 - feature C:
     ...
 ```
+
+> Tests can be linked to requirements using the `@spec` tag.
 
 #### Features evaluation policy
 

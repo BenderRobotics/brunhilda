@@ -29,23 +29,24 @@ class TestResultsSummary:
     def test_percentages_calculation(self):
         summary = ResultsSummary(
             passed=50,
-            failed=20,
+            failed=18,
             errored=10,
             skipped=10,
             justified=5,
             expected_failures=4,
             unexpected_successes=1,
-            not_executed=0
+            not_executed=2
         )
 
         assert summary.total == 100
         assert summary.pct_passed == 50.0
-        assert summary.pct_failed == 20.0
+        assert summary.pct_failed == 18.0
         assert summary.pct_errored == 10.0
         assert summary.pct_skipped == 10.0
         assert summary.pct_justified == 5.0
         assert summary.pct_expected_failures == 4.0
         assert summary.pct_unexpected_successes == 1.0
+        assert summary.pct_not_executed == 2.0
 
     def test_percentages_division_by_zero(self):
         summary = ResultsSummary(0, 0, 0, 0, 0, 0, 0, 0)
@@ -69,7 +70,7 @@ class TestResultsSummary:
             ('expected_failure', 'expected_failures'),
             ('UNEXPECTED-SUCCESS', 'unexpected_successes'),
             ('unexpected success', 'unexpected_successes'),
-            ('EMPTY', 'not_executed'),
+            ('NOT-EXECUTED', 'not_executed'),
             ('unknown', ValueError),  # Test error raise
         ]
     )
@@ -135,10 +136,10 @@ class TestSummary:
             ({
                 'skipped': 5
             }, 'SKIPPED'),
-            ({}, 'EMPTY'),
+            ({}, 'NOT-EXECUTED'),
             ({
                 'not_executed': 5
-            }, 'EMPTY'),
+            }, 'NOT-EXECUTED'),
         ]
     )
     def test_overall_result_logic(self, counts, expected_result):

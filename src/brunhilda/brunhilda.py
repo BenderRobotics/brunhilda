@@ -9,7 +9,7 @@ from unittest.suite import TestSuite
 from .loader import iter_suite
 from .outputs.html_result_output import HtmlResultOutput
 from .outputs.junit_result_output import JUnitResultOutput
-from .result import EMPTY, BRunhildaTestResult
+from .result import NOT_EXECUTED, BRunhildaTestResult
 
 __unittest = True
 
@@ -85,7 +85,7 @@ class BRunhilda(unittest.TextTestRunner):
 
         for test in iter_suite(suite):
             result.startTest(test)
-            result._last_result = EMPTY  # override since we do not execute the test
+            result._last_result = NOT_EXECUTED  # override since we do not execute the test
             result.stopTest(test)
 
         result.stopTestRun()

@@ -77,8 +77,8 @@
             {% set test_result_class = "test--expected-failure" %}
         {%- elif test_case.result == "UNEXPECTED-SUCCESS" %}
             {% set test_result_class = "test--unexpected-success" %}
-        {%- elif test_case.result == "EMPTY" %}
-            {% set test_result_class = "test--empty" %}
+        {%- elif test_case.result == "NOT-EXECUTED" %}
+            {% set test_result_class = "test--not-executed" %}
         {%- else %}
             {% set test_result_class = test_case.result|lower %}
         {%- endif %}
@@ -101,10 +101,7 @@
                             <td class="test__requirement">{{ requirement }}</td>
                 {% if loop.first %}
                             <td class="test__result" rowspan="{{ loop.length }}">
-                    {% if test_case.result == 'EMPTY' %}
-                    {% else %}
                             <a href="{{ test_case.html_report_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
-                    {% endif %}
                             </td>
                             <td class="test__issue" rowspan="{{ loop.length }}">
                     {% if test_case.result in ('ERRORED', 'FAILED', 'JUSTIFIED')%}
@@ -145,10 +142,7 @@
                     <td class="test__name"><a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }}</a></td>
                     <td class="test__requirement"></td>
                     <td class="test__result">
-                    {% if test_case.result == 'EMPTY' %}
-                    {% else %}
-                        <a href="{{ test_case.html_report_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
-                    {% endif %}
+                    <a href="{{ test_case.html_report_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
                     </td>
                     <td class="test__issue">
                     {% if test_case.result in ('ERRORED', 'FAILED', 'JUSTIFIED')%}

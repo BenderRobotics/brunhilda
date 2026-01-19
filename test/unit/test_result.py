@@ -17,9 +17,6 @@ def mock_dependencies(mocker):
     mock_summary.results = ''
     mocker.patch.object(target_module, 'Summary', return_value=mock_summary)
 
-    # Mock EMPTY constant
-    mocker.patch.object(target_module, 'EMPTY', 'EMPTY')
-
     # Functions mock parser
     mocker.patch.object(target_module, 'parse_description', return_value='Parsed Desc')
     mocker.patch.object(target_module, 'parse_requirements', return_value={'REQ-1'})

@@ -210,7 +210,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
             return policy(results)
 
         if not results:
-            return 'EMPTY'
+            return 'NOT-EXECUTED'
 
         if policy == FeatureCoveragePolicy.STRICT:
             res = self._strict_policy(results)

@@ -6,7 +6,7 @@ except ImportError:  # pragma: no cover
     from typing_extensions import Literal
 
 Result = Literal['PASSED', 'FAILED', 'ERRORED', 'JUSTIFIED', 'SKIPPED', 'UNEXPECTED-SUCCESS', 'EXPECTED-FAILURE',
-                 'EMPTY']
+                 'NOT-EXECUTED']
 
 
 @dataclass(eq=True, unsafe_hash=True)
@@ -60,6 +60,10 @@ class ResultsSummary:
     def pct_unexpected_successes(self) -> float:
         return (self.unexpected_successes / self.total * 100.0) if (self.total != 0) else 0.0
 
+    @property
+    def pct_not_executed(self) -> float:
+        return (self.not_executed / self.total * 100.0) if (self.total != 0) else 0.0
+
     def __add__(self, result: Result):
         """
         Add result to summary.
@@ -82,7 +86,7 @@ class ResultsSummary:
             self.expected_failures += 1
         elif result == 'UNEXPECTED-SUCCESS':
             self.unexpected_successes += 1
-        elif result == 'EMPTY':
+        elif result in ['NOT-EXECUTED', 'EMPTY']:
             self.not_executed += 1
         else:
             raise ValueError(f'Unknown result "{result}".')
@@ -114,4 +118,4 @@ class Summary:
         elif self.results.skipped > 0:
             return 'SKIPPED'
         else:
-            return 'EMPTY'
+            return 'NOT-EXECUTED'

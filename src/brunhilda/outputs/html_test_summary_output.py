@@ -50,6 +50,7 @@ class HtmlTestSummaryOutput(HtmlOutput):
             issue_list_path=issue_list_path,
             test_plan_paths=test_plan_paths,
             user_data=user_data,
-            brunhilda_version=brunhilda_version
+            brunhilda_version=brunhilda_version,
+            suite_graph=any(test['result'] == 'NOT-EXECUTED' for test in entries)
         )
         return rendered

@@ -34,7 +34,7 @@ SKIPPED = 'SKIPPED'
 JUSTIFIED = 'JUSTIFIED'
 EXPECTED_FAILURE = 'EXPECTED-FAILURE'
 UNEXPECTED_SUCCESS = 'UNEXPECTED-SUCCESS'
-EMPTY = 'EMPTY'  # for test case without test
+NOT_EXECUTED = 'NOT-EXECUTED'
 
 
 def yaml_str_presenter(dumper, text):
@@ -122,7 +122,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self._issues: Dict[str, Any] = {}
         self._requirements = set()
         self._extra_data_path = extra_data_path
-        self._last_result: Result = EMPTY
+        self._last_result: Result = NOT_EXECUTED
         self._name = name
         self._dut = dut
         self._user_data = user_data
@@ -177,7 +177,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self._tests.clear()
         self._issues = {'errors': [], 'failures': [], 'run': {}}
         self._summary = Summary()
-        self._last_result = EMPTY
+        self._last_result = NOT_EXECUTED
         self.run_start_timestamp = datetime.datetime.now()
 
     def _process_test_extra(self, test: unittest.TestCase, test_id: str):
@@ -399,7 +399,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'errored': 0,
                 'expected_failures': 0,
                 'unexpected_successes': 0,
-                'result': EMPTY
+                'result': NOT_EXECUTED
             }
             self.num_suites += 1
             self.suite_execution_time = 0

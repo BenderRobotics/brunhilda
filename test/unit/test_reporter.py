@@ -61,7 +61,7 @@ def test_load_tests(reporter):
     path = 'tests/run.json'
     report = 'reports/run.html'
 
-    mock_test_data = {'tests': [{'test_id': 'T1', 'level': 1}]}
+    mock_test_data = {'tests': [{'test_id': 'T1', 'level': 1, 'result': 'PASSED'}]}
 
     with patch.object(reporter, '_load', return_value=mock_test_data) as mock_load:
         reporter.load_tests(path, report)
@@ -76,8 +76,8 @@ def test_load_tests(reporter):
 
 def test_load_tests_multiple(reporter):
     """Test loading multiple test files input."""
-    data1 = {'tests': [{'test_id': 'T1', 'level': 1}]}
-    data2 = {'tests': [{'test_id': 'T2', 'level': 2}]}
+    data1 = {'tests': [{'test_id': 'T1', 'level': 1, 'result': 'PASSED'}]}
+    data2 = {'tests': [{'test_id': 'T2', 'level': 2, 'result': 'EMPTY'}]}
 
     with patch.object(reporter, '_load', side_effect=[data1, data2]) as mock_load:
         reporter.load_tests('run1.json', 'rep1.html', 'run2.json', 'rep2.html')
@@ -87,6 +87,7 @@ def test_load_tests_multiple(reporter):
 
         assert reporter._tests['run1.json'][0]['test_id_with_level'] == 'T11'
         assert reporter._tests['run2.json'][0]['test_id_with_level'] == 'T22'
+        assert reporter._tests['run2.json'][0]['result'] == 'NOT-EXECUTED'
 
 
 # --- Testing load_issues ---

@@ -119,12 +119,20 @@ class Reporter:
             path = str(args[i])
             report_path = str(args[i + 1] if i + 1 < len(args) else '')
 
-            tests_list = self._load(path)['tests']
+            tests_list = self._load(path)
+
+            # Backward compatibility (old test artifacts were containing list of test result directly, now is the list wrapped as a 'tests' key dict value)
+            if 'tests' in tests_list:
+                tests_list = tests_list['tests']
 
             for test in tests_list:
                 test['html_report_path'] = report_path
                 # More unique ID for handling the running of a single test from multiple levels
                 test['test_id_with_level'] = f"{test['test_id']}{test['level']}"
+
+                # Backward compatibility (EMPTY result was replaced by NOT-EXECUTED)
+                if test['result'] == 'EMPTY':
+                    test['result'] = 'NOT-EXECUTED'
 
             self._tests[path] = tests_list
 

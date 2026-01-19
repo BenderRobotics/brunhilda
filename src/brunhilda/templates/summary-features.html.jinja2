@@ -115,7 +115,7 @@
                     </td>
                     <td>At least one feature test marked as <em>expected failure</em> which passed despite expectation.</td>
                 </tr>
-                <tr class="run-summary--empty">
+                <tr class="run-summary--not-executed">
                     <th>Not covered</th>
                     <td>
                         {{ summary.results.not_executed }}
@@ -254,6 +254,8 @@
                                                                <i class="fa-solid fa-person-digging test__steps__result__icon test__steps__result--expected-failure" title="expected-failure"></i>
                                                             {% elif test_case.result|lower == 'unexpected-success' %}
                                                                 <i class="fa-solid fa-triangle-exclamation test__steps__result__icon test__steps__result--unexpected-success" title="errored"></i>
+                                                            {% elif test_case.result|lower == 'not-executed' %}
+                                                                <i class="fa-regular fa-circle test__steps__result__icon test__steps__result--not-executed" title="not-executed"></i>
                                                             {% else %}
                                                                 {{ test_case.result|lower }}
                                                             {% endif %}

@@ -1,7 +1,7 @@
 <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
 <script>
     const results = ['passed', 'failed', 'errored', 'justified', 'skipped',
-                     'expected-failure', 'unexpected-success', 'not-covered'];
+                     'expected-failure', 'unexpected-success', 'not-executed'];
 
     $(document).ready(function() {
         for (const result of results) {
@@ -185,6 +185,15 @@
             </td>
             <td>Tests marked as <em>expected failure</em> which passed despite expectation.</td>
         </tr>
+        <tr class="run-summary--not-executed">
+            <th><input type="checkbox" id="run-summary--not-executed" checked>
+                <label for="run-summary--not-executed">Not executed</label>
+            </th>
+            <td>
+                {{ summary.results.not_executed }}
+            </td>
+            <td>Tests that hasn't been executed.</td>
+        </tr>
     </tbody>
     <tfoot>
         <tr>
@@ -249,39 +258,6 @@
 
 {% if summary.results.total > 0 %}
 
-{% if 0 %}
-<div class="bar">
-    <div class="bar__line bar__line--passed"
-            style="width:{{summary.results.pct_passed}}%;">
-            <span>{{ summary.results.pct_passed|round(1) }}% passed</span>
-    </div>
-    <div class="bar__line bar__line--failed"
-            style="width:{{summary.results.pct_failed}}%;">
-            <span>{{ summary.results.pct_failed|round(1) }}% failed</span>
-    </div>
-    <div class="bar__line bar__line--errored"
-        style="width:{{summary.results.pct_errored}}%;">
-        <span>{{ summary.results.pct_errored|round(1) }}% errored</span>
-    </div>
-    <div class="bar__line bar__line--justified"
-        style="width:{{summary.results.pct_justified}}%;">
-        <span>{{ summary.results.pct_justified|round(1) }}% justified</span>
-    </div>
-    <div class="bar__line bar__line--skipped"
-            style="width:{{summary.results.pct_skipped}}%;">
-            <span>{{ summary.results.pct_skipped|round(1) }}% skipped</span>
-    </div>
-    <div class="bar__line bar__line--expected-failure"
-            style="width:{{summary.results.pct_expected_failures}}%;">
-            <span>{{ summary.results.pct_expected_failures|round(1) }}% expected failure</span>
-    </div>
-    <div class="bar__line bar__line--unexpected-success"
-            style="width:{{summary.results.pct_unexpected_successes}}%;">
-            <span>{{ summary.results.pct_unexpected_successes|round(1) }}% unexpected success</span>
-    </div>
-</div>
-{% endif %}
-
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
     function randomColor() {
@@ -292,6 +268,7 @@
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
+        {% if summary.results.total-summary.results.not_executed > 0%}
         var dataResult = google.visualization.arrayToDataTable([
             ['Test result', 'Amount'],
             ['passed', {{ summary.results.passed }}],
@@ -302,6 +279,12 @@
             ['expected failure', {{ summary.results.expected_failures }}],
             ['unexpected success', {{ summary.results.unexpected_successes }}]
         ]);
+        {% else %}
+        {# To show "No data" string instead of graph #}
+        var dataResult = google.visualization.arrayToDataTable([
+            ['Test result', 'Amount']
+        ]);
+        {% endif %}
 
         var executionArray = [
             ['Execution', 'Amount'],
@@ -363,4 +346,59 @@
     <div id="piechart_execution" class="piechart__chart"></div>
     <div id="piechart_level" class="piechart__chart"></div>
 </div>
+
+{% if suite_graph %}
+    <h2>Suite Summary</h2>
+    <script>
+    function randomColor() {
+        return "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+    }
+
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var suiteDataResult = google.visualization.arrayToDataTable([
+            ['Test result', 'Amount'],
+            ['passed', {{ summary.results.passed }}],
+            ['failed', {{ summary.results.failed }}],
+            ['errored', {{ summary.results.errored }}],
+            ['skipped', {{ summary.results.skipped }}],
+            ['justified', {{ summary.results.justified }}],
+            ['expected failure', {{ summary.results.expected_failures }}],
+            ['unexpected success', {{ summary.results.unexpected_successes }}],
+            ['not executed', {{ summary.results.not_executed }}]
+        ]);
+
+        var suiteExecutionData = google.visualization.arrayToDataTable([
+            ['Scope', 'Amount'],
+            ['executed', {{ summary.results.passed + summary.results.failed + summary.results.errored + summary.results.skipped + summary.results.justified + summary.results.expected_failures + summary.results.unexpected_successes }}],
+            ['excluded', {{ summary.results.not_executed }}]
+        ]);
+
+        var chartSuiteResult = new google.visualization.PieChart(document.getElementById('suite_piechart_result'));
+        var chartSuiteExecution = new google.visualization.PieChart(document.getElementById('suite_piechart_execution'));
+
+        chartSuiteResult.draw(suiteDataResult, {
+            title: 'Suite Test Result',
+            chartArea: {width: '95%', height: '80%'},
+            pieHole: 0.3,
+            colors: Object.values(colorPaletteTestResult)
+        });
+        chartSuiteExecution.draw(suiteExecutionData, {
+            title: 'Test Suite Execution',
+            chartArea: {width: '95%', height: '80%'},
+            pieHole: 0.3,
+            colors: ['#28a745', '#808080'],
+            legend: 'none'
+        });
+    }
+    </script>
+    <div class="piechart">
+        <div id="suite_piechart_result" class="piechart__chart"></div>
+        <div id="suite_piechart_execution" class="piechart__chart"></div>
+    </div>
+
+{% endif %}
+
 {% endif %}
