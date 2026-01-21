@@ -1,5 +1,24 @@
 # Brunhilda project changelog
 
+## 2.6.0 (2026-01-21)
+
+- Added version of BRunhilda to generated files (refs #12690)
+- Added possibility to link custom files to the index page (refs #12691)
+- Added sub-tests detailed info into test record view (refs #12689)
+- Added ability to show multiple version of the same suite at a time (refs #12692)
+- Added run info to tests output (refs #12882)
+- Added coverage html report to CI artifacts (refs #12882)
+- Adjusted issue list table cell spanning (refs #12693)
+- Updated project structure (refs #12882)
+- Removed leftover trace output (refs #12882)
+- Updated load issues and tests methods (refs #12882)
+- Changed unforced public attributes to readonly (refs #12882)
+- Improved type hints (refs #12882)
+- Updated docstring code documentation (refs #12882)
+- Extended unit tests coverage (refs #12882)
+- Fixed test details opening by clicking on test line (refs #13017)
+- Fixed sub-test row height limit (refs #13018)
+
 ## 2.5.0 (2025-11-06)
 
 - Added pyyaml to install_requires dependencies (refs #7560)
