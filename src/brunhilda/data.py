@@ -24,12 +24,13 @@ class ResultsSummary:
     expected_failures: int
     unexpected_successes: int
     not_executed: int
+    out_of_scope: int
 
     @property
     def total(self) -> int:
         return (
             self.passed + self.failed + self.errored + self.skipped + self.justified + self.expected_failures +
-            self.unexpected_successes + self.not_executed
+            self.unexpected_successes + self.not_executed + self.out_of_scope
         )
 
     @property
@@ -64,6 +65,10 @@ class ResultsSummary:
     def pct_not_executed(self) -> float:
         return (self.not_executed / self.total * 100.0) if (self.total != 0) else 0.0
 
+    @property
+    def pct_out_of_scope(self) -> float:
+        return (self.out_of_scope / self.total * 100.0) if (self.total != 0) else 0.0
+
     def __add__(self, result: Result):
         """
         Add result to summary.
@@ -88,6 +93,8 @@ class ResultsSummary:
             self.unexpected_successes += 1
         elif result in ['NOT-EXECUTED', 'EMPTY']:
             self.not_executed += 1
+        elif result == 'OUT-OF-SCOPE':
+            self.out_of_scope += 1
         else:
             raise ValueError(f'Unknown result "{result}".')
 
@@ -100,7 +107,7 @@ class Summary:
     """
 
     def __init__(self):
-        self.results = ResultsSummary(0, 0, 0, 0, 0, 0, 0, 0)
+        self.results = ResultsSummary(0, 0, 0, 0, 0, 0, 0, 0, 0)
         self.execution = {}
         self.levels = {}
 

@@ -15,7 +15,7 @@ def reporter():
 
 
 def test_init_defaults(reporter):
-    assert reporter._requirements == []
+    assert reporter._requirements == {}
     assert reporter._outputs == []
     assert reporter._tests == {}
     assert reporter._test_plan_paths == {'_': ''}

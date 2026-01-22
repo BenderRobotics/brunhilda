@@ -340,15 +340,17 @@ runner.save_html_report(result, path)
 BRunhilda Reporter supports the creation of advanced reports allowing to combine test runs into a single report file.
 
 ```python
-class brunhilda.reporter.Reporter(requirements: List[str] = [],
-                                  user_data: Dict[str, str] = {},
+class brunhilda.reporter.Reporter(user_data: Dict[str, str] = {},
                                   user_stories: List[Item] = [])
 ```
 
-Reporter class. `requirements` is a list of requirements ID's, `user_data` dictionary is rendered as a table at the top of produced reports. `user_stories` is a list of [doorstop](https://doorstop.readthedocs.io/en/latest/) Item requirements.
+Reporter class `user_data` dictionary is rendered as a table at the top of produced reports. `user_stories` is a list of [doorstop](https://doorstop.readthedocs.io/en/latest/) Item requirements.
 
 - `brunhilda.reporter.Reporter.load_tests` loads test execution artifact created by `brunhilda.BRunhilda.save_tests` method and store tests html report created by `brunhilda.BRunhilda.save_html_report`.
 - `brunhilda.reporter.Reporter.load_issues` loads test execution artifact created by `brunhilda.BRunhilda.save_issues` method.
+- `brunhilda.reporter.Reporter.load_requirements_list` loads requirements from list.
+- `brunhilda.reporter.Reporter.load_out_of_scope_requirements_list` loads out of scope requirements from list.
+- `brunhilda.reporter.Reporter.load_requirements` loads requirements from [file](#requirements-file).
 - `brunhilda.reporter.Reporter.load_features` loads features linked to the individual tests.
 - `brunhilda.reporter.Reporter.justify_tests` processes loaded tests and issues and applies the justifications.
 - `brunhilda.reporter.Reporter.print_issue_list` creates a report with all issues and justifications.
@@ -363,13 +365,14 @@ Reporter class. `requirements` is a list of requirements ID's, `user_data` dicti
 It is important to keep the order
 
 1. load tests,
-2. load issues, features,
-3. justify,
-4. print test plan report,
-5. print issues report,
-6. print rest of reports,
-7. add links to index page,
-8. print index.
+2. load issues, requirements
+3. load features,
+4. justify,
+5. print test plan report,
+6. print issues report,
+7. print rest of reports,
+8. add links to index page,
+9. print index.
 
 ```python
 reporter = brunhilda.reporter.Reporter(requirements=['REQ_01', 'REQ_02'],
@@ -379,6 +382,7 @@ reporter.load_tests('tests_run_1.yaml', 'test_run_1_report.html')
 reporter.load_tests('tests_run_2.yaml', 'test_run_2_report.html')
 reporter.load_issues('issues_run_1.yaml')
 reporter.load_issues('issues_run_2.yaml')
+reporter.load_requirements('requirements.json')
 reporter.load_features('features.yaml')
 reporter.justify_tests()
 reporter.print_test_plan('plan.html', preamble='preamble.html')
@@ -400,6 +404,23 @@ reporter.load_tests('dev/dry_run_tests.yaml', Path('dev/dry_run_report.html'))
 reporter.load_tests('dev/executed_tests.yaml', Path('dev/report.html'))
 ```
 
+#### Requirements file
+
+BRunhilda can load requirements from JSON/YAML file, where keys are requirements IDs.
+Requirement is set as out of scope if contains `out-of-scope` key. Value of this key specifies reason why is out of scope (can be empty string).
+In following example only the first requirement is in scope.
+
+```json
+{
+	"INTF_001.3": {},
+	"INTF_001.4": {
+		"out-of-scope": ""
+	},
+	"INTF_001.5": {
+		"out-of-scope": "This requirement can't be tested on our site"
+	}
+}
+```
 
 #### Custom colors
 

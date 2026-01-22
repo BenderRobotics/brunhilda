@@ -122,6 +122,13 @@
                     </td>
                     <td>No tests are linked to the feature.</td>
                 </tr>
+                <tr class="run-summary--out-of-scope">
+                    <th>Out of scope</th>
+                    <td>
+                        {{ summary.results.out_of_scope }}
+                    </td>
+                    <td>Features containing only out of scope requirements.</td>
+                </tr>
             </tbody>
             <tfoot>
                 <tr>
@@ -146,7 +153,8 @@
                     ['justified', {{ summary.results.justified }}],
                     ['expected failure', {{ summary.results.expected_failures }}],
                     ['unexpected success', {{ summary.results.unexpected_successes }}],
-                    ['not covered', {{ summary.results.not_executed }}]
+                    ['not covered', {{ summary.results.not_executed }}],
+                    ['out of scope', {{ summary.results.out_of_scope }}]
                 ]);
 
                 var chartResult = new google.visualization.PieChart(document.getElementById('piechart_result'));
@@ -155,7 +163,7 @@
                     title: 'Test Result',
                     chartArea: {width: '95%', height: '80%'},
                     pieHole: 0.3,
-                    colors: ['green','#dc0000', '#a700d1', 'orange', '#74ad09', '#4000f0', '#00c8c8', '#dddddd']
+                    colors: ['green','#dc0000', '#a700d1', 'orange', '#74ad09', '#4000f0', '#00c8c8', '#dddddd', '#99CC99']
                 });
             }
         </script>

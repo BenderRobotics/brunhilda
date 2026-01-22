@@ -19,15 +19,10 @@ from .rel_path import rel_path
 
 class Reporter:
 
-    def __init__(
-        self,
-        requirements: List[str] = [],
-        user_data: Dict[str, str] = {},
-        user_stories: List['doorstop.Item'] = []
-    ) -> None:
+    def __init__(self, user_data: Dict[str, str] = {}, user_stories: List['doorstop.Item'] = []) -> None:
         self._outputs: List[Tuple[str, str, bool]] = []  # Tuple contains name, path, is generated
-        self._requirements = requirements
         self._user_stories = user_stories
+        self._requirements: Dict[str, Optional[str]] = {}  # key: req_id, value: out of scope reason (None == in scope)
         self._tests: Dict = {}
         self._issues: Dict = {}
         self._features: Optional[Dict] = None
@@ -91,6 +86,49 @@ class Reporter:
 
                     test['comment'] = [comment for comment in comments if comment]
                     test['bug_id'] = list(bug_ids)
+
+    def _append_requirement(self, req_id: str, out_of_scope_reason: Optional[str] = None) -> None:
+        """
+        Append requirement to list of requirements.
+        If it's duplicity, update out of scope state or do nothing.
+        """
+        # new requirement
+        if req_id not in self._requirements:
+            self._requirements[req_id] = out_of_scope_reason
+
+        # requirement exists and we got new out of scope reason
+        elif self._requirements.get(req_id) is None and out_of_scope_reason is not None:
+            self._requirements[req_id] = out_of_scope_reason
+
+    def load_requirements_list(self, requirements: List[str]) -> None:
+        """
+        Loads requirements.
+
+        :param requirements: list of requirements
+        """
+        for req_id in requirements:
+            self._append_requirement(req_id, None)
+
+    def load_out_of_scope_requirements_list(self, requirements: List[str]) -> None:
+        """
+        Loads out of scope requirements.
+
+        :param requirements: list of out of scope requirements
+        """
+        for req_id in requirements:
+            self._append_requirement(req_id, '')  # requirement is out of scope, but reason is unknown
+
+    def load_requirements(self, path: Union[str, Path]) -> None:
+        """
+        Loads requirements from file.
+
+        :param path: path to requirements file
+        """
+        requirements = self._load(path)
+
+        for req_id, data in requirements.items():
+            reason = data['out-of-scope'] if 'out-of-scope' in data else None
+            self._append_requirement(req_id, reason)
 
     @overload
     def load_tests(self, path: Union[str, Path], report_path: Union[str, Path] = '') -> None:
@@ -162,7 +200,29 @@ class Reporter:
 
         :param path: path to the file
         """
-        self._features = self._load(path)
+        features = self._load(path)
+        for features_list in features.values():
+            for feature in features_list:
+                for feature_data in feature.values():
+                    feature_out_of_scope = False
+                    requirements = list(feature_data.get('link', {}).keys())
+                    if requirements == []:
+                        feature_out_of_scope = True
+                    else:
+                        for requirement in requirements:
+                            if requirement in self._requirements.keys():
+                                if self._requirements[requirement] is not None:
+                                    feature_out_of_scope = True
+                                else:
+                                    feature_out_of_scope = False
+                                    break
+                            else:
+                                feature_out_of_scope = False
+                                break
+
+                    feature_data['oos'] = feature_out_of_scope
+
+        self._features = features
 
     def _write_file(self, name: str, path: str, content: str) -> None:
         """
@@ -183,7 +243,7 @@ class Reporter:
         self._outputs.append((name, path, True))
         print(f'... created output {path}')
 
-    def _collect_requirements(self, testsuite: Dict) -> List[str]:
+    def _collect_requirements(self, testsuite: Dict) -> List[Tuple[str, Optional[str]]]:
         """
         Collects all requirements mentioned in the testsuite
 
@@ -196,15 +256,15 @@ class Reporter:
         for test_run in testsuite.values():
             for test in test_run:
                 for req in test['requirements']:
-                    requirements.add(req)
+                    requirements.add((req, None))
 
         # add requirements from the full list of requirements if they are not already in there
-        for req in self._requirements:
-            if not any(r.startswith(req) for r in requirements):
-                requirements.add(req)
+        for req, data in self._requirements.items():
+            if not any(r[0].startswith(req) for r in requirements):
+                requirements.add((req, data))
 
         return natsorted(
-            list(requirements), key=lambda req: ' '.join((f'{chunk:>010}' for chunk in re.split(r'-|_|\s', req)))
+            list(requirements), key=lambda req: ' '.join((f'{chunk:>010}' for chunk in re.split(r'-|_|\s', req[0])))
         )
 
     def _collect_summary(self, testsuite: Dict) -> Summary:

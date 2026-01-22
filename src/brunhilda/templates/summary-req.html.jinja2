@@ -33,7 +33,10 @@
         <section>
             <h2>Requirements Summary</h2>
             <p>
-                <input type="checkbox" id="run-summary--not-covered" checked> <label for="run-summary--not-covered">Not covered</label>
+                <input type="checkbox" id="req-summary--not-covered" checked> <label for="req-summary--not-covered">Not covered</label>
+            </p>
+            <p>
+                <input type="checkbox" id="req-summary--out-of-scope" checked> <label for="req-summary--out-of-scope">Out of scope</label>
             </p>
             <table class="summary table--wide">
                 <thead>
@@ -65,8 +68,27 @@
                         <td class="inner_table__td" colspan="4">
                             <table class="inner_table">
                             <tbody>
-                    {% if requirement.levels|length == 0 %}
-                                <tr class="test--not-covered">
+                    {% if requirement.out_of_scope != None %}
+                                <tr class="req-out-of-scope">
+                                    <td>Out of scope
+                                    {% if requirement.out_of_scope != "" %}
+                                        <span title="{{ requirement.out_of_scope }}" style="vertical-align: middle;">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16" height="16"
+                                            viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10" fill="currentColor"></circle>
+                                            <g stroke="white" stroke-width="3" stroke-linecap="round">
+                                                <line x1="12" y1="17" x2="12" y2="11"></line>
+                                                <line x1="12" y1="7" x2="12" y2="7"></line>
+                                            </g>
+                                        </svg>
+                                    </span>
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                    {% elif requirement.levels|length == 0 %}
+                                <tr class="req-not-covered">
                                     <td>Not Covered</td>
                                 </tr>
                     {% else %}
@@ -121,7 +143,7 @@
                             </tbody>
                             </table>
                         </td>
-                        <td class="req__coverage">{{ requirement.pass_ratio|round|int }}</td>
+                        <td class="req__coverage"> {% if requirement.out_of_scope != None %} 100 {% else %}{{ requirement.pass_ratio|round|int }} {% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -139,4 +161,45 @@
         </section>
     </div>
 </body>
+
+<script>
+    $(document).ready(function() {
+        const req_types = ['not-covered', 'out-of-scope'];
+
+        for (const type of req_types) {
+            (function(t) {
+                const checkboxId = "#req-summary--" + t;
+
+                if ($(checkboxId).length) {
+                    $(checkboxId).change(function() {
+                        const targetClass = ".req-" + t;
+
+                        if (this.checked) {
+                            $(targetClass).removeClass("test--hidden");
+                        } else {
+                            $(targetClass).addClass("test--hidden");
+                        }
+
+                        $("tr.filterable").each(function() {
+                            const $row = $(this);
+                            const $innerTable = $row.find(".inner_table");
+
+                            if ($innerTable.length) {
+                                const visibleInnerRows = $innerTable.find("tr").not(".test--hidden");
+
+                                if (visibleInnerRows.length === 0) {
+                                    $row.addClass("test--hidden_id");
+                                } else {
+                                    $row.removeClass("test--hidden_id");
+                                }
+                            }
+                        });
+                    });
+                }
+            })(type);
+        }
+    });
+
+</script>
+
 </html>

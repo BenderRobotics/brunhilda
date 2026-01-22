@@ -318,9 +318,10 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                                             entry['links'][link][test_group]['results'].add(test_case['result'])
                                             feature_results.append(test_case['result'])
                                         unlinked_tests[index] = None
-
-                    entry['result'] = self._result(feature_results, feature_coverage_policy).lower()
-                    summary.results += self._result(feature_results, feature_coverage_policy)
+                    result = self._result(feature_results, feature_coverage_policy
+                                         ) if feature_group[feature_name]['oos'] == False else 'OUT-OF-SCOPE'
+                    entry['result'] = result.lower()
+                    summary.results += result
                     entries[group].append(entry)
 
         # remove empty test groups

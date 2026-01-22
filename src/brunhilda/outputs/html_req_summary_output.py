@@ -40,7 +40,7 @@ class HtmlReqSummaryOutput(HtmlOutput):
         entries = []
         count = 0
 
-        for requirement in requirements:
+        for requirement, data in requirements:
             levels = {}
             passed = 0
             count = 0
@@ -70,6 +70,7 @@ class HtmlReqSummaryOutput(HtmlOutput):
                     'levels': levels,
                     'count': count,
                     'pass_ratio': (passed / count) * 100 if (count != 0) else 0,
+                    'out_of_scope': data
                 }
             )
 
