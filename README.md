@@ -494,20 +494,20 @@ feature group 2:
 
 > Tests can be linked to requirements using the `@spec` tag.
 
-#### Features evaluation policy
+#### Evaluation policy
 
-BRunhilda supports multiple polices for feature coverage evaluation.
+BRunhilda supports multiple polices for feature and requirement evaluation.
 
 | Policy            | Description                                                                                                                                                                                                       |
 | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | STRICT (default)  | Evaluates results according to strict priority order: `ERRORED` > `UNEXPECTED-SUCCESS` > `FAILED` > `EXPECTED-FAILURE`* > `SKIPPED`* > `JUSTIFIED` > `PASSED`. The first one to match will determine the outcome. |
-| ALL_PASS          | Feature is `PASSED` only if all results are `PASSED`, `SKIPPED` or `JUSTIFIED`, otherwise feature is `FAILED`.                                                                                                       |
-| ONE_PASS          | Feature is `PASSED` if at least one result is `PASSED`, otherwise feature is `FAILED`.                                                                                                                            |
-| LENIENT           | Feature is `PASSED` if at least one result is `PASSED` and there aren't any `FAILED` or `ERRORED` results.                                                                                                        |
-| MAJORITY          | Feature is result as same as the most common result. In case of tie the priority order decides: `ERRORED` > `UNEXPECTED-SUCCESS` > `FAILED` > `EXPECTED-FAILURE` > `SKIPPED` > `JUSTIFIED` > `PASSED`             |
-| THRESHOLD         | Feature is `PASSED` if share of `PASSED` result is equal or greater than 80 %. If all tests are `SKIPPED`, feature result is `SKIPPED`. Otherwise feature result is `FAILED`.                                     |
+| ALL_PASS          | Feature / requirement is `PASSED` only if all results are `PASSED`, `SKIPPED` or `JUSTIFIED`, otherwise feature is `FAILED`.                                                                                                       |
+| ONE_PASS          | Feature / requirement is `PASSED` if at least one result is `PASSED`, otherwise feature is `FAILED`.                                                                                                                            |
+| LENIENT           | Feature / requirement is `PASSED` if at least one result is `PASSED` and there aren't any `FAILED` or `ERRORED` results.                                                                                                        |
+| MAJORITY          | Feature / requirement is result as same as the most common result. In case of tie the priority order decides: `ERRORED` > `UNEXPECTED-SUCCESS` > `FAILED` > `EXPECTED-FAILURE` > `SKIPPED` > `JUSTIFIED` > `PASSED`             |
+| THRESHOLD         | Feature / requirement is `PASSED` if share of `PASSED` result is equal or greater than 80 %. If all tests are `SKIPPED`, result is `SKIPPED`. Otherwise result is `FAILED`.                                     |
 
-> If feature doesn't have any test, feature result is `EMPTY`.
+> If feature / requirement doesn't have any test, the result is `EMPTY`.
 
 > \* = All results
 
@@ -528,8 +528,8 @@ def my_policy(results: List[str]) -> str:
 
 reporter = brunhilda.reporter.Reporter()
 # load tests, load issues, etc.
-reporter.print_feature_summary('dev/features_custom_policy.html', feature_coverage_policy=my_policy)
-reporter.print_feature_summary('dev/features_threshold_policy.html', feature_coverage_policy=brunhilda.FeatureCoveragePolicy.THRESHOLD)
+reporter.print_feature_summary('dev/features_custom_policy.html', evaluation_policy=my_policy)
+reporter.print_feature_summary('dev/features_threshold_policy.html', evaluation_policy=brunhilda.CoveragePolicy.THRESHOLD)
 reporter.print_feature_summary('dev/features_default_policy.html')  # STRICT policy will be used
 ```
 

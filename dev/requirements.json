@@ -1,0 +1,15 @@
+{
+	"INTF_001.3": {},
+	"INTF_001.4": {
+		"out-of-scope": ""
+	},
+	"INTF_001.5": {
+		"out-of-scope": "This requirement can't be tested on our site"
+	},
+	"MMI_PGF_G04": {
+		"out-of-scope": "This requirement can't be tested on our site"
+	},
+	"MMI_PGF_L21_4": {
+		"out-of-scope": "This requirement can't be tested on our site"
+	}
+}

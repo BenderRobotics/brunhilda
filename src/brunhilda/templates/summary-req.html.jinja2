@@ -11,7 +11,7 @@
     </style>
 </head>
 
-<body>
+<body class="run-summary">
     <h1>{{ name }}</h1>
     <div class="header">
         {% include "header.html.jinja2" %}
@@ -31,13 +31,144 @@
         </section>
 
         <section>
+        <h2>Summary</h2>
+        <table class="run-summary table--wide">
+            <tbody>
+                <tr class="run-summary--passed">
+                    <th>
+                        <input type="checkbox" id="req-summary--passed" checked>
+                        <label for="req-summary--passed">Passed</label>
+                    </th>
+                    <td>
+                        {{ requirements_results.passed }}
+                    </td>
+                    <td>All tests of the requirement passed.</td>
+                </tr>
+                <tr class="run-summary--failed">
+                    <th>
+                        <input type="checkbox" id="req-summary--failed" checked>
+                        <label for="req-summary--failed">Failed</label>
+                    </th>
+                    <td>
+                        {{ requirements_results.failed }}
+                    </td>
+                    <td>At least one test of the requirement failed.</td>
+                </tr>
+                <tr class="run-summary--errored">
+                    <th>
+                        <input type="checkbox" id="req-summary--errored" checked>
+                        <label for="req-summary--errored">Errored</label>
+                    </th>
+                    <td>
+                        {{ requirements_results.errored }}
+                    </td>
+                    <td>At least one test of the requirement errored.</td>
+                </tr>
+                <tr class="run-summary--justified">
+                    <th>
+                        <input type="checkbox" id="req-summary--justified" checked>
+                        <label for="req-summary--justified">Justified</label>
+                    </th>
+                    <td>
+                        {{ requirements_results.justified }}
+                    </td>
+                    <td>All failed or erored requirement tests were justified.</td>
+                </tr>
+                <tr class="run-summary--skipped">
+                    <th>
+                        <input type="checkbox" id="req-summary--skipped" checked>
+                        <label for="req-summary--skipped">Skipped</label>
+                    </th>
+                    <td>
+                        {{ requirements_results.skipped }}
+                    </td>
+                    <td>All requirement tests were skipped.</td>
+                </tr>
+                <tr class="run-summary--expected-failure">
+                    <th>
+                        <input type="checkbox" id="req-summary--expected-failure" checked>
+                        <label for="req-summary--expected-failure">Expected failures</label>
+                    </th>
+                    <td>
+                        {{ requirements_results.expected_failures }}
+                    </td>
+                    <td>All requirement tests failed are expected to fail during execution.</td>
+                </tr>
+                <tr class="run-summary--unexpected-success">
+                    <th>
+                        <input type="checkbox" id="req-summary--unexpected-success" checked>
+                        <label for="req-summary--unexpected-success">Unexpected successes</label>
+                    </th>
+                    <td>
+                        {{ requirements_results.unexpected_successes }}
+                    </td>
+                    <td>At least one requirement test marked as <em>expected failure</em> which passed despite expectation.</td>
+                </tr>
+                <tr class="run-summary--not-executed">
+                    <th>
+                        <input type="checkbox" id="req-summary--not-covered" checked>
+                        <label for="req-summary--not-covered">Not covered</label>
+                    </th>
+                    <td>
+                        {{ requirements_results.not_executed }}
+                    </td>
+                    <td>No tests are linked to the requirement.</td>
+                </tr>
+                <tr class="run-summary--out-of-scope">
+                    <th>
+                        <input type="checkbox" id="req-summary--out-of-scope" checked>
+                        <label for="req-summary--out-of-scope">Out of scope</label>
+                    </th>
+                    <td>
+                        {{ requirements_results.out_of_scope }}
+                    </td>
+                    <td>Requirement is marked as out of scope.</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th> Total </th>
+                    <td colspan="2">{{ requirements_results.total }}</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+        <script>
+            google.charts.load('current', {'packages': ['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                var dataResult = google.visualization.arrayToDataTable([
+                    ['Requirement result', 'Amount'],
+                    ['passed', {{ requirements_results.passed }}],
+                    ['failed', {{ requirements_results.failed }}],
+                    ['errored', {{ requirements_results.errored }}],
+                    ['skipped', {{ requirements_results.skipped }}],
+                    ['justified', {{ requirements_results.justified }}],
+                    ['expected failure', {{ requirements_results.expected_failures }}],
+                    ['unexpected success', {{ requirements_results.unexpected_successes }}],
+                    ['not covered', {{ requirements_results.not_executed }}],
+                    ['out of scope', {{ requirements_results.out_of_scope }}]
+                ]);
+
+                var chartResult = new google.visualization.PieChart(document.getElementById('piechart_result'));
+
+                chartResult.draw(dataResult, {
+                    title: 'Requirements Result',
+                    chartArea: {width: '95%', height: '80%'},
+                    pieHole: 0.3,
+                    colors: ['green','#dc0000', '#a700d1', 'orange', '#74ad09', '#4000f0', '#00c8c8', '#dddddd', '#99CC99']
+                });
+            }
+        </script>
+        <div class="piechart">
+            <div id="piechart_result" class="piechart__chart"></div>
+        </div>
+        </section>
+
+        <section>
             <h2>Requirements Summary</h2>
-            <p>
-                <input type="checkbox" id="req-summary--not-covered" checked> <label for="req-summary--not-covered">Not covered</label>
-            </p>
-            <p>
-                <input type="checkbox" id="req-summary--out-of-scope" checked> <label for="req-summary--out-of-scope">Out of scope</label>
-            </p>
             <table class="summary table--wide">
                 <thead>
                     <tr>
@@ -45,6 +176,7 @@
                             <span>Requirement ID</span>
                             <input id="filter"/>
                         </th>
+                        <th class="table__col--req_result">Requirement Result</th>
                         <th class="table__col--test_level">
                             <span>Test Level</span>
                             <select id="level-selector">
@@ -61,36 +193,46 @@
                     </tr>
                 </thead>
                 <tbody>
-
                 {% for requirement in requirements %}
                     <tr class="filterable" data-filter="{{ requirement.name }}">
                         <td class="req__id table__col--test_requirement">{{ requirement.name }}</td>
-                        <td class="inner_table__td" colspan="4">
-                            <table class="inner_table">
-                            <tbody>
-                    {% if requirement.out_of_scope != None %}
-                                <tr class="req-out-of-scope">
-                                    <td>Out of scope
+                        {% if requirement.out_of_scope != None %}
+                        <td class="table__col--requirement_result req--out-of-scope">OUT OF SCOPE
                                     {% if requirement.out_of_scope != "" %}
                                         <span title="{{ requirement.out_of_scope }}" style="vertical-align: middle;">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="16" height="16"
-                                            viewBox="0 0 24 24">
-                                            <circle cx="12" cy="12" r="10" fill="currentColor"></circle>
-                                            <g stroke="white" stroke-width="3" stroke-linecap="round">
-                                                <line x1="12" y1="17" x2="12" y2="11"></line>
-                                                <line x1="12" y1="7" x2="12" y2="7"></line>
-                                            </g>
+                                        <svg width="16" height="16">
+                                            <use href="#icon-out-of-scope-reason"></use>
                                         </svg>
                                     </span>
                                     {% endif %}
-                                    </td>
-                                </tr>
-                    {% elif requirement.levels|length == 0 %}
-                                <tr class="req-not-covered">
-                                    <td>Not Covered</td>
-                                </tr>
+                        </td>
+                        {% elif requirement.levels|length == 0 %}
+                        <td class="table__col--requirement_result req--not-covered">NOT COVERED</td>
+                        {% else %}
+                            {% if requirement.result == "PASSED" -%}
+                                {% set req_result_class = "req--passed" %}
+                            {%- elif requirement.result == "SKIPPED" %}
+                                {% set req_result_class = "req--skipped" %}
+                            {%- elif requirement.result == "ERRORED" %}
+                                {% set req_result_class = "req--errored" %}
+                            {%- elif requirement.result == "FAILED" %}
+                                {% set req_result_class = "req--failed" %}
+                            {%- elif requirement.result == "JUSTIFIED" %}
+                                {% set req_result_class = "req--justified" %}
+                            {%- elif requirement.result == "EXPECTED-FAILURE" %}
+                                {% set req_result_class = "req--expected-failure" %}
+                            {%- elif requirement.result == "UNEXPECTED-SUCCESS" %}
+                                {% set req_result_class = "req--unexpected-success" %}
+                            {%- else %}
+                                {% set test_result_class = requirement.result|lower %}
+                            {%- endif %}
+                        <td class="table__col--requirement_result {{ req_result_class }}">{{ requirement.result }}</td>
+                        {% endif %}
+                        <td class="inner_table__td" colspan="4">
+                            <table class="inner_table">
+                            <tbody>
+                    {% if requirement.out_of_scope != None or requirement.levels|length == 0 %}
+                        <tr></tr>
                     {% else %}
                         {% for level_name, level_tests in requirement.levels.items() -%}
                             {% set level_loop = loop %}
@@ -149,12 +291,11 @@
                 </tbody>
                 <tfoot>
                     <tr class="test--{{ summary.result|lower|replace(' ', '-') }}">
-                        <th>Total requirements: {{ requirements|length }}</th>
+                        <th>Total requirements: {{ requirements_results.total }}</th>
+                        <th></th>
                         <th>Total levels: {{ summary.levels.keys()|length }}</th>
-                        <th>Total tests: {{ summary.results.total }}</th>
-                        <th></th>
-                        <th class="test__result">{{ summary.result }}</th>
-                        <th></th>
+                        <th colspan="4">Total tests: {{ summary.results.total }}</th>
+
                     </tr>
                 </tfoot>
             </table>
@@ -164,7 +305,7 @@
 
 <script>
     $(document).ready(function() {
-        const req_types = ['not-covered', 'out-of-scope'];
+        const req_types = ['not-covered', 'out-of-scope', 'passed', 'failed', 'errored', 'justified', 'skipped', 'expected-failure', 'unexpect-success'];
 
         for (const type of req_types) {
             (function(t) {
@@ -172,28 +313,13 @@
 
                 if ($(checkboxId).length) {
                     $(checkboxId).change(function() {
-                        const targetClass = ".req-" + t;
+                        const rowsToToggle = $("tr.filterable").has("td.req--" + t);
 
                         if (this.checked) {
-                            $(targetClass).removeClass("test--hidden");
+                            rowsToToggle.removeClass("req--hidden");
                         } else {
-                            $(targetClass).addClass("test--hidden");
+                            rowsToToggle.addClass("req--hidden");
                         }
-
-                        $("tr.filterable").each(function() {
-                            const $row = $(this);
-                            const $innerTable = $row.find(".inner_table");
-
-                            if ($innerTable.length) {
-                                const visibleInnerRows = $innerTable.find("tr").not(".test--hidden");
-
-                                if (visibleInnerRows.length === 0) {
-                                    $row.addClass("test--hidden_id");
-                                } else {
-                                    $row.removeClass("test--hidden_id");
-                                }
-                            }
-                        });
                     });
                 }
             })(type);

@@ -1,7 +1,8 @@
 from copy import deepcopy
-from typing import Dict, List, Optional
+from typing import Callable, Dict, List, Optional, Union
 
-from ..data import Summary
+from ..data import ResultsSummary, Summary
+from ..policies import CoveragePolicy, evaluate_result
 from .html_output import HtmlOutput
 
 try:
@@ -23,7 +24,8 @@ class HtmlReqSummaryOutput(HtmlOutput):
         summary: Summary,
         issue_list_path: Optional[str] = None,
         test_plan_paths: Optional[Dict[str, str]] = None,
-        user_data: Dict[str, str] = None
+        user_data: Dict[str, str] = None,
+        evaluation_policy: Union[CoveragePolicy, Callable[[List[str]], str]] = CoveragePolicy.STRICT
     ) -> str:
         """
         Prints requirements summary to HTML document.
@@ -39,15 +41,18 @@ class HtmlReqSummaryOutput(HtmlOutput):
         """
         entries = []
         count = 0
+        requirements_results = ResultsSummary(0, 0, 0, 0, 0, 0, 0, 0, 0)
 
         for requirement, data in requirements:
             levels = {}
             passed = 0
             count = 0
+            req_tests_results = []
 
             for test_run in testsuite.values():
                 for test in test_run:
                     if ('requirements' in test) and (requirement in test['requirements']):
+                        req_tests_results.append(test['result'])
                         level = test['level']
                         result = test['result'].upper()
                         count += 1
@@ -64,13 +69,23 @@ class HtmlReqSummaryOutput(HtmlOutput):
                 for test in levels[level]:
                     test['coverage_ratio'] = (100 / count) if (count > 0) else 0
 
+            if data is not None:
+                requirement_result = 'OUT-OF-SCOPE'
+                requirements_results += requirement_result
+            elif requirement != '-':  # Exclude empty requirement from stats
+                requirement_result = evaluate_result(req_tests_results, evaluation_policy)
+                requirements_results += requirement_result
+            else:
+                requirement_result = ''
+
             entries.append(
                 {
                     'name': requirement,
                     'levels': levels,
                     'count': count,
                     'pass_ratio': (passed / count) * 100 if (count != 0) else 0,
-                    'out_of_scope': data
+                    'out_of_scope': data,
+                    'result': requirement_result
                 }
             )
 
@@ -83,6 +98,8 @@ class HtmlReqSummaryOutput(HtmlOutput):
             issue_list_path=issue_list_path,
             test_plan_paths=test_plan_paths,
             user_data=user_data,
-            brunhilda_version=brunhilda_version
+            brunhilda_version=brunhilda_version,
+            requirements_results=requirements_results,
+            only_summary_functions=True
         )
         return rendered

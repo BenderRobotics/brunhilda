@@ -518,42 +518,49 @@ input.testcase__expander:checked+.testcase__description {
 
 .test--passed .test__result,
 .test--passed .test__result a,
+.req--passed,
 .run-summary--passed {
     color: var(--color--pass);
 }
 
 .test--skipped .test__result,
 .test--skipped .test__result a,
+.req--skipped,
 .run-summary--skipped {
     color: var(--color--skip);
 }
 
 .test--justified .test__result,
 .test--justified .test__result a,
+.req--justified,
 .run-summary--justified {
     color: var(--color--justified);
 }
 
 .test--errored .test__result,
 .test--errored .test__result a,
+.req--errored,
 .run-summary--errored {
     color: var(--color--error);
 }
 
 .test--failed .test__result,
 .test--failed .test__result a,
+.req--failed,
 .run-summary--failed {
     color: var(--color--fail);
 }
 
 .test--expected-failure .test__result,
 .test--expected-failure .test__result a,
+.req--expected-failure,
 .run-summary--expected-failure {
     color: var(--color--expected-failure);
 }
 
 .test--unexpected-success .test__result,
 .test--unexpected-success .test__result a,
+.req--unexpected-success,
 .run-summary--unexpected-success {
     color: var(--color--unexpected-success);
 }
@@ -814,6 +821,12 @@ input.test__expander:checked+.test__detail {
 }
 
 .table__col--test_result {
+    min-width: 125px;
+    max-width: 125px;
+}
+
+.table__col--requirement_result {
+    font-weight: bold;
     min-width: 125px;
     max-width: 125px;
 }
@@ -1128,16 +1141,20 @@ ol.lowerroman {
     font-weight: bold;
 }
 
-.req-not-covered {
-    color: var(--color--fail);
-    text-align: center;
+.req--not-covered {
+    color: var(--color--not-executed);
+    text-align: left;
     font-weight: bold;
 }
 
-.req-out-of-scope {
+.req--out-of-scope {
     color: var(--color--out-of-scope);
-    text-align: center;
+    text-align: left;
     font-weight: bold;
+}
+
+.req--hidden {
+    display: none !important;
 }
 
 

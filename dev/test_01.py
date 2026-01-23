@@ -279,7 +279,7 @@ class TestCase1(unittest.TestCase):
         @priority:      high
         @variants:      MMI_TGL_001, MMI_TGL_002;
         @status:        new
-        @spec:          L11 4.4
+        @spec:          MMI_PGF_G03_1
         @tp:            TP07.1
         @env:           PHY1; PHY2; VIRT
 

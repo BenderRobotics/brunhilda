@@ -3,24 +3,13 @@ from enum import Enum
 from typing import Callable, Dict, List, Optional, OrderedDict, Union
 
 from ..data import Summary
+from ..policies import CoveragePolicy, evaluate_result
 from .html_output import HtmlOutput
 
 try:
     from ..__version__ import version as brunhilda_version
 except ImportError:
     brunhilda_version = 'unknown'
-
-
-class FeatureCoveragePolicy(Enum):
-    """
-    Enum defining policies for feature coverage evaluation.
-    """
-    STRICT = 'strict'
-    MAJORITY = 'majority'
-    THRESHOLD = 'threshold'
-    LENIENT = 'lenient'
-    ALL_PASS = 'all-pass'
-    ONE_PASS = 'one-pass'
 
 
 class HtmlFeatureSummaryOutput(HtmlOutput):
@@ -86,156 +75,13 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
 
         return False
 
-    def _strict_policy(self, results: List[str]) -> str:
-        """
-        STRICT feature coverage policy.
-        Evaluates results according to strict priority order. The first one to match will determine the outcome.
-
-        :param results: list of tests results
-        :return: feature result in string
-        """
-        if any(r == 'ERRORED' for r in results):
-            res = 'ERRORED'
-        elif any(r == 'UNEXPECTED-SUCCESS' for r in results):
-            res = 'UNEXPECTED-SUCCESS'
-        elif any(r == 'FAILED' for r in results):
-            res = 'FAILED'
-        elif all(r == 'EXPECTED-FAILURE' for r in results):
-            res = 'EXPECTED-FAILURE'
-        elif all(r == 'SKIPPED' for r in results):
-            res = 'SKIPPED'
-        elif any(r == 'JUSTIFIED' for r in results):
-            res = 'JUSTIFIED'
-        else:
-            res = 'PASSED'
-
-        return res
-
-    def _all_pass_policy(self, results: List[str]) -> str:
-        """
-        ALL_PASS feature coverage policy.
-        Feature is PASSED only if all results are PASSED, SKIPPED or JUSTIFIED, otherwise feature is FAILED.
-
-        :param results: list of tests results
-        :return: feature result in string
-        """
-        if all(r in ['PASSED', 'SKIPPED', 'JUSTIFIED'] for r in results):
-            res = 'PASSED'
-        else:
-            res = 'FAILED'
-
-        return res
-
-    def _one_pass_policy(self, results: List[str]) -> str:
-        """
-        ONE_PASS feature coverage policy.
-        Feature is PASSED if at least one result is PASSED, otherwise feature is FAILED.
-
-        :param results: list of tests results
-        :return: feature result in string
-        """
-        if any(r == 'PASSED' for r in results):
-            res = 'PASSED'
-        else:
-            res = 'FAILED'
-
-        return res
-
-    def _lenient_policy(self, results: List[str]) -> str:
-        """
-        LENIENT feature coverage policy.
-        Feature is PASSED if at least one result is PASSED and there aren't any FAILED or ERRORED results.
-
-        :param results: list of tests results
-        :return: feature result in string
-        """
-        if any(r == 'PASSED' for r in results) and not any(r in ('FAILED', 'ERRORED') for r in results):
-            res = 'PASSED'
-        else:
-            res = 'FAILED'
-
-        return res
-
-    def _majority_policy(self, results: List[str]) -> str:
-        """
-        MAJORITY feature coverage policy.
-        Feature is result as same as the most common result. In case of tie, the dict sort decides.
-
-        :param results: list of tests results
-        :return: feature result in string
-        """
-        majority = {
-            'ERRORED': results.count('ERRORED'),
-            'UNEXPECTED-SUCCESS': results.count('UNEXPECTED-SUCCESS'),
-            'FAILED': results.count('FAILED'),
-            'EXPECTED-FAILURE': results.count('EXPECTED-FAILURE'),
-            'SKIPPED': results.count('SKIPPED'),
-            'JUSTIFIED': results.count('JUSTIFIED'),
-            'PASSED': results.count('PASSED'),
-        }
-        return max(majority, key=majority.get)
-
-    def _threshold_policy(self, results: List[str]) -> str:
-        """
-        MAJORITY feature coverage policy.
-        Feature is PASSED if share of PASSED result is equal or greater than 80 %. Otherwise feature result is FAILED.
-        If all tests are SKIPPED, feature result is SKIPPED.
-
-        :param results: list of tests results
-        :return: feature result in string
-        """
-        pass_ratio = results.count('PASSED') / len(results)
-        if all(r == 'SKIPPED' for r in results):
-            res = 'SKIPPED'
-        elif pass_ratio >= 0.8:
-            res = 'PASSED'
-        else:
-            res = 'FAILED'
-
-        return res
-
-    def _result(
-        self,
-        results: List[str],
-        policy: Union[FeatureCoveragePolicy, Callable[[List[str]], str]] = FeatureCoveragePolicy.STRICT
-    ) -> str:
-        """
-        Evaluates feature results by given policy.
-
-        :param results: list of test results
-        :param policy: evaluation policy
-        :return: feature result in string
-        """
-        if callable(policy):
-            return policy(results)
-
-        if not results:
-            return 'NOT-EXECUTED'
-
-        if policy == FeatureCoveragePolicy.STRICT:
-            res = self._strict_policy(results)
-        elif policy == FeatureCoveragePolicy.ALL_PASS:
-            res = self._all_pass_policy(results)
-        elif policy == FeatureCoveragePolicy.ONE_PASS:
-            res = self._one_pass_policy(results)
-        elif policy == FeatureCoveragePolicy.LENIENT:
-            res = self._lenient_policy(results)
-        elif policy == FeatureCoveragePolicy.MAJORITY:
-            res = self._majority_policy(results)
-        elif policy == FeatureCoveragePolicy.THRESHOLD:
-            res = self._threshold_policy(results)
-        else:
-            raise ValueError('Undefined feature coverage policy selected.')
-
-        return res
-
     def print(
         self,
         name: str,
         features: Dict,
         testsuite: Dict,
         test_plan_paths: Optional[Dict[str, str]] = None,
-        feature_coverage_policy: Union[FeatureCoveragePolicy, Callable[[List[str]], str]] = FeatureCoveragePolicy.STRICT
+        evaluation_policy: Union[CoveragePolicy, Callable[[List[str]], str]] = CoveragePolicy.STRICT
     ) -> str:
         """
         Prints summary of features to HTML document.
@@ -244,7 +90,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
         :param features: collected features
         :param testsuite: suite of the executed tests
         :param test_plan_path: path to the test plans
-        :param feature_coverage_policy: evaluation policy
+        :param evaluation_policy: evaluation policy
         :return: HTML string
         """
         entries = OrderedDict()
@@ -318,8 +164,8 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                                             entry['links'][link][test_group]['results'].add(test_case['result'])
                                             feature_results.append(test_case['result'])
                                         unlinked_tests[index] = None
-                    result = self._result(feature_results, feature_coverage_policy
-                                         ) if feature_group[feature_name]['oos'] == False else 'OUT-OF-SCOPE'
+                    result = evaluate_result(feature_results, evaluation_policy
+                                            ) if feature_group[feature_name]['oos'] == False else 'OUT-OF-SCOPE'
                     entry['result'] = result.lower()
                     summary.results += result
                     entries[group].append(entry)
@@ -333,7 +179,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                             del entry['links'][link][test_group]
                         else:
                             # for features test cases we do not want to use policy
-                            entry['links'][link][test_group]['result'] = self._result(
+                            entry['links'][link][test_group]['result'] = evaluate_result(
                                 entry['links'][link][test_group]['results']
                             ).lower()
 

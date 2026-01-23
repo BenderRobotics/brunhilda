@@ -1,6 +1,14 @@
 import pytest
 
-from brunhilda.outputs.html_feature_summary_output import HtmlFeatureSummaryOutput
+from brunhilda.policies import (
+    _all_pass_policy,
+    _lenient_policy,
+    _majority_policy,
+    _one_pass_policy,
+    _strict_policy,
+    _threshold_policy,
+    evaluate_result,
+)
 
 
 @pytest.mark.parametrize(
@@ -36,7 +44,7 @@ from brunhilda.outputs.html_feature_summary_output import HtmlFeatureSummaryOutp
     ]
 )
 def test_strict_policy(test_input, expected_result):
-    assert HtmlFeatureSummaryOutput()._strict_policy(test_input) == expected_result
+    assert _strict_policy(test_input) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -73,7 +81,7 @@ def test_strict_policy(test_input, expected_result):
     ]
 )
 def test_all_pass_policy(test_input, expected_result):
-    assert HtmlFeatureSummaryOutput()._all_pass_policy(test_input) == expected_result
+    assert _all_pass_policy(test_input) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -96,7 +104,7 @@ def test_all_pass_policy(test_input, expected_result):
     ]
 )
 def testone_pass(test_input, expected_result):
-    assert HtmlFeatureSummaryOutput()._one_pass_policy(test_input) == expected_result
+    assert _one_pass_policy(test_input) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -123,7 +131,7 @@ def testone_pass(test_input, expected_result):
     ]
 )
 def test_lenient_policy(test_input, expected_result):
-    assert HtmlFeatureSummaryOutput()._lenient_policy(test_input) == expected_result
+    assert _lenient_policy(test_input) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -163,7 +171,7 @@ def test_lenient_policy(test_input, expected_result):
     ]
 )
 def test_majority_policy(test_input, expected_result):
-    assert HtmlFeatureSummaryOutput()._majority_policy(test_input) == expected_result
+    assert _majority_policy(test_input) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -189,7 +197,7 @@ def test_majority_policy(test_input, expected_result):
     ]
 )
 def test_threshold_policy(test_input, expected_result):
-    assert HtmlFeatureSummaryOutput()._threshold_policy(test_input) == expected_result
+    assert _threshold_policy(test_input) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -204,4 +212,4 @@ def test_threshold_policy(test_input, expected_result):
     ]
 )
 def test_result(test_input, expected_result):
-    assert HtmlFeatureSummaryOutput()._result(test_input) == expected_result
+    assert evaluate_result(test_input) == expected_result

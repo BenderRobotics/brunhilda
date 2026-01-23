@@ -8,12 +8,13 @@ import yaml
 from natsort import natsorted
 
 from .data import Summary
-from .outputs.html_feature_summary_output import FeatureCoveragePolicy, HtmlFeatureSummaryOutput
+from .outputs.html_feature_summary_output import HtmlFeatureSummaryOutput
 from .outputs.html_index_output import HtmlIndexOutput
 from .outputs.html_issue_list_output import HtmlIssueListOutput
 from .outputs.html_req_summary_output import HtmlReqSummaryOutput
 from .outputs.html_test_plan_output import HtmlTestPlanOutput
 from .outputs.html_test_summary_output import HtmlTestSummaryOutput
+from .policies import CoveragePolicy
 from .rel_path import rel_path
 
 
@@ -343,7 +344,8 @@ class Reporter:
         self,
         path: Union[str, Path],
         name: str = 'Requirements Coverage Summary',
-        preamble: Union[Sequence[str], str, None] = None
+        preamble: Union[Sequence[str], str, None] = None,
+        evaluation_policy: Union[CoveragePolicy, Callable[[List[str]], str]] = CoveragePolicy.STRICT
     ) -> None:
         """
         Prints requirements summary report.
@@ -351,6 +353,7 @@ class Reporter:
         :param path: where to store the output file
         :param name: name of the produced report used in title
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
+        :param evaluation_policy: policy used for evaluating requirement result
         """
         path = str(path)
         formater = HtmlReqSummaryOutput(preamble=preamble)
@@ -364,7 +367,8 @@ class Reporter:
             summary=self._collect_summary(self._tests),
             issue_list_path=issue_list_path,
             test_plan_paths=test_plan_paths,
-            user_data=self._user_data
+            user_data=self._user_data,
+            evaluation_policy=evaluation_policy
         )
         self._write_file(name, path, output)
 
@@ -500,7 +504,7 @@ class Reporter:
         path: Union[str, Path],
         name: str = 'Summary of Features',
         preamble: Union[Sequence[str], str, None] = None,
-        feature_coverage_policy: Union[FeatureCoveragePolicy, Callable[[List[str]], str]] = FeatureCoveragePolicy.STRICT
+        evaluation_policy: Union[CoveragePolicy, Callable[[List[str]], str]] = CoveragePolicy.STRICT
     ) -> None:
         """
         Prints summary of features with related tests
@@ -508,6 +512,7 @@ class Reporter:
         :param path: path where the file shall be created
         :param name: name of the output file
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
+        :param evaluation_policy: policy used for evaluating feature result
         """
         path = str(path)
         self._feature_list_path = path
@@ -518,7 +523,7 @@ class Reporter:
             features=self._features,
             testsuite=self._tests,
             test_plan_paths=test_plan_paths,
-            feature_coverage_policy=feature_coverage_policy
+            evaluation_policy=evaluation_policy
         )
         self._write_file(name, path, output)
 
