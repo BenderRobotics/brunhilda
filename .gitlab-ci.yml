@@ -81,12 +81,9 @@ prepare-release:
   rules:
     - if: $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/
   script:
-    - VERSION=$(python setup.py --version)
-    # TODO Changelog is created from CHANGELOG.md
-    - python build/get_changes.py CHANGELOG.md v${VERSION} > changes.txt
-    # TODO otherwise changelog is created from git history between last two tags
-    # - pip install -i https://pypi.benderrobotics.com gitlab_tools
-    # - gitlab-tools tag-changelog -p $CI_PROJECT_PATH -t TODO_CREATE_GITLAB_API_TOKEN -b $CI_DEFAULT_BRANCH -o changes.txt
+    - python tools/get_changes.py CHANGELOG.md v${VERSION} > changes.txt
+    - pip install -i https://pypi.benderrobotics.com gitlab_tools
+    - gitlab-tools tag-changelog -p $CI_PROJECT_PATH -t $API_KEY -b $CI_DEFAULT_BRANCH -o changes.txt
   artifacts:
     paths:
       - "changes.txt"
@@ -104,7 +101,6 @@ release-wheel:
     - chmod 600 ./ssh_key
   script:
     - TAG_VERSION=${CI_COMMIT_TAG#"v"}
-    - test $VERSION = $TAG_VERSION
     - |
       sftp -i ./ssh_key -oStrictHostKeyChecking=no $PYPI_USER@$PYPI_HOST:/brunhilda/ << EOF
         put dist/*
@@ -121,7 +117,6 @@ package-registry-upload:
     - docker
   script:
     - TAG_VERSION=${CI_COMMIT_TAG#"v"}
-    - test $VERSION = $TAG_VERSION
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "dist/${PACKAGE_NAME}" "${PACKAGE_REGISTRY}/${VERSION}/${PACKAGE_NAME}"'
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "dist/${ARCHIVE_NAME}" "${PACKAGE_REGISTRY}/${VERSION}/${ARCHIVE_NAME}"'
   rules:
@@ -135,7 +130,6 @@ release-gitlab:
   needs: [build, prepare-release]
   script:
     - TAG_VERSION=${CI_COMMIT_TAG#"v"}
-    - test $VERSION = $TAG_VERSION
     - DESCRIPTION=$(cat changes.txt)
     - |
       release-cli create --name "Release of $CI_COMMIT_TITLE $CI_PROJECT_TAG" --tag-name $CI_COMMIT_TAG \
