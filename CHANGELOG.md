@@ -1,5 +1,9 @@
 # Brunhilda project changelog
 
+## 2.5.1 (2026-02-20)
+
+- Reverted change in multi paragraph step description parsing (refs #12083)
+
 ## 2.5.0 (2025-11-06)
 
 - Added pyyaml to install_requires dependencies (refs #7560)
