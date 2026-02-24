@@ -86,8 +86,10 @@ def parse_steps(test_steps: List[Dict[str, Any]], description: str) -> List[Dict
                         steps.append(step)
 
                     step = {'number': 0, 'description': '', 'expectation': ''}
-                    step['number'] = int(reg_step_description.match(line).group('num'))
-                    step['description'] = reg_step_description.sub('', line).strip()
+                    match_desc = reg_step_description.match(line)
+                    step['number'] = int(match_desc.group('num'))
+                    dynamic_spaces = ' ' * len(match_desc.group(0))
+                    step['description'] = reg_step_description.sub(dynamic_spaces, line)
                     step['expectation'] = ''
                     step['result'] = ''
                     step['comment'] = ''
@@ -99,13 +101,15 @@ def parse_steps(test_steps: List[Dict[str, Any]], description: str) -> List[Dict
                 # check if line stars with "  >"
                 elif reg_step_expectation.match(line):
                     step_description_active = False
-                    step['expectation'] = reg_step_expectation.sub('', line).strip()
+                    match_exp = reg_step_expectation.match(line)
+                    dynamic_spaces = ' ' * len(match_exp.group(0))
+                    step['expectation'] = reg_step_expectation.sub(dynamic_spaces, line)
                 # if still in description, append to description
                 elif step_description_active:
-                    step['description'] += '\n' + line.strip()
+                    step['description'] += '\n' + line
                 # otherwise append to expectation
                 elif step:
-                    step['expectation'] += '\n' + line.strip()
+                    step['expectation'] += '\n' + line
     if step:
         steps.append(step)
 

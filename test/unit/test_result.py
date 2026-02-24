@@ -103,6 +103,10 @@ class TestCatchedStream:
         catched.write('abc')
         assert catched.getvalue() == 'abc'
 
+    @pytest.mark.skipif(
+        sys.version_info >= (3, 11),
+        reason="Since Python 3.11 the object class has own __getstate__ and AttributeError isn't raised."
+    )
     def test_getattr_forbidden(self):
         stream = io.StringIO()
         buffer = io.StringIO()
