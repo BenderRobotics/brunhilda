@@ -156,6 +156,28 @@ def test_01(self):
     """
 ```
 
+#### Docstring Formatting
+
+Because the docstrings are compiled as RST, you can use standard syntax like `**bold**` or `*italic*`.
+
+If you need to set exact line breaks and formatting (e.g. for multi-line conditions or specific outputs), use [Line Blocks](https://docutils.sourceforge.io/0.4/docs/ref/rst/restructuredtext.html#line-blocks).
+
+**Important rules for Line Blocks:**
+
+- Each line of a line block must start with a vertical bar (`|`) and a space.
+- If a line continues without a `|`, it must be indented to match the text of the line above it.
+- Ensure vertical alignment of the `|` characters is strictly maintained.
+
+```python
+@steps
+1) > | Read value from machine.
+     | If the value is 0 or 1,
+       LED should be activated.
+     | Else: LED should not be activated.
+   > Expected state is correctly set.
+@endsteps
+```
+
 ### Test Loader
 
 The TestLoader class is used to create test suites from classes and modules. This is an extension of [`unittest.TestLoader`](https://docs.python.org/3/library/unittest.html#unittest.TestLoader).

@@ -65,6 +65,33 @@ class TestHtmlOutput:
         assert 'Line 1' in html
         assert 'Line 2 indented' in html
 
+    @pytest.mark.parametrize(
+        'docstring, expected_output', [
+            (
+                '        | Connect the P1P2 simulator device and add Hydro slave device, then start the initial communication\n'
+                '          between the simulated Hydro and DUT and wait for the state NORMAL in DUT.\n'
+                '        | Launch the debug GUI tool.',
+                '<div class="line-block">\n<div class="line">Connect the P1P2 simulator device and add Hydro slave device, then start the initial communication\nbetween the simulated Hydro and DUT and wait for the state NORMAL in DUT.</div>\n<div class="line">Launch the debug GUI tool.</div>\n</div>'
+            ),
+            ('    Step one\n    Step two', '<p>Step one\nStep two</p>'),
+            ('    Text with trailing space   \n    Second line  ', '<p>Text with trailing space\nSecond line</p>'),
+            ('    Expected values are in range 5-10.', '<p>Expected values are in range 5-10.</p>'),
+            ('    Link to parameter *.', '<p>Link to parameter *.</p>'),
+            (
+                '    Check if **DHW_reheatFG** is set to *True*.',
+                '<p>Check if <strong>DHW_reheatFG</strong> is set to <em>True</em>.</p>'
+            ),
+            (123, ''),
+        ]
+    )
+    def test_format_doc_test_steps(self, docstring, expected_output):
+        output = HtmlOutput()
+        html = output._format_doc(docstring)
+        if expected_output == '':
+            assert html == ''
+        else:
+            assert expected_output in html
+
     # --- Tests for _format_logging ---
 
     def test_format_logging(self):
