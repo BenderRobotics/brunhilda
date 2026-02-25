@@ -1201,6 +1201,10 @@ ol.lowerroman {
     font-weight: bold;
 }
 
+.req-hidden {
+    display: none !important;
+}
+
 
 /**************************************/
 /* Style of index link floating button */
