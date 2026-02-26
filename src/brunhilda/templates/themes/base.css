@@ -769,6 +769,7 @@ input.test__expander:checked+.test__detail {
     padding: 0;
     margin: 0;
     border: none;
+    width: 100%;
 }
 
 .inner_table tr:first-child td {
