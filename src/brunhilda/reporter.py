@@ -119,7 +119,10 @@ class Reporter:
             path = str(args[i])
             report_path = str(args[i + 1] if i + 1 < len(args) else '')
 
-            tests_list = self._load(path)['tests']
+            tests_list = self._load(path)
+
+            if 'tests' in tests_list:
+                tests_list = tests_list['tests']
 
             for test in tests_list:
                 test['html_report_path'] = report_path
