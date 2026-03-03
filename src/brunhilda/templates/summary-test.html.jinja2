@@ -123,7 +123,7 @@
                             {% endif %}
                             </td>
                             <td class="test__comment" rowspan="{{ loop.length }}">
-                                <div class="scrollable-cell">
+                                <div class="comment-content">
                                 {% if test_case.comment|length > 1 %}
                                     <ul>
                                     {% for comment in test_case.comment %}
@@ -134,6 +134,7 @@
                                     {{ test_case.comment[0] }}
                                 {% endif %}
                                 </div>
+                                <button class="comment-toggle-btn" style="display: none;">▼</button>
                             </td>
                 {% endif %}
                         </tr>
@@ -157,13 +158,11 @@
                     </td>
                     <td class="test__bug-id">{{ test_case.bug_id }}</td>
                     <td class="test__comment">
-                        <div class="scrollable-cell">{{ test_case.comment }}</div>
+                        <div class="comment-content">{{ test_case.comment }}</div>
+                        <button class="comment-toggle-btn" style="display: none;">▼</button>
                     </td>
                 </tr>
         {% endif %}
-        <tr class="row-resizer">
-            <td colspan="8"></td>
-        </tr>
     {% endfor %}
                 </tbody>
                 <tfoot>
@@ -185,6 +184,96 @@
         $(document).ready(function() {
             const table = document.getElementById('test-summary-table');
             if (!table) return;
+
+            const commentExpandersData = [];
+
+            function initCommentExpanders() {
+                $(".test__comment").each(function() {
+                    const td = $(this);
+                    const cell = td.find(".comment-content");
+                    const btn = td.find(".comment-toggle-btn");
+
+                    if (cell.length === 0 || btn.length === 0) return;
+
+                    const item = {
+                        td: td,
+                        cell: cell,
+                        btn: btn,
+                        row: td.closest('tr'),
+                        currentClampHeight: 0
+                    };
+                    commentExpandersData.push(item);
+
+                    btn.on('click', function() {
+                        const isExpanded = cell.hasClass('is-expanded');
+
+                        if (isExpanded) {
+                            cell.removeClass('is-expanded');
+                            cell.css("max-height", cell[0].scrollHeight + "px");
+                            void cell[0].offsetHeight;
+                            cell.css("max-height", item.currentClampHeight + "px");
+                            btn.text('▼');
+                        } else {
+                            cell.addClass('is-expanded');
+                            const currentNeededHeight = cell[0].scrollHeight;
+                            cell.css("max-height", currentNeededHeight + "px");
+                            btn.text('▲');
+                        }
+                    });
+                });
+            }
+
+            function updateCommentExpanders() {
+                if (commentExpandersData.length === 0) return;
+
+                // temporary hiding of texts to obtain natural line height
+                $(".comment-content").css({
+                    "display": "none",
+                    "max-height": "none",
+                    "overflow": "visible",
+                    "transition": "none"
+                });
+
+                commentExpandersData.forEach(item => {
+                    item.targetRowHeight = item.row.outerHeight();
+                });
+
+                $(".comment-content").css("display", "block");
+
+                commentExpandersData.forEach(item => {
+                    item.fullTextHeight = item.cell[0].scrollHeight;
+                });
+
+                // show/hide toggle button
+                commentExpandersData.forEach(item => {
+                    item.currentClampHeight = Math.max(40, item.targetRowHeight - 10);
+                    const tolerance = 15;
+
+                    item.cell.css("transition", "max-height 0.3s ease-in-out");
+
+                    if (item.fullTextHeight > item.currentClampHeight + tolerance) {
+                        // text is too long, button needed
+                        item.btn.show();
+                        item.cell.css("overflow", "hidden");
+
+                        if (!item.cell.hasClass('is-expanded')) {
+                            item.cell.css("max-height", item.currentClampHeight + "px");
+                            item.btn.text('▼');
+                        } else {
+                            item.cell.css("max-height", "none");
+                            item.btn.text('▲');
+                        }
+                    } else {
+                        // whole text is shown
+                        item.cell.addClass('is-expanded');
+                        item.cell.css({
+                            "max-height": "none",
+                            "overflow": "visible"
+                        });
+                        item.btn.hide();
+                    }
+                });
+            }
 
             // Add column resizers with logic after 3rd and 7th column (not generated in template)
             const setupColumnResizers = function (table) {
@@ -231,68 +320,13 @@
                         document.removeEventListener('mousemove', mouseMoveHandler);
                         document.removeEventListener('mouseup', mouseUpHandler);
                         resizer.classList.remove('resizing');
+                        updateCommentExpanders();
                     };
 
                     resizer.addEventListener('mousedown', mouseDownHandler);
                 };
                 addResizer(headers[2], headers[7], headers[2]);
                 addResizer(headers[2], headers[7], headers[6]);
-            };
-
-            // Add event listener to row resizers (already generated in template)
-            const setupRowResizers = function(table) {
-                const resizers = table.querySelectorAll('.row-resizer');
-
-                resizers.forEach(resizer => {
-                    const resizerPreviousRow = resizer.previousElementSibling;
-                    if (!resizerPreviousRow) return;
-
-                    const groupIdentifier = resizerPreviousRow.dataset.filter;
-                    const rowToResize = table.querySelectorAll(`tr[data-filter="${groupIdentifier}"]`)[0];
-                    const firstcell = rowToResize.cells[0];
-                    const rowspan = firstcell?.rowSpan ?? 1;
-                    const scrollableCell = rowToResize.querySelector(`div[class="scrollable-cell"]`);
-                    const scrollableCellMinHeight = parseInt(window.getComputedStyle(scrollableCell).minHeight, 10);
-
-                    let startY = 0;
-                    let startRowHeight = 0;
-                    let startScrollableColumnHeight = 0;
-
-                    const mouseDownHandler = function(e) {
-                        e.preventDefault();
-                        startY = e.clientY;
-                        startRowHeight = parseInt(window.getComputedStyle(rowToResize).height, 10);
-                        startScrollableColumnHeight = parseInt(window.getComputedStyle(scrollableCell).height, 10);
-                        document.addEventListener('mousemove', mouseMoveHandler);
-                        document.addEventListener('mouseup', mouseUpHandler);
-                        resizer.classList.add('resizing');
-                    };
-
-                    const mouseMoveHandler = function(e) {
-                        const dy = e.clientY - startY;
-                        const cellHeight = startScrollableColumnHeight +dy;
-                        const rowHeight = cellHeight/rowspan;
-                        const scrollableCellMaxHeight = scrollableCell.scrollHeight;
-
-                        if (scrollableCellMaxHeight >= cellHeight && scrollableCellMinHeight <= cellHeight){
-                            scrollableCell.style.height = `${cellHeight}px`;
-
-                            let currentRow = rowToResize;
-                            for (let i = 0; i < rowspan; i++){
-                                currentRow.style.height = `${rowHeight}px`;
-                                currentRow = currentRow.nextElementSibling;
-                            }
-                        }
-                    };
-
-                    const mouseUpHandler = function() {
-                        document.removeEventListener('mousemove', mouseMoveHandler);
-                        document.removeEventListener('mouseup', mouseUpHandler);
-                        resizer.classList.remove('resizing');
-                    };
-
-                    resizer.addEventListener('mousedown', mouseDownHandler);
-                });
             };
 
             // Add resizer after last column, that will increase table width
@@ -331,45 +365,16 @@
                     document.removeEventListener('mousemove', mouseMoveHandler);
                     document.removeEventListener('mouseup', mouseUpHandler);
                     resizer.classList.remove('resizing');
+                    updateCommentExpanders();
                 };
 
                 resizer.addEventListener('mousedown', mouseDownHandler);
             };
 
-            function updateScrollableCells() {
-                $(".scrollable-cell").each(function () {
-                    const cell = $(this);
-
-                    cell.css("max-height", "1px"); // To not affect calculation (going to be overwritten after calculation)
-
-                    // Calculate default height of other row cells
-                    const row = cell.closest("tr");
-                    let height = 0;
-                    row.children("td:not(.test__comment)").each(function () {
-                        const h = $(this).outerHeight();
-                        if (h > height) height = h;
-                    });
-
-                    cell.css({
-                        "height": height + "px",
-                    });
-                    cell.css({
-                        "min-height": height + "px"
-                    });
-                    cell.css("max-height", "none");
-
-                    // Show scrollbar if needed
-                    if (cell[0].scrollHeight > height) {
-                        cell.css("overflow-y", "auto");
-                    } else {
-                        cell.css("overflow-y", "hidden");
-                    }
-                });
-            };
 
         /* CALL THE SETUP METHODS */
-        updateScrollableCells();
-        setupRowResizers(table);
+        initCommentExpanders();
+        updateCommentExpanders();
         setupColumnResizers(table);
         setupTableResizer(table);
         });

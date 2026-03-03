@@ -1230,21 +1230,12 @@ ol.lowerroman {
 }
 
 /**************************************/
-/* Scrollable cell */
+/* Collapsible comment content */
 
-.scrollable-cell {
-    overflow-y: auto;
-    padding: 0 1rem 0 0;
-    margin: 0;
+.comment-content {
     box-sizing: border-box;
-    font: inherit;
-    font-size: inherit;
-    color: inherit;
-    background: transparent;
-    border: none;
-}
-
-.test__comment .scrollable-cell {
+    margin: 0;
+    padding: 0;
     min-height: 1rem;
 }
 
@@ -1343,4 +1334,23 @@ ol.lowerroman {
 .subtest__has_image .subtest__detail pre {
     height: 100%;
     max-height: none;
+}
+
+/**************************************/
+/* Toggle comment button */
+.comment-toggle-btn {
+    display: inline-block;
+    margin-top: 0.5em;
+    padding: 0.2em 0.6em;
+    font-size: 0.85em;
+    background-color: #f3f3f3;
+    border: 1px solid #c0c0c0;
+    border-radius: 3px;
+    cursor: pointer;
+    color: #444;
+    transition: background-color 0.2s;
+}
+
+.comment-toggle-btn:hover {
+    background-color: #e0e0e0;
 }
