@@ -102,8 +102,10 @@
                 {% if loop.first %}
                             <td class="test__result" rowspan="{{ loop.length }}">
                     {% if test_case.result == 'EMPTY' %}
-                    {% else %}
+                    {% elif test_case.html_report_path != "" %}
                             <a href="{{ test_case.html_report_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
+                    {% else %}
+                            <a>{{ test_case.result }}</a>
                     {% endif %}
                             </td>
                             <td class="test__issue" rowspan="{{ loop.length }}">
@@ -147,8 +149,10 @@
                     <td class="test__requirement"></td>
                     <td class="test__result">
                     {% if test_case.result == 'EMPTY' %}
+                    {% elif test_case.html_report_path != "" %}
+                            <a href="{{ test_case.html_report_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
                     {% else %}
-                        <a href="{{ test_case.html_report_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
+                            <a>{{ test_case.result }}</a>
                     {% endif %}
                     </td>
                     <td class="test__issue">

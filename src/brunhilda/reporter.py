@@ -354,9 +354,12 @@ class Reporter:
 
         # Update path to test run report to relative one
         updated_tests = {
-            k: [{
-                **test, 'html_report_path': rel_path(path, test['html_report_path'])
-            } for test in tests] for k, tests in self._tests.items()
+            k: [
+                {
+                    **test, 'html_report_path':
+                        rel_path(path, test['html_report_path']) if test['html_report_path'] != '' else ''
+                } for test in tests
+            ] for k, tests in self._tests.items()
         }
 
         output = formater.print(
