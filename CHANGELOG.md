@@ -1,5 +1,15 @@
 # Brunhilda project changelog
 
+## 2.6.1 (2026-01-21)
+
+- Added backward compatibility for loading test files created with versions prior to 2.6.0 (refs #13181).
+- Fixed the parsing of line blocks in step descriptions (refs #13244).
+- Colors for unknown categories in charts are now selected in a reproducible order from a defined list (refs #13173).
+- Fixed filtering in the requirements summary report (refs #13173).
+- Fixed cell resizing in the test summary (refs #13173, #13172).
+- Improved the performance of test summary loading (#13172).
+- Removed the link to the test report if no HTML is provided during report creation (refs #13182).
+
 ## 2.6.0 (2026-01-21)
 
 - Added version of BRunhilda to generated files (refs #12690)
