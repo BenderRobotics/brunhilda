@@ -384,6 +384,8 @@ Reporter class `user_data` dictionary is rendered as a table at the top of produ
 - `brunhilda.reporter.Reporter.add_index_link` adds not generated file link to index page.
 - `brunhilda.reporter.Reporter.print_index` creates an index file referencing all files yet created.
 
+Reporter instance **doesn't allow** to create reports with just part of the tests (eg. load tests → justify → print reports → load tests → justify → print reports). Similar behaviour can be achieved using multiple reporter instances and using reporters method `add_index_link`.
+
 It is important to keep the order
 
 1. load tests,

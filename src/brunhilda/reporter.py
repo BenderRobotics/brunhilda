@@ -31,6 +31,7 @@ class Reporter:
         self._feature_list_path: Optional[str] = None
         self._test_plan_paths = {'_': ''}
         self._user_data = user_data
+        self._justification_executed = False
 
     def _load(self, path: Union[str, Path]) -> Dict:
         """
@@ -87,6 +88,8 @@ class Reporter:
 
                     test['comment'] = [comment for comment in comments if comment]
                     test['bug_id'] = list(bug_ids)
+
+            self._justification_executed = True
 
     def _append_requirement(self, req_id: str, out_of_scope_reason: Optional[str] = None) -> None:
         """
@@ -153,6 +156,8 @@ class Reporter:
         :param path: path to the test file
         :param report_path: path to the test html report file
         """
+        if self._justification_executed:
+            raise RuntimeError('Another tests cannot be loaded after justification.')
 
         for i in range(0, len(args), 2):
             path = str(args[i])
@@ -191,6 +196,9 @@ class Reporter:
 
         :param paths: path(s) to the file(s)
         """
+        if self._justification_executed:
+            raise RuntimeError('Another issues cannot be loaded after justification.')
+
         for path in paths:
             path = str(path)
             self._issues[path] = self._load(path)
