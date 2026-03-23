@@ -7,6 +7,8 @@ import simplejson as json
 import yaml
 from natsort import natsorted
 
+from brunhilda.outputs.html_result_output import HtmlResultOutput
+
 from .data import Summary
 from .outputs.html_feature_summary_output import HtmlFeatureSummaryOutput
 from .outputs.html_index_output import HtmlIndexOutput
@@ -14,14 +16,21 @@ from .outputs.html_issue_list_output import HtmlIssueListOutput
 from .outputs.html_req_summary_output import HtmlReqSummaryOutput
 from .outputs.html_test_plan_output import HtmlTestPlanOutput
 from .outputs.html_test_summary_output import HtmlTestSummaryOutput
+from .outputs.output import Output
 from .policies import CoveragePolicy
 from .rel_path import rel_path
+
+try:
+    from .__version__ import version as brunhilda_version
+except ImportError:
+    brunhilda_version = 'unknown'
 
 
 class Reporter:
 
     def __init__(self, user_data: Dict[str, str] = {}, user_stories: List['doorstop.Item'] = []) -> None:
-        self._outputs: List[Tuple[str, str, bool]] = []  # Tuple contains name, path, is generated
+        self._outputs: List[Tuple[str, str, bool,
+                                  bool]] = []  # Tuple contains name, path, is generated, is justified record
         self._user_stories = user_stories
         self._requirements: Dict[str, Optional[str]] = {}  # key: req_id, value: out of scope reason (None == in scope)
         self._tests: Dict = {}
@@ -233,13 +242,14 @@ class Reporter:
 
         self._features = features
 
-    def _write_file(self, name: str, path: str, content: str) -> None:
+    def _write_file(self, name: str, path: str, content: str, is_justified_record=False) -> None:
         """
         Writes content to the given filename
 
         :param name: name of the file
         :param path: path to the file
         :param content: content of the file
+        :param is_justified_report: defines if written file is regeneration of test record
         """
         dir_name = os.path.dirname(os.path.abspath(path))
 
@@ -249,7 +259,7 @@ class Reporter:
         with open(path, 'w', encoding='utf-8') as f:
             f.write(content)
 
-        self._outputs.append((name, path, True))
+        self._outputs.append((name, path, True, is_justified_record))
         print(f'... created output {path}')
 
     def _collect_requirements(self, testsuite: Dict) -> List[Tuple[str, Optional[str]]]:
@@ -321,7 +331,7 @@ class Reporter:
 
         :param path: index path
         """
-        for _, file_path, is_generated in self._outputs:
+        for _, file_path, is_generated, _ in self._outputs:
             if is_generated:
                 with open(file_path, 'r', encoding='utf-8') as file:
                     content = file.read()
@@ -546,7 +556,7 @@ class Reporter:
         :param name: name of the file that will be displayed on index page
         """
         path = str(path)
-        self._outputs.append((name, path, False))
+        self._outputs.append((name, path, False, False))
         print(f'... added index page file {path}')
 
     def print_index(
@@ -563,9 +573,127 @@ class Reporter:
         formater = HtmlIndexOutput(preamble=preamble)
         file_list = []
 
-        for file_name, file_path, _ in self._outputs:
-            file_list.append((file_name, rel_path(path, file_path)))
+        for file_name, file_path, _, is_justified_record in self._outputs:
+            if not is_justified_record:
+                file_list.append((file_name, rel_path(path, file_path)))
 
         output = formater.print(name, file_list)
         self._add_index_link(path)
         self._write_file(name, path, output)
+
+    def print_justified_record(self, tests_path: str, output_path: str) -> None:
+        """
+        Regenerate test record with updated results after justification
+        :param tests_path: path to json/yaml tests file
+        :param output_path: path to regenerated file
+        """
+        if not tests_path in self._tests:
+            raise RuntimeError(
+                f"Given tests ({tests_path}) weren't loaded before justified record print. They must be loaded before this operation."
+            )
+
+        raw_data = self._load(tests_path)
+        summary = Summary()
+
+        for test in self._tests[tests_path]:
+            summary.results += test['result']
+
+        output = HtmlResultOutput(path=output_path)
+        rendered = output.print(
+            env_info=raw_data['run'].get('env-info', None),
+            user_data=raw_data['run']['user-data'],
+            result=self._prepare_test_data_for_template(self._tests[tests_path], raw_data),
+            summary=summary,
+            justified_record=True
+        )
+
+        self._write_file('', output_path, rendered, True)
+
+        # Update tests link to html report
+        for test in self._tests[tests_path]:
+            test['html_report_path'] = output_path
+
+    def _prepare_test_data_for_template(self, flat_data: list, raw_data: Dict):
+        """
+        Helper method to convert loaded tests into BRunhildaTestResult format
+        Needed for correct parsing into HTML test record template
+
+        :param flat_data: loaded test data from json/yaml file
+        :param raw_data: raw data
+        """
+        converted_result = {'testcases': {}}
+        case_id = 0  # unique ID in case raw_data doesn't contain 'test-cases'
+
+        for test in flat_data:
+            case_name = test['case']
+
+            if case_name not in converted_result['testcases']:
+                converted_result['testcases'][case_name] = {
+                    'name': case_name,
+                    'time': 0.0,  # will be retroactively adjusted
+                    'description': '',  # will be retroactively adjusted
+                    'tests': [],
+                    'passed': 0,
+                    'errored': 0,
+                    'failed': 0,
+                    'skipped': 0,
+                    'justified': 0,
+                    'not_executed': 0,
+                    'expected_failures': 0,
+                    'unexpected_successes': 0,
+                    'id': case_id  # will be retroactively adjusted
+                }
+                case_id += 1
+
+            ctx = converted_result['testcases'][case_name]
+
+            raw_res = test.get('result', 'NOT-EXECUTED').upper()
+
+            test_obj = {
+                'name': test.get('test_id', 'unknown').split('.')[-1],
+                'result': raw_res,
+                'time': test.get('duration', 0.0),
+                'skip_reason': test.get('comment')[0] if raw_res == 'SKIPPED' and test.get('comment') else '',
+                'description': test.get('description', ''),
+                'steps': test.get('steps', []),
+                'subtests': test.get('subtests', []),
+                'output': test.get('output', ''),
+                'errors': test.get('errors', []),
+                'extra': test.get('extra', [])
+            }
+
+            if test_obj['subtests']:
+                stats = {}
+                for st in test_obj['subtests']:
+                    st_res = st.get('result', 'NOT-EXECUTED').lower()
+                    stats[st_res] = stats.get(st_res, 0) + 1
+                test_obj['subtests_stats'] = stats
+
+            ctx['tests'].append(test_obj)
+
+            if raw_res == 'PASSED':
+                ctx['passed'] += 1
+            elif raw_res == 'FAILED':
+                ctx['failed'] += 1
+            elif raw_res == 'ERRORED':
+                ctx['errored'] += 1
+            elif raw_res == 'SKIPPED':
+                ctx['skipped'] += 1
+            elif raw_res == 'EXPECTED-FAILURE':
+                ctx['expected_failures'] += 1
+            elif raw_res == 'UNEXPECTED-SUCCESS':
+                ctx['unexpected_successes'] += 1
+            elif raw_res == 'JUSTIFIED':
+                ctx['justified'] += 1
+            elif raw_res == 'NOT-EXECUTED':
+                ctx['not_executed'] += 1
+
+        if 'test-cases' in raw_data:
+            # Update test cases description, ID and time from raw data
+            for test_case in raw_data['test-cases']:
+                if test_case['name'] in converted_result['testcases']:
+                    converted_result['testcases'][test_case['name']]['description'] = test_case['description']
+                    converted_result['testcases'][test_case['name']]['time'] = test_case['time']
+                    converted_result['testcases'][test_case['name']]['id'] = test_case['id']
+
+        return converted_result

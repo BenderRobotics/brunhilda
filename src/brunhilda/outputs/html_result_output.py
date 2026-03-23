@@ -15,7 +15,7 @@ class HtmlResultOutput(HtmlOutput):
     Generates a detailed HTML report of the executed test run.
     """
 
-    def print(self, env_info: Dict, user_data: Dict, result, summary: Summary) -> str:
+    def print(self, env_info: Dict, user_data: Dict, result, summary: Summary, justified_record: bool = False) -> str:
         """
         Prints test result to HTML document.
 
@@ -59,6 +59,7 @@ class HtmlResultOutput(HtmlOutput):
             result=result,
             summary=summary,
             document_path=self.path,
-            brunhilda_version=brunhilda_version
+            brunhilda_version=brunhilda_version,
+            justified_record=justified_record
         )
         return rendered

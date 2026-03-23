@@ -121,6 +121,11 @@
         <div class="header">
             {% include "header.html.jinja2" %}
         </div>
+
+        {% if justified_record %}
+        <a href="#index" class="index-link-button">🏠 Home</a>
+        {% endif %}
+
         <div class="main">
 {% if preamble %}
             <section class="preamble">
@@ -167,7 +172,9 @@
                                     <span class="testcase__summary--expected-failure">
                                         expected failures: <strong>{{ testcase.expected_failures }}</strong></span>,
                                     <span class="testcase__summary--unexpected-success">
-                                        unexpected success: <strong>{{ testcase.unexpected_successes }}</strong></span>.
+                                        unexpected success: <strong>{{ testcase.unexpected_successes }}</strong></span>,
+                                    <span class="testcase__summary--justified">
+                                        justified: <strong>{{ testcase.justified }}</strong></span>.
                                 </p>
                             </label>
                             <input type="checkbox" id="testcase_expand_{{ testcase.name }}" class="testcase__expander" checked>

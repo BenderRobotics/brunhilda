@@ -375,6 +375,7 @@ Reporter class `user_data` dictionary is rendered as a table at the top of produ
 - `brunhilda.reporter.Reporter.load_requirements` loads requirements from [file](#requirements-file).
 - `brunhilda.reporter.Reporter.load_features` loads features linked to the individual tests.
 - `brunhilda.reporter.Reporter.justify_tests` processes loaded tests and issues and applies the justifications.
+- `brunhilda.reporter.Reporter.print_justified_record` regenerates HTML test record with updated tests results after justification.
 - `brunhilda.reporter.Reporter.print_issue_list` creates a report with all issues and justifications.
 - `brunhilda.reporter.Reporter.print_test_plan` creates a test plan report.
 - `brunhilda.reporter.Reporter.print_requirements_summary` creates requirements summary report.
@@ -392,11 +393,12 @@ It is important to keep the order
 2. load issues, requirements
 3. load features,
 4. justify,
-5. print test plan report,
-6. print issues report,
-7. print rest of reports,
-8. add links to index page,
-9. print index.
+5. print justified test record
+6. print test plan report,
+7. print issues report,
+8. print rest of reports,
+9. add links to index page,
+10. print index.
 
 ```python
 reporter = brunhilda.reporter.Reporter(requirements=['REQ_01', 'REQ_02'],
@@ -409,6 +411,7 @@ reporter.load_issues('issues_run_2.yaml')
 reporter.load_requirements('requirements.json')
 reporter.load_features('features.yaml')
 reporter.justify_tests()
+reporter.print_justified_record('tests_run_1.yaml', 'test_run_1_report_justified.html')
 reporter.print_test_plan('plan.html', preamble='preamble.html')
 reporter.print_issue_list('issues.html')
 reporter.print_requirements_summary('requirements.html', preamble=['preamble1.html', 'preamble2.html'])

@@ -125,7 +125,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self._last_result: Result = NOT_EXECUTED
         self._name = name
         self._dut = dut
-        self._user_data = user_data
+        self._user_data = dict(sorted(user_data.items())) if user_data else None
         self._summary = Summary()
         self._env_info = {
             'pyversion': sys.version,
@@ -399,6 +399,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'errored': 0,
                 'expected_failures': 0,
                 'unexpected_successes': 0,
+                'justified': 0,
                 'result': NOT_EXECUTED
             }
             self.num_suites += 1
@@ -463,6 +464,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             self.results['testcases'][testcase_name]['result'] = PASSED
 
         test_id = self._get_test_id(test)
+        output = self.stream_buffer.read()
+        test_time = self.test_execution_time
         self._process_test_extra(test, test_id)
 
         self.results['testcases'][testcase_name]['time'] = self.suite_execution_time
@@ -472,12 +475,12 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'skip_reason': self.skip_reason,
                 'id': test_id,
                 'name': test._testMethodName,
-                'time': self.test_execution_time,
+                'time': test_time,
                 'description': parse_description(test._testMethodDoc),
                 'steps': parse_steps(test.steps, test._testMethodDoc),
                 'tags': parse_tags(test._testMethodDoc),
                 'result': self._last_result,
-                'output': self.stream_buffer.read(),
+                'output': output,
                 'errors': self._errors_strings,
                 'extra': test.extra
             }
@@ -486,7 +489,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         self._summary.results += self._last_result
 
         self._record(
-            testcase_name, test_id, test.steps, test._testMethodDoc, self._last_result, self.skip_reason, self.subtests
+            testcase_name, test_id, test.steps, test._testMethodDoc, self._last_result, self.skip_reason, self.subtests,
+            test_time, output, self._errors_strings, test.extra
         )
 
     def addSuccess(self, test: unittest.TestCase):
@@ -682,7 +686,11 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         description: str,
         result: Result,
         comment='',
-        subtests: List[Dict[str, Any]] = []
+        subtests: List[Dict[str, Any]] = [],
+        duration: float = 0.0,
+        output: str = '',
+        error_strings: List[str] = [],
+        extra: Any = None
     ):
         """
         Adds executed test to the trace record
@@ -694,6 +702,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param result: result of the test execution
         :param comment: test comment
         :param subtests: all subtests of this test
+        :param duration: execution time of the test
+        :param output: terminal string output
+        :param error_strings: list of terminal error strings
+        :param extra: extra test result data (text, image reference)
         """
         requirements = parse_requirements(description)
         tags = parse_tags(description)
@@ -713,6 +725,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'comment': comment,
                 'level': self._name,
                 'subtests': deepcopy(subtests),
+                'duration': duration,
+                'output': output,
+                'errors': error_strings,
+                'extra': extra
             }
         )
 
@@ -788,6 +804,18 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
         :param filename: filename to put the serialized form into
         """
+        test_cases = []
+
+        for test_case in self.results['testcases'].values():
+            test_cases.append(
+                {
+                    'name': test_case['name'],
+                    'description': test_case['description'],
+                    'time': test_case['time'],
+                    'id': test_case['id']
+                }
+            )
+
         tests_output = {
             'tests': self._tests,
             'run':
@@ -795,8 +823,10 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                     'user-data': self._user_data,
                     'date-time': self.run_start_timestamp,
                     'level': self._name,
-                    'dut': self._dut
-                }
+                    'dut': self._dut,
+                    'env-info': self._env_info
+                },
+            'test-cases': test_cases
         }
 
         self._serialize(tests_output, filename)

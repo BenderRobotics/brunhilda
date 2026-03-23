@@ -757,6 +757,10 @@ input.test__expander:checked+.test__detail {
     background-color: var(--color--error-bg);
 }
 
+.subtest--justified {
+    background-color: var(--color--justified-bg);
+}
+
 .subtest__extra__image {
     max-height: 400px;
     max-width: 100%;
