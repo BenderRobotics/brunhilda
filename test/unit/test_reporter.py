@@ -111,8 +111,8 @@ def test_load_issues_single_path(reporter):
 
 def test_load_issues_multiple_paths(reporter):
     """Test loading multiple issues files input."""
-    data1 = {'failures': ['issue1']}
-    data2 = {'failures': ['issue2']}
+    data1 = {'errors': [], 'failures': [{'bug-id': 'issue1', 'comment': ''}]}
+    data2 = {'errors': [], 'failures': [{'bug-id': 'issue2', 'comment': ''}]}
 
     with patch.object(reporter, '_load', side_effect=[data1, data2]) as mock_load:
 
@@ -123,6 +123,88 @@ def test_load_issues_multiple_paths(reporter):
 
         assert reporter._issues['data/issues_part1.json'] == data1
         assert reporter._issues['data/issues_part2.json'] == data2
+
+
+def test_load_issues_newline_update(reporter):
+    """Tests load issues part, where comments newlines are updated."""
+    data = {
+        'errors':
+            [
+                {
+                    'comment': ''
+                }, {
+                    'comment': ''
+                }, {
+                    'comment': 'First\nSecond'
+                }, {
+                    'comment': 'First\nSecond'
+                }, {
+                    'comment': 'Normal comment'
+                }, {
+                    'comment': 'Normal comment'
+                }
+            ],
+        'failures':
+            [
+                {
+                    'comment': ''
+                }, {
+                    'comment': ''
+                }, {
+                    'comment': 'First\nSecond'
+                }, {
+                    'comment': 'First\nSecond'
+                }, {
+                    'comment': 'Normal comment'
+                }, {
+                    'comment': 'Normal comment'
+                }
+            ]
+    }
+    path = 'data/issues.json'
+
+    with patch.object(reporter, '_load', return_value=data) as mock_load:
+
+        reporter.load_issues(path)
+
+        mock_load.assert_called_once_with(path)
+
+        assert path in reporter._issues
+        print(reporter._issues[path])
+        assert reporter._issues[path] == {
+            'errors':
+                [
+                    {
+                        'comment': ''
+                    }, {
+                        'comment': ''
+                    }, {
+                        'comment': 'First<br />Second'
+                    }, {
+                        'comment': 'First<br />Second'
+                    }, {
+                        'comment': 'Normal comment'
+                    }, {
+                        'comment': 'Normal comment'
+                    }
+                ],
+            'failures':
+                [
+                    {
+                        'comment': ''
+                    }, {
+                        'comment': ''
+                    }, {
+                        'comment': 'First<br />Second'
+                    }, {
+                        'comment': 'First<br />Second'
+                    }, {
+                        'comment': 'Normal comment'
+                    }, {
+                        'comment': 'Normal comment'
+                    }
+                ]
+        }
 
 
 # --- Testing justify_tests ---

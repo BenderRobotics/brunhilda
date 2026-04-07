@@ -210,7 +210,18 @@ class Reporter:
 
         for path in paths:
             path = str(path)
-            self._issues[path] = self._load(path)
+            issues = self._load(path)
+
+            # Update issues comment newline symbols
+            for issue in issues['errors'] + issues['failures']:
+                if '\n' in issue['comment']:
+                    # Comment in yaml is written in double quotes
+                    issue['comment'] = issue['comment'].replace('\n', '<br />')
+                elif r'\n' in issue['comment']:
+                    # Comment in yaml is written in single quotes
+                    issue['comment'] = issue['comment'].replace(r'\n', '<br />')
+
+            self._issues[path] = issues
 
     def load_features(self, path: Union[str, Path]) -> None:
         """
