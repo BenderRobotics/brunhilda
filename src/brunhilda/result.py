@@ -610,10 +610,12 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
 
             # Subtest errored if the exception is not a failure or derived exception
             if not issubclass(err[0], test.failureException):
-                self.subtests[-1]['result'] = ERRORED
+                subtest_result = ERRORED
+                self.subtests[-1]['result'] = subtest_result
                 self._last_result = ERRORED
             else:
-                self.subtests[-1]['result'] = FAILED
+                subtest_result = FAILED
+                self.subtests[-1]['result'] = subtest_result
                 # We want to keep overall test result ERRORED if already set, ERRORED means that test is not working.
                 if self._last_result != ERRORED:
                     self._last_result = FAILED
@@ -623,14 +625,14 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'sub-test': subtest_id,
                 'message': err_str,
                 'extra': subtest.extra,
-                'result': self._last_result,
+                'result': subtest_result,
                 'bug-id': '',
                 'comment': '',
                 'justified': '',
                 'tags': parse_tags(test._testMethodDoc)
             }
 
-            self._issues['errors' if self._last_result == ERRORED else 'failures'].append(issue)
+            self._issues['errors' if subtest_result == ERRORED else 'failures'].append(issue)
 
         super().addSubTest(test, subtest, err)
 
@@ -645,9 +647,11 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         # When sub test is skipped, this method is called as well, so only way how to
         # detect skipped sub tests is to check the test class.
         if isinstance(test, unittest.case._SubTest):
+            subtest_id = test.id().split('.', 1)[1]
             self.subtests.append(
                 {
-                    'id': 1 + len(self.subtests),
+                    'num': 1 + len(self.subtests),
+                    'id': subtest_id,
                     'name': str(dict(test.params)),
                     'result': SKIPPED,
                     'reason': reason,
