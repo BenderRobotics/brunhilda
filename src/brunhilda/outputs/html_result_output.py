@@ -27,6 +27,17 @@ class HtmlResultOutput(HtmlOutput):
         """
         result = copy.deepcopy(result)
 
+        subtests_results = {
+            'PASSED': 0,
+            'FAILED': 0,
+            'ERRORED': 0,
+            'JUSTIFIED': 0,
+            'SKIPPED': 0,
+            'EXPECTED-FAILURE': 0,
+            'UNEXPECTED-SUCCESS': 0,
+            'NOT-EXECUTED': 0,
+        }
+
         for case in sorted(result['testcases'].values(), key=lambda item: item['id']):
             if 'description' in case:
                 case['description'] = self._format_doc(case['description'])
@@ -46,10 +57,15 @@ class HtmlResultOutput(HtmlOutput):
                 if test['subtests']:
                     stats = {'FAILED': 0, 'ERRORED': 0, 'SKIPPED': 0}
                     for subtest in test['subtests']:
+                        subtests_results[subtest['result']] += 1
+
                         if subtest['result'] in stats:
                             stats[subtest['result']] += 1
+
                     stats = {k: v for k, v in stats.items() if v > 0}
                     test['subtests_stats'] = stats
+                else:
+                    subtests_results[test['result']] += 1
 
         template = self.load_template('template.html.jinja2')
         rendered = template.render(
@@ -60,6 +76,7 @@ class HtmlResultOutput(HtmlOutput):
             summary=summary,
             document_path=self.path,
             brunhilda_version=brunhilda_version,
-            justified_record=justified_record
+            justified_record=justified_record,
+            subtests_results=subtests_results
         )
         return rendered

@@ -123,6 +123,22 @@
 <h2>Summary</h2>
 
 <table class="run-summary table--wide">
+    {% if subtests_results %}
+    <thead>
+        <tr>
+            <th>Result</th>
+            <th>Tests</th>
+            <th>Subtests
+            <span title="Tests without subtests are counted as 1 subtest." style="vertical-align: middle;">
+                <svg width="16" height="16">
+                    <use href="#icon-info"></use>
+                </svg>
+            </span>
+            </th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    {% endif %}
     <tbody>
         <tr class="run-summary--passed">
             <th><input type="checkbox" id="run-summary--passed" checked>
@@ -131,6 +147,11 @@
             <td>
                 {{ summary.results.passed }}
             </td>
+            {% if subtests_results %}
+            <td>
+                {{ subtests_results.PASSED }}
+            </td>
+            {% endif %}
             <td>Passed tests.</td>
         </tr>
         <tr class="run-summary--failed">
@@ -140,6 +161,11 @@
             <td>
                 {{ summary.results.failed }}
             </td>
+            {% if subtests_results %}
+            <td>
+                {{ subtests_results.FAILED }}
+            </td>
+            {% endif %}
             <td>Failed tests.</td>
         </tr>
         <tr class="run-summary--errored">
@@ -149,6 +175,11 @@
             <td>
                 {{ summary.results.errored }}
             </td>
+            {% if subtests_results %}
+            <td>
+                {{ subtests_results.ERRORED }}
+            </td>
+            {% endif %}
             <td>Tests that ended with other than assertion failure error.</td>
         </tr>
         <tr class="run-summary--justified">
@@ -158,6 +189,11 @@
             <td>
                 {{ summary.results.justified }}
             </td>
+            {% if subtests_results %}
+            <td>
+                {{ subtests_results.JUSTIFIED }}
+            </td>
+            {% endif %}
             <td>Tests ended with failure or error manually reviewed and reported as a false alarm.</td>
         </tr>
         <tr class="run-summary--skipped">
@@ -167,6 +203,11 @@
             <td>
                 {{ summary.results.skipped }}
             </td>
+            {% if subtests_results %}
+            <td>
+                {{ subtests_results.SKIPPED }}
+            </td>
+            {% endif %}
             <td>Tests that were skipped and not executed.</td>
         </tr>
         <tr class="run-summary--expected-failure">
@@ -176,6 +217,11 @@
             <td>
                 {{ summary.results.expected_failures }}
             </td>
+            {% if subtests_results %}
+            <td>
+                {{ subtests_results['EXPECTED-FAILURE'] }}
+            </td>
+            {% endif %}
             <td>Tests that are expected to fail during execution (e.g. DUT feature implementation is not yet finished).</td>
         </tr>
         <tr class="run-summary--unexpected-success">
@@ -185,6 +231,11 @@
             <td>
                 {{ summary.results.unexpected_successes }}
             </td>
+            {% if subtests_results %}
+            <td>
+                {{ subtests_results['UNEXPECTED-SUCCESS'] }}
+            </td>
+            {% endif %}
             <td>Tests marked as <em>expected failure</em> which passed despite expectation.</td>
         </tr>
         <tr class="run-summary--not-executed">
@@ -194,13 +245,22 @@
             <td>
                 {{ summary.results.not_executed }}
             </td>
+            {% if subtests_results %}
+            <td>
+                {{ subtests_results['NOT-EXECUTED'] }}
+            </td>
+            {% endif %}
             <td>Tests that hasn't been executed.</td>
         </tr>
     </tbody>
     <tfoot>
         <tr>
             <th> Total </th>
-            <td colspan="2">{{ summary.results.total }}</td>
+            <td>{{ summary.results.total }}</td>
+            {% if subtests_results %}
+            <td>{{ subtests_results.values() | sum }}</td>
+            {% endif %}
+            <td></td>
         </tr>
     </tfoot>
 </table>

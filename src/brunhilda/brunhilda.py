@@ -20,6 +20,7 @@ class BRunhilda(unittest.TextTestRunner):
     It prints out the names of tests as they are run, errors as they
     occur, and a summary of the results at the end of the test run.
     """
+    suite_run_end_separator = ' END OF SUITE RUN '.center(70, '~')
 
     def __init__(
         self,
@@ -70,7 +71,9 @@ class BRunhilda(unittest.TextTestRunner):
         :param test: test suite or case to be run
         :return: test result
         """
-        return super().run(test)  # type: ignore
+        result = super().run(test)
+        self._print_detailed_stats(result)
+        return result  # type: ignore
 
     def dryrun(self, suite: TestSuite) -> BRunhildaTestResult:
         """
@@ -90,6 +93,54 @@ class BRunhilda(unittest.TextTestRunner):
 
         result.stopTestRun()
         return result
+
+    def _print_detailed_stats(self, result: BRunhildaTestResult) -> None:
+        """
+        Print detailed statistics of results subtests.
+
+        :param result: case/suite result
+        """
+        infos_tests = {
+            'PASSED': 0,
+            'FAILED': 0,
+            'ERRORED': 0,
+            'SKIPPED': 0,
+            'EXPECTED-FAILURE': 0,
+            'UNEXPECTED-SUCCESS': 0,
+            'NOT-EXECUTED': 0,
+        }
+
+        infos_subtests = {
+            'PASSED': 0,
+            'FAILED': 0,
+            'ERRORED': 0,
+            'SKIPPED': 0,
+            'EXPECTED-FAILURE': 0,
+            'UNEXPECTED-SUCCESS': 0,
+            'NOT-EXECUTED': 0,
+        }
+
+        for testcase in result.results['testcases'].values():
+            for test in testcase['tests']:
+                infos_tests[test['result']] += 1
+                if test['subtests']:
+                    for subtest in test['subtests']:
+                        infos_subtests[subtest['result']] += 1
+                else:
+                    infos_subtests[test['result']] += 1
+
+        self.stream.writeln()
+        self.stream.writeln('Tests stats:')
+        for result, counter in infos_tests.items():
+            self.stream.writeln(f'  {result}: {counter}')
+
+        self.stream.writeln()
+        self.stream.writeln('Subtests stats:')
+        for result, counter in infos_subtests.items():
+            self.stream.writeln(f'  {result}: {counter}')
+
+        self.stream.writeln(self.suite_run_end_separator)
+        self.stream.writeln()
 
     def _makeResult(self) -> BRunhildaTestResult:
         """
