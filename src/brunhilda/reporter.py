@@ -71,9 +71,8 @@ class Reporter:
             for tests in self._tests.values():
                 for test in tests:
                     justifications = []  # list of justifications - there can be several failures in one test
-                    comments = set([test['comment']])
-                    bug_ids = set()
-
+                    issues_details = [
+                    ]  # list of dict containing bug ID, bug comment, (sub)test result, issue list link
                     for issues in self._issues.values():
                         if issues['run']['level'] == test['level']:
                             for issue in issues['errors'] + issues['failures']:
@@ -81,22 +80,48 @@ class Reporter:
                                     justified = issue['justified'].lower().strip() == 'yes'
                                     justifications.append(justified)
 
-                                    if issue['comment']:
-                                        comments.add(issue['comment'])
+                                    issue_list_link = f"{issue['sub-test'] if issue['sub-test'] else issue['test']}_{test['level']}"
+                                    issue_result = 'JUSTIFIED' if justified else issue['result']
 
-                                    if issue['bug-id']:
-                                        bug_ids.add(issue['bug-id'])
+                                    if issue['comment'] and issue['bug-id']:
+                                        issues_details.append(
+                                            {
+                                                'bug_id': issue['bug-id'],
+                                                'comment': issue['comment'],
+                                                'link': issue_list_link,
+                                                'result': issue_result
+                                            }
+                                        )
+                                    elif issue['bug-id']:
+                                        issues_details.append(
+                                            {
+                                                'bug_id': issue['bug-id'],
+                                                'link': issue_list_link,
+                                                'result': issue_result
+                                            }
+                                        )
+                                    elif issue['comment']:
+                                        issues_details.append(
+                                            {
+                                                'comment': issue['comment'],
+                                                'link': issue_list_link,
+                                                'result': issue_result
+                                            }
+                                        )
+                                    else:
+                                        issues_details.append({'link': issue_list_link, 'result': issue_result})
 
                                     for i, subtest in enumerate(test['subtests']):
                                         if subtest['id'] == issue['sub-test'] and justified:
                                             test['subtests'][i]['result'] = 'JUSTIFIED'
                                             break
+                    if test['comment']:
+                        test['test_comment'] = test['comment']
 
                     if justifications and all(justifications):
                         test['result'] = 'JUSTIFIED'
 
-                    test['comment'] = [comment for comment in comments if comment]
-                    test['bug_id'] = list(bug_ids)
+                    test['issues_details'] = issues_details
 
             self._justification_executed = True
 
@@ -181,7 +206,7 @@ class Reporter:
             for test in tests_list:
                 test['html_report_path'] = report_path
                 # More unique ID for handling the running of a single test from multiple levels
-                test['test_id_with_level'] = f"{test['test_id']}{test['level']}"
+                test['test_id_with_level'] = f"{test['test_id']}_{test['level']}"
 
                 # Backward compatibility (EMPTY result was replaced by NOT-EXECUTED)
                 if test['result'] == 'EMPTY':
@@ -366,7 +391,7 @@ class Reporter:
         for file_issues in self._issues.values():
             for result in ('errors', 'failures'):
                 for issue in file_issues[result]:
-                    test_id = f"{ issue['test'] }{ file_issues['run']['level'] }"
+                    test_id = f"{ issue['test'] }_{ file_issues['run']['level'] }"
                     issue['html_report_path'] = test_name_to_html_report_path[test_id]
 
     def print_requirements_summary(

@@ -71,7 +71,7 @@ def test_load_tests(reporter):
         stored_data = reporter._tests[path]
         assert len(stored_data) == 1
         assert stored_data[0]['html_report_path'] == report
-        assert stored_data[0]['test_id_with_level'] == 'T11'
+        assert stored_data[0]['test_id_with_level'] == 'T1_1'
 
 
 def test_load_tests_multiple(reporter):
@@ -85,8 +85,8 @@ def test_load_tests_multiple(reporter):
         assert mock_load.call_count == 2
         mock_load.assert_has_calls([call('run1.json'), call('run2.json')])
 
-        assert reporter._tests['run1.json'][0]['test_id_with_level'] == 'T11'
-        assert reporter._tests['run2.json'][0]['test_id_with_level'] == 'T22'
+        assert reporter._tests['run1.json'][0]['test_id_with_level'] == 'T1_1'
+        assert reporter._tests['run2.json'][0]['test_id_with_level'] == 'T2_2'
         assert reporter._tests['run2.json'][0]['result'] == 'NOT-EXECUTED'
 
 
@@ -300,15 +300,15 @@ def test_justify_tests(reporter):
     test_C = tests[2]
 
     assert test_A['result'] == 'JUSTIFIED'
-    assert 'Known HW error' in test_A['comment']
-    assert '123' in test_A['bug_id']
+    assert 'Known HW error' in test_A['issues_details'][0]['comment']
+    assert '123' in test_A['issues_details'][0]['bug_id']
 
     assert test_B['subtests'][0]['result'] == 'JUSTIFIED'
     assert test_B['subtests'][1]['result'] == 'PASSED'
     assert test_B['result'] == 'JUSTIFIED'
-    assert 'Some comment' in test_B['comment']
-    assert 'Subtest fail' in test_B['comment']
-    assert '456' in test_B['bug_id']
+    assert 'Some comment' in test_B['test_comment']
+    assert 'Subtest fail' in test_B['issues_details'][0]['comment']
+    assert '456' in test_B['issues_details'][0]['bug_id']
 
     assert test_C['result'] == 'ERRORED'
-    assert 'New error' in test_C['comment']
+    assert 'New error' in test_C['issues_details'][0]['comment']

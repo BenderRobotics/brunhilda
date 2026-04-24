@@ -271,7 +271,7 @@
                                     <td class="req__test-coverage testcase__inner_table__td table__col--cov_p">{{ (100 / requirement.count)|round|int }}</td>
                                     <td class="{{ test_result_class }} req__test-result testcase__inner_table__td table__col--test_result">
                                         <span class="test__result">
-                                    {% if test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED_FAILURE', 'NOT-EXECUTED') %}
+                                    {% if test_case.result not in ('SKIPPED', 'PASSED', 'EXPECTED-FAILURE', 'UNEXPECTED-SUCCESS', 'NOT-EXECUTED') %}
                                             <a href="{{ issue_list_path }}#{{ test_case.test_id_with_level }}">{{ test_case.result }}</a>
                                     {% else %}
                                             {{ test_case.result }}

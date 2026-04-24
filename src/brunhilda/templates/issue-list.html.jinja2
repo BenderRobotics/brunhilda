@@ -46,7 +46,7 @@
                 </tbody>
                     {% endif %}
                     {% set ns.test_id = issue.test %}
-                <tbody id="{{ issue.test }}{{ report.run.level }}">
+                <tbody id="{{ issue.test }}_{{ report.run.level }}">
                 {% endif %}
                 {% if issue.justified|lower == 'yes' %}
                     {% set class_justification = 'issue--justified' %}
@@ -58,10 +58,10 @@
                 {% else %}
                     {% set test_plan_path = test_plan_paths['_'] %}
                 {% endif %}
-                    <tr class="{{ class_justification }}">
+                    <tr class="{{ class_justification }}" {% if issue['sub-test'] %}id="{{ issue['sub-test'] }}_{{ report.run.level }}"{% endif %}>
                         <td>{{ report.run.dut }}</td>
                         <td>{{ report.run.level }}</td>
-                        <td><a href="{{ test_plan_path }}#{{ issue.test }}{{ report.run.level }}">{{ issue['sub-test'] or issue.test }}</a></td>
+                        <td><a href="{{ test_plan_path }}#{{ issue.test }}_{{ report.run.level }}">{{ issue['sub-test'] or issue.test }}</a></td>
                         <td><ul>
                             {% for spec in issue.tags.spec%}
                             <li>{{ spec }}</li>
@@ -98,7 +98,7 @@
                 </tbody>
                     {% endif %}
                     {% set ns.test_id = issue.test %}
-                <tbody id="{{ issue.test }}{{ report.run.level }}">
+                <tbody id="{{ issue.test }}_{{ report.run.level }}">
                 {% endif %}
                 {% if issue.justified|lower == 'yes' %}
                     {% set class_justification = 'issue--justified' %}
@@ -110,10 +110,10 @@
                 {% else %}
                     {% set test_plan_path = test_plan_paths['_'] %}
                 {% endif %}
-                    <tr class="{{ class_justification }}">
+                    <tr class="{{ class_justification }}" {% if issue['sub-test'] %}id="{{ issue['sub-test'] }}_{{ report.run.level }}"{% endif %}>
                         <td>{{ report.run.dut }}</td>
                         <td>{{ report.run.level }}</td>
-                        <td><a href="{{ test_plan_path }}#{{ issue.test }}{{ report.run.level }}">{{ issue['sub-test'] or issue.test }}</a></td>
+                        <td><a href="{{ test_plan_path }}#{{ issue.test }}_{{ report.run.level }}">{{ issue['sub-test'] or issue.test }}</a></td>
                         <td><ul>
                             {% for spec in issue.tags.spec%}
                             <li>{{ spec }}</li>

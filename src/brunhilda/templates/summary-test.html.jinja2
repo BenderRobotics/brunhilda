@@ -90,97 +90,85 @@
         {% endif %}
 
         {% if test_case.requirements %}
-            {% for requirement in test_case.requirements %}
-                {{ ns.refered_requirements.append(requirement)|default("", True) }}
-                        <tr class="test_level--{{ test_case.level }} {{ test_result_class }} filterable" data-filter="{{ test_case.test_id }}" data-filter-id="{{ test_case["tags"].get("test-id", [])[0] if test_case["tags"].get("test-id") else "" }}">
-                {% if loop.first %}
-                            <td class="test__level" rowspan="{{ loop.length }}">{{ test_case.level|capitalize }}</td>
-                            <td class="test__id" rowspan="{{ loop.length }}">{{ test_case["tags"].get("test-id", [])[0] if test_case["tags"].get("test-id") else "" }}</td>
-                            <td class="test__name" rowspan="{{ loop.length }}"><a href="{{ test_plan_path }}#{{ test_case.test_id_with_level }}">{{ test_case.test_id }}</a></td>
-                {% endif %}
-                            <td class="test__requirement">{{ requirement }}</td>
-                {% if loop.first %}
-                            <td class="test__result" rowspan="{{ loop.length }}">
-                    {% if test_case.result == 'EMPTY' %}
-                    {% elif test_case.html_report_path != "" %}
-                            <a href="{{ test_case.html_report_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
-                    {% else %}
-                            <a>{{ test_case.result }}</a>
-                    {% endif %}
-                            </td>
-                            <td class="test__issue" rowspan="{{ loop.length }}">
-                    {% if test_case.result in ('ERRORED', 'FAILED', 'JUSTIFIED')%}
-                            <a href="{{ issue_list_path }}#{{ test_case.test_id_with_level }}">🔗</a>
-                    {% endif %}
-                            </td>
-                            <td class="test__bug-id" rowspan="{{ loop.length }}">
-                            {% if test_case.bug_id|length > 1 %}
-                                <ul>
-                                {% for bug_id in test_case.bug_id %}
-                                    <li>{{ bug_id }}</li>
-                                {% endfor %}
-                                </ul>
-                            {% elif test_case.bug_id|length == 1 %}
-                                {{ test_case.bug_id[0] }}
-                            {% endif %}
-                            </td>
-                            <td class="test__comment" rowspan="{{ loop.length }}">
-                                <div class="comment-content">
-                                {% if test_case.comment|length > 1 %}
-                                    <ul>
-                                    {% for comment in test_case.comment %}
-                                        <li>{{ comment }}</li>
-                                    {% endfor %}
-                                    </ul>
-                                {% elif test_case.comment|length == 1 %}
-                                    {{ test_case.comment[0] }}
-                                {% endif %}
-                                </div>
-                                <button class="comment-toggle-btn" style="display: none;">▼</button>
-                            </td>
-                {% endif %}
-                        </tr>
+            {% for req in test_case.requirements %}
+                {{ ns.refered_requirements.append(req)|default("", True) }}
             {% endfor %}
-        {% else %}
-                <tr class="test_level--{{ test_case.level }} {{ test_result_class }} filterable" data-filter="{{ test_case.test_id }} data-filter-id="{{ test_case["tags"].get("test-id", [])[0] if test_case["tags"].get("test-id") else "" }}">
-                    <td class="test__level">{{ test_case.level|capitalize }}</td>
-                    <td class="test__id">{{ test_case["tags"].get("test-id", [])[0] if test_case["tags"].get("test-id") else "" }}</td>
-                    <td class="test__name"><a href="{{ test_plan_path }}#{{ test_case.test_id }}">{{ test_case.test_id }}</a></td>
-                    <td class="test__requirement"></td>
-                    <td class="test__result">
+        {% endif %}
+
+        {# Rowspan calculation#}
+        {% set issue_count = test_case.issues_details | length %}
+        {% set has_test_comment = 1 if 'test_comment' in test_case else 0 %}
+        {% set has_issue_link = test_case.result in ('ERRORED', 'FAILED', 'JUSTIFIED') %}
+        {% set total_rows = [issue_count + has_test_comment, 1] | max %}
+
+        {% for i in range(total_rows) %}
+            <tr class="test_level--{{ test_case.level }} {{ test_result_class }} filterable" data-filter="{{ test_case.test_id }}" data-filter-id="{{ test_case["tags"].get("test-id", [])[0] if test_case["tags"].get("test-id") else "" }}">
+
+            {% if i == 0 %}
+                <td class="test__level" rowspan="{{ total_rows }}">{{ test_case.level|capitalize }}</td>
+                <td class="test__id" rowspan="{{ total_rows }}">{{ test_case["tags"].get("test-id", [])[0] if test_case["tags"].get("test-id") else "" }}</td>
+                <td class="test__name" rowspan="{{ total_rows }}"><a href="{{ test_plan_path }}#{{ test_case.test_id_with_level }}">{{ test_case.test_id }}</a></td>
+                <td class="test__requirement" rowspan="{{ total_rows }}">
+                    {% for req in test_case.requirements %}
+                        <div class="req-item">{{ req }}</div>
+                    {% endfor %}
+                </td>
+                <td class="test__result" rowspan="{{ total_rows }}">
                     {% if test_case.result == 'EMPTY' %}
                     {% elif test_case.html_report_path != "" %}
-                            <a href="{{ test_case.html_report_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
+                        <a href="{{ test_case.html_report_path }}#{{ test_case.test_id }}">{{ test_case.result }}</a>
                     {% else %}
                             <a>{{ test_case.result }}</a>
                     {% endif %}
-                    </td>
-                    <td class="test__issue">
-                    {% if test_case.result in ('ERRORED', 'FAILED', 'JUSTIFIED')%}
-                    <a href="{{ issue_list_path }}#{{ test_case.test_id }}">🔗</a>
+                </td>
+            {% endif %}
+
+            {% if i < issue_count %}
+                {% if has_issue_link %}
+                    {% if test_case.issues_details[i]['result'] == 'ERRORED' %}
+                        {% set subtest_class = "subtest--errored" %}
+                    {% elif test_case.issues_details[i]['result'] == 'FAILED' %}
+                        {% set subtest_class = "subtest--failed" %}
+                    {% elif test_case.issues_details[i]['result'] == 'JUSTIFIED' %}
+                        {% set subtest_class = "subtest--justified" %}
                     {% endif %}
-                    </td>
-                    <td class="test__bug-id">{{ test_case.bug_id }}</td>
-                    <td class="test__comment">
-                        <div class="comment-content">{{ test_case.comment }}</div>
-                        <button class="comment-toggle-btn" style="display: none;">▼</button>
-                    </td>
-                </tr>
-        {% endif %}
+                <td class="test__issue {{ subtest_class }}">
+                    <a href="{{ issue_list_path }}#{{ test_case.issues_details[i]['link'] }}"
+                    {% if '(' in test_case.issues_details[i]['link'] and ')' in test_case.issues_details[i]['link'] %}
+                    title="{{ test_case.issues_details[i]['link'].split('(')[1].split(')')[0] }}"
+                    {% endif %}
+                    >🔗 {{ test_case.issues_details[i]['result'][0] }}</a>
+                </td>
+                {% else %}
+                <td class="test__issue"></td>
+                {% endif %}
+                <td class="test__bug-id">{{ test_case.issues_details[i].get("bug_id", "") }}</td>
+                <td class="test__comment">{{ test_case.issues_details[i].get("comment", "") }}</td>
+            {% elif loop.last and has_test_comment %}
+                <td></td>
+                <td></td>
+                <td class="test__comment">{{ test_case.test_comment }}</td>
+            {% else %}
+                <td></td>
+                <td></td>
+                <td></td>
+            {% endif %}
+            </tr>
+        {% endfor %}
     {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr class="test--{{ summary.result|lower|replace(' ', '-') }}">
-                        <th>Total levels: {{ summary.levels.keys()|length }}</th>
-                        <th colspan="2">Total tests: {{ summary.results.total }}</th>
-                        <th>Total requirements: {{ ns.refered_requirements|unique|list|length }}</th>
-                        <th class="test__result">{{ summary.result }}</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-            </table>
+        </tbody>
+            <tfoot>
+                <tr class="test--{{ summary.result|lower|replace(' ', '-') }}">
+                    <th>Total levels: {{ summary.levels.keys()|length }}</th>
+                    <th colspan="2">Total tests: {{ summary.results.total }}</th>
+                    <th>Total requirements: {{ ns.refered_requirements|unique|list|length }}</th>
+                    <th class="test__result">{{ summary.result }}</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
         </section>
     </div>
 
@@ -189,95 +177,16 @@
             const table = document.getElementById('test-summary-table');
             if (!table) return;
 
-            const commentExpandersData = [];
+            const resizers = [];
 
-            function initCommentExpanders() {
-                $(".test__comment").each(function() {
-                    const td = $(this);
-                    const cell = td.find(".comment-content");
-                    const btn = td.find(".comment-toggle-btn");
+            const updateResizersHeight = () => {
+                const currentHeight = table.offsetHeight;
 
-                    if (cell.length === 0 || btn.length === 0) return;
-
-                    const item = {
-                        td: td,
-                        cell: cell,
-                        btn: btn,
-                        row: td.closest('tr'),
-                        currentClampHeight: 0
-                    };
-                    commentExpandersData.push(item);
-
-                    btn.on('click', function() {
-                        const isExpanded = cell.hasClass('is-expanded');
-
-                        if (isExpanded) {
-                            cell.removeClass('is-expanded');
-                            cell.css("max-height", cell[0].scrollHeight + "px");
-                            void cell[0].offsetHeight;
-                            cell.css("max-height", item.currentClampHeight + "px");
-                            btn.text('▼');
-                        } else {
-                            cell.addClass('is-expanded');
-                            const currentNeededHeight = cell[0].scrollHeight;
-                            cell.css("max-height", currentNeededHeight + "px");
-                            btn.text('▲');
-                        }
-                    });
+                resizers.forEach(resizer => {
+                    resizer.style.top = "0px";
+                    resizer.style.height = `${currentHeight}px`;
                 });
-            }
-
-            function updateCommentExpanders() {
-                if (commentExpandersData.length === 0) return;
-
-                // temporary hiding of texts to obtain natural line height
-                $(".comment-content").css({
-                    "display": "none",
-                    "max-height": "none",
-                    "overflow": "visible",
-                    "transition": "none"
-                });
-
-                commentExpandersData.forEach(item => {
-                    item.targetRowHeight = item.row.outerHeight();
-                });
-
-                $(".comment-content").css("display", "block");
-
-                commentExpandersData.forEach(item => {
-                    item.fullTextHeight = item.cell[0].scrollHeight;
-                });
-
-                // show/hide toggle button
-                commentExpandersData.forEach(item => {
-                    item.currentClampHeight = Math.max(40, item.targetRowHeight - 10);
-                    const tolerance = 15;
-
-                    item.cell.css("transition", "max-height 0.3s ease-in-out");
-
-                    if (item.fullTextHeight > item.currentClampHeight + tolerance) {
-                        // text is too long, button needed
-                        item.btn.show();
-                        item.cell.css("overflow", "hidden");
-
-                        if (!item.cell.hasClass('is-expanded')) {
-                            item.cell.css("max-height", item.currentClampHeight + "px");
-                            item.btn.text('▼');
-                        } else {
-                            item.cell.css("max-height", "none");
-                            item.btn.text('▲');
-                        }
-                    } else {
-                        // whole text is shown
-                        item.cell.addClass('is-expanded');
-                        item.cell.css({
-                            "max-height": "none",
-                            "overflow": "visible"
-                        });
-                        item.btn.hide();
-                    }
-                });
-            }
+            };
 
             // Add column resizers with logic after 3rd and 7th column (not generated in template)
             const setupColumnResizers = function (table) {
@@ -288,6 +197,7 @@
                     resizer.classList.add('resizer');
                     resizer.style.height = `${table.offsetHeight}px`;
                     resizerAnchorCol.appendChild(resizer);
+                    resizers.push(resizer);
 
                     let startX = 0;
                     let mainStartWidth = 0;
@@ -324,7 +234,7 @@
                         document.removeEventListener('mousemove', mouseMoveHandler);
                         document.removeEventListener('mouseup', mouseUpHandler);
                         resizer.classList.remove('resizing');
-                        updateCommentExpanders();
+                        updateResizersHeight();
                     };
 
                     resizer.addEventListener('mousedown', mouseDownHandler);
@@ -340,6 +250,7 @@
                 resizer.style.height = `${table.offsetHeight}px`;
                 const lastHeader = table.querySelectorAll('th')[7];
                 lastHeader.appendChild(resizer);
+                resizers.push(resizer);
 
                 let startX = 0;
                 let startLastColWidth = 0;
@@ -369,7 +280,7 @@
                     document.removeEventListener('mousemove', mouseMoveHandler);
                     document.removeEventListener('mouseup', mouseUpHandler);
                     resizer.classList.remove('resizing');
-                    updateCommentExpanders();
+                    updateResizersHeight();
                 };
 
                 resizer.addEventListener('mousedown', mouseDownHandler);
@@ -377,10 +288,22 @@
 
 
         /* CALL THE SETUP METHODS */
-        initCommentExpanders();
-        updateCommentExpanders();
         setupColumnResizers(table);
         setupTableResizer(table);
+
+        updateResizersHeight();
+
+        const observer = new MutationObserver(() => {
+            updateResizersHeight();
+        });
+
+        observer.observe(table.querySelector('tbody'), {
+            attributes: true,
+            childList: true,
+            subtree: true
+        });
+
+        window.addEventListener('resize', updateResizersHeight);
         });
     </script>
 </body>

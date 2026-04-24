@@ -504,7 +504,13 @@ input.testcase__expander:checked+.testcase__description {
 }
 
 .test__issue a{
+    color: black;
     text-decoration: none;
+}
+
+.test__issue {
+    white-space: nowrap;
+    vertical-align: middle;
 }
 
 .test__time {
