@@ -19,19 +19,19 @@ repos:
     rev: v3.2.0
     hooks:
       - id: trailing-whitespace
-        exclude: ^dev/
+        exclude: ^dev/(?!calculator_example/)
       - id: check-docstring-first
-        exclude: ^dev/
+        exclude: ^dev/(?!calculator_example/)
       - id: check-json
-        exclude: ^dev/
+        exclude: ^dev/(?!calculator_example/)
       - id: check-yaml
-        exclude: ^dev/
+        exclude: ^dev/(?!calculator_example/)
       - id: requirements-txt-fixer
-        exclude: ^dev/
+        exclude: ^dev/(?!calculator_example/)
       - id: double-quote-string-fixer
-        exclude: ^dev/
+        exclude: ^dev/(?!calculator_example/)
       - id: end-of-file-fixer
-        exclude: ^dev/
+        exclude: ^dev/(?!calculator_example/)
   - repo: meta
     hooks:
       - id: check-useless-excludes

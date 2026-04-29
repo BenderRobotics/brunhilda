@@ -71,3 +71,5 @@ report-mypy.xml
 dev/*.html
 dev/*.xml
 dev/extra/*.jpg
+dev/calculator_example/*.yaml
+dev/calculator_example/*.html

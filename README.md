@@ -178,6 +178,43 @@ If you need to set exact line breaks and formatting (e.g. for multi-line conditi
 @endsteps
 ```
 
+#### Execution details in test steps
+
+It is possible to add execution details into test steps. This can only be achieved programmatically directly in the test body. All you need is to append dictionary containing `number` (step number), `obtained`, `comment` and `result` keys into `self.steps`. Example is shown bellow.
+
+These details will be shown in HTML Test Run Report.
+
+```Python
+def test_example(self):
+    """
+    ...
+
+    @steps
+    1) >  Set ``user_permission`` to 3 (installer).
+        > ``user_permission == 4``
+    2) > Set ``tm_user_permission_user`` to 20.
+        > ``tm_user_permission == 20``
+    @endsteps
+    """
+    tested_class = User()
+
+    tested_class.user_permission = 3
+    self.steps.append({'number': 1,
+                       'obtained':  f'tested_class.user_permission = {tested_class.user_permission}',
+                       'comment': 'Some test execution comment',
+                       'result': 'PASSED' if tested_class.user_permission == 4 else 'FAILED'})
+
+    tested_class.tm_user_permission = 20
+    self.steps.append({'number': 2})
+    self.steps[1]['obtained'] = f'tested_class.tm_user_permission = {tested_class.tm_user_permission}'
+    self.steps[1]['comment'] = 'Some test execution comment'
+    self.steps[1]['result'] = 'PASSED' if tested_class.tm_user_permission == 20 else 'FAILED'
+
+    self.assertEqual(tested_class.user_permission, 4)
+    self.assertEqual(tested_class.tm_user_permission, 20)
+
+```
+
 ### Test Loader
 
 The TestLoader class is used to create test suites from classes and modules. This is an extension of [`unittest.TestLoader`](https://docs.python.org/3/library/unittest.html#unittest.TestLoader).
