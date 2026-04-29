@@ -1,53 +1,71 @@
 # Brunhilda project changelog
 
+## 2.7.0 (2026-04-28)
+
+- Added guide for report readers (refs [#13710](https://redmine.benderrobotics.com/issues/13710))
+- Added requirement result in Requirement Summary (refs [#12918](https://redmine.benderrobotics.com/issues/12918))
+- Added Out of Scope requirement state (refs [#12917](https://redmine.benderrobotics.com/issues/12917))
+- Added Not Executed test result (refs [#12919](https://redmine.benderrobotics.com/issues/12919))
+- Added prevention for loading tests after justification (refs [#13386](https://redmine.benderrobotics.com/issues/13386))
+- Added justified Test Record regeneration (refs [#13388](https://redmine.benderrobotics.com/issues/13388))
+- Added support for newline in issue comment section (refs [#13637](https://redmine.benderrobotics.com/issues/13637))
+- Added subtest stats into Test Record summary table (refs [#13385](https://redmine.benderrobotics.com/issues/13385))
+- Added order to bug IDs and comments in Test Summary (refs [#13636](https://redmine.benderrobotics.com/issues/13636))
+- Updated charts colors (refs [#13173](https://redmine.benderrobotics.com/issues/13173))
+- Fixed cell alignment in Requirement Summary table (refs [#13173](https://redmine.benderrobotics.com/issues/13173))
+- Fixed parsing of line blocks in steps description (refs [#13244](https://redmine.benderrobotics.com/issues/13244))
+- Fixed resizing cells (refs [#13172](https://redmine.benderrobotics.com/issues/13172), [#13173](https://redmine.benderrobotics.com/issues/13173))
+- Fixed erroring subtests after errored subtest (refs [#13597](https://redmine.benderrobotics.com/issues/13597))
+- Removed Test Record link if no HTML provided (refs [#13182](https://redmine.benderrobotics.com/issues/13182))
+
 ## 2.6.1 (2026-01-21)
 
-- Added backward compatibility for loading test files created with versions prior to 2.6.0 (refs #13181).
-- Fixed the parsing of line blocks in step descriptions (refs #13244).
-- Colors for unknown categories in charts are now selected in a reproducible order from a defined list (refs #13173).
-- Fixed filtering in the requirements summary report (refs #13173).
-- Fixed cell resizing in the test summary (refs #13173, #13172).
-- Improved the performance of test summary loading (#13172).
-- Removed the link to the test report if no HTML is provided during report creation (refs #13182).
+- Added backward compatibility for loading test files created with versions prior to 2.6.0 (refs [#13181](https://redmine.benderrobotics.com/issues/13181)).
+- Fixed the parsing of line blocks in step descriptions (refs [#13244](https://redmine.benderrobotics.com/issues/13244)).
+- Colors for unknown categories in charts are now selected in a reproducible order from a defined list (refs [#13173](https://redmine.benderrobotics.com/issues/13173)).
+- Fixed filtering in the requirements summary report (refs [#13173](https://redmine.benderrobotics.com/issues/13173)).
+- Fixed cell resizing in the test summary (refs [#13173](https://redmine.benderrobotics.com/issues/13173), [#13172](https://redmine.benderrobotics.com/issues/13172)).
+- Improved the performance of test summary loading ([#13172](https://redmine.benderrobotics.com/issues/13172)).
+- Removed the link to the test report if no HTML is provided during report creation (refs [#13182](https://redmine.benderrobotics.com/issues/13182)).
 
 ## 2.6.0 (2026-01-21)
 
-- Added version of BRunhilda to generated files (refs #12690)
-- Added possibility to link custom files to the index page (refs #12691)
-- Added sub-tests detailed info into test record view (refs #12689)
-- Added ability to show multiple version of the same suite at a time (refs #12692)
-- Added run info to tests output (refs #12882)
-- Added coverage html report to CI artifacts (refs #12882)
-- Adjusted issue list table cell spanning (refs #12693)
-- Updated project structure (refs #12882)
-- Removed leftover trace output (refs #12882)
-- Updated load issues and tests methods (refs #12882)
-- Changed unforced public attributes to readonly (refs #12882)
-- Improved type hints (refs #12882)
-- Updated docstring code documentation (refs #12882)
-- Extended unit tests coverage (refs #12882)
-- Fixed test details opening by clicking on test line (refs #13017)
-- Fixed sub-test row height limit (refs #13018)
+- Added version of BRunhilda to generated files (refs [#12690](https://redmine.benderrobotics.com/issues/12690))
+- Added possibility to link custom files to the index page (refs [#12691](https://redmine.benderrobotics.com/issues/12691))
+- Added sub-tests detailed info into test record view (refs [#12689](https://redmine.benderrobotics.com/issues/12689))
+- Added ability to show multiple version of the same suite at a time (refs [#12692](https://redmine.benderrobotics.com/issues/12692))
+- Added run info to tests output (refs [#12882](https://redmine.benderrobotics.com/issues/12882))
+- Added coverage html report to CI artifacts (refs [#12882](https://redmine.benderrobotics.com/issues/12882))
+- Adjusted issue list table cell spanning (refs [#12693](https://redmine.benderrobotics.com/issues/12693))
+- Updated project structure (refs [#12882](https://redmine.benderrobotics.com/issues/12882))
+- Removed leftover trace output (refs [#12882](https://redmine.benderrobotics.com/issues/12882))
+- Updated load issues and tests methods (refs [#12882](https://redmine.benderrobotics.com/issues/12882))
+- Changed unforced public attributes to readonly (refs [#12882](https://redmine.benderrobotics.com/issues/12882))
+- Improved type hints (refs [#12882](https://redmine.benderrobotics.com/issues/12882))
+- Updated docstring code documentation (refs [#12882](https://redmine.benderrobotics.com/issues/12882))
+- Extended unit tests coverage (refs [#12882](https://redmine.benderrobotics.com/issues/12882))
+- Fixed test details opening by clicking on test line (refs [#13017](https://redmine.benderrobotics.com/issues/13017))
+- Fixed sub-test row height limit (refs [#13018](https://redmine.benderrobotics.com/issues/13018))
 
 ## 2.5.0 (2025-11-06)
 
-- Added pyyaml to install_requires dependencies (refs #7560)
-- Added link to index page to all reports (refs #11707)
-- Added link between summary report and test result (refs #11708)
-- Added link between issue list and test result (refs #11709)
-- Added test ID column to test summary (refs #7562)
-- Added custom color palette support (refs #11902)
-- Added shortcut for closing all details (refs #12082)
-- Added support for multi paragraph entries (refs #12083)
-- Added support for custom coverage policy (refs #12081)
-- Moved home link button to right top corner, update button style (refs #11707)
-- Updated package structure to use pyproject.toml (refs #11792)
-- Improved width and maximum height of narrow table cells in reports (refs #11793)
-- Improved readability of cells in reports (refs #11793)
-- Changed doorstop user story feature to optional (refs #7560, #6890)
-- Fixed HTML code in error message (refs #10824)
-- Fixed reference matching (refs #12043)
-- Fixed duplicate references in feature summary (refs #7561)
+- Added pyyaml to install_requires dependencies (refs [#7560](https://redmine.benderrobotics.com/issues/7560))
+- Added link to index page to all reports (refs [#11707](https://redmine.benderrobotics.com/issues/11707))
+- Added link between summary report and test result (refs [#11708](https://redmine.benderrobotics.com/issues/11708))
+- Added link between issue list and test result (refs [#11709](https://redmine.benderrobotics.com/issues/11709))
+- Added test ID column to test summary (refs [#7562](https://redmine.benderrobotics.com/issues/7562))
+- Added custom color palette support (refs [#11902](https://redmine.benderrobotics.com/issues/11902))
+- Added shortcut for closing all details (refs [#12082](https://redmine.benderrobotics.com/issues/12082))
+- Added support for multi paragraph entries (refs [#12083](https://redmine.benderrobotics.com/issues/12083))
+- Added support for custom coverage policy (refs [#12081](https://redmine.benderrobotics.com/issues/12081))
+- Moved home link button to right top corner, update button style (refs [#11707](https://redmine.benderrobotics.com/issues/11707))
+- Updated package structure to use pyproject.toml (refs [#11792](https://redmine.benderrobotics.com/issues/11792))
+- Improved width and maximum height of narrow table cells in reports (refs [#11793](https://redmine.benderrobotics.com/issues/11793))
+- Improved readability of cells in reports (refs [#11793](https://redmine.benderrobotics.com/issues/11793))
+- Changed doorstop user story feature to optional (refs [#7560](https://redmine.benderrobotics.com/issues/7560), [#6890](https://redmine.benderrobotics.com/issues/6890))
+- Fixed HTML code in error message (refs [#10824](https://redmine.benderrobotics.com/issues/10824))
+- Fixed reference matching (refs [#12043](https://redmine.benderrobotics.com/issues/12043))
+- Fixed duplicate references in feature summary (refs [#7561](https://redmine.benderrobotics.com/issues/7561))
 - Fixed counting of skipped tests
 - Fixed missing errors_strings field of test result object
 
