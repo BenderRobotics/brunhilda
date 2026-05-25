@@ -53,45 +53,54 @@
             return name.replace(" ", "_").replace("(", "_").replace(")", "_").replace(".", "_").toLowerCase();
         }
 
-        $("#filter").on('change keyup paste', function () {
-            if (this.value != "") {
-                const filterValue = sanitize(this.value)
+        /* Universal method for setting custom filtering */
+        function setupTableFilter(inputSelector, dataAttribute, hiddenClass) {
+            $(inputSelector).on('change keyup paste', function () {
+                const filterInput = this.value.trim()
 
-                $("tr.filterable").each(function() {
-                    const rowValue = $(this).attr("data-filter");
+                if (filterInput != "") {
+                    const orGroups = filterInput.split('|').map(g => g.trim());
 
-                    if (rowValue != undefined && sanitize(rowValue).includes(filterValue)) {
-                        $(this).removeClass("test--hidden_id");
-                    }
-                    else {
-                        $(this).addClass("test--hidden_id");
-                    }
-                });
-            }
-            else {
-                $(".test--hidden_id").removeClass("test--hidden_id");
-            }
-        });
+                    const compiledGroups = orGroups.map(group => {
+                        const andParts = group.split('&').map(p => p.trim()).filter(p => p !== "");
 
-        $("#filter-id").on('change keyup paste', function () {
-            if (this.value != "") {
-                const filterValue = sanitize(this.value)
+                        return andParts.map(part => {
+                            const isNegative = part.startsWith('!');
+                            let rawText = isNegative ? part.substring(1).trim() : part;
 
-                $("tr.filterable").each(function() {
-                    const rowValue = $(this).attr("data-filter-id");
+                            let pattern = rawText
+                                .replace(/[.+^${}()|[\]\\]/g, "\\$&")
+                                .replace(/\*/g, ".*")
+                                .replace(/\?/g, ".");
 
-                    if (rowValue != undefined && sanitize(rowValue).includes(filterValue)) {
-                        $(this).removeClass("test--hidden_id");
-                    }
-                    else {
-                        $(this).addClass("test--hidden_id");
-                    }
-                });
-            }
-            else {
-                $(".test--hidden_id").removeClass("test--hidden_id");
-            }
-        });
+                            return {
+                                negated: isNegative,
+                                regex: new RegExp(pattern, 'i')
+                            };
+                        });
+                    });
+
+                    $("tr.filterable").each(function() {
+                        const rowValue = $(this).attr(dataAttribute) || "";
+
+                        const matches = compiledGroups.some(group => {
+                            return group.every(cond => {
+                                const isMatch = cond.regex.test(rowValue);
+                                return cond.negated ? !isMatch : isMatch;
+                            });
+                        });
+
+                        $(this).toggleClass(hiddenClass, !matches);
+                    });
+                } else {
+                    $("." + hiddenClass).removeClass(hiddenClass);
+                }
+            });
+        }
+
+        /* Custom filter activation */
+        setupTableFilter("#filter", "data-filter", "test--hidden_name");
+        setupTableFilter("#filter-id", "data-filter-id", "test--hidden_id");
 
         /* This filter can be applied as search within the text. No space replacements. Values are case insensitive.
         Values that do not contain specific input are hidden.

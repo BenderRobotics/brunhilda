@@ -106,7 +106,7 @@ Three interactive pie charts provide a quick visual assessment of the project:
 
 The core of the report is a comprehensive table listing every executed test with the following columns:
 
-- **Filters**: You can narrow down the list using the Test Level dropdown or by typing into the Test ID and Test Name search fields.
+- **Filters**: You can narrow down the list using the Test Level dropdown or by typing into the Test ID and Test Name search fields which supports `&` (AND), `|` (OR), `!` (NOT), `*` (any string) and `?` (single character), keep in mind that `&` has priority over `|`.
 - **Requirements**: Lists the specific project requirements mapped to each test case.
 - **Test Result (with Links)**: Each result (e.g., "PASSED", "FAILED") is a clickable link that takes you directly to the specific Test Run Report for that execution.
 - **Issue**: Direct link (🔗) to detailed issue descriptions ([List of Issues](#list-of-issues)). This cell is tinted by test result, it's useful for subtests result visualization.
@@ -203,7 +203,7 @@ The top of the report features a statistical breakdown and a pie chart showing t
 
 The main table provides a granular look at each requirement ID and its associated tests:
 
-- **Requirement ID**: The unique identifier imported from requirement source.
+- **Requirement ID**: The unique identifier imported from requirement source. You can narrow down the list using by typing into the Requirement ID search field which supports `&` (AND), `|` (OR), `!` (NOT), `*` (any string) and `?` (single character), keep in mind that `&` has priority over `|`.
 - **Requirement Result**: The overall status determined by the specific project evaluation policy.
 - **Test Cases Covering Requirement**: A list of all test cases linked to this ID, including direct links to their definitions in the [Test Plan](#test-plan).
 - **Requirement Coverage Percentage**: Shows the weight or contribution of each individual test case toward the total requirement verification.

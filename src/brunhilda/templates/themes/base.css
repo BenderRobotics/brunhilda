@@ -450,6 +450,10 @@ input.testcase__expander:checked+.testcase__description {
     visibility: collapse;
 }
 
+.test--hidden_name {
+    display: none;
+}
+
 .test--hidden_id {
     display: none;
 }
