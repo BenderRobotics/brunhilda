@@ -84,7 +84,7 @@
                         {% endfor %}
                         </td>
                 {% endif %}
-                        <td>{{ issue['bug-id'] }}</td>
+                        <td>{{ issue.get("bug_html_link", issue['bug-id']) }}</td>
                         <td>{{ issue.justified }}</td>
                         <td>{{ issue.comment }}</td>
                     </tr>
@@ -136,7 +136,7 @@
                         {% endfor %}
                         </td>
                     {% endif %}
-                        <td>{{ issue['bug-id'] }}</td>
+                        <td>{{ issue.get("bug_html_link", issue['bug-id']) }}</td>
                         <td>{{ issue.justified }}</td>
                         <td>{{ issue.comment }}</td>
                     </tr>

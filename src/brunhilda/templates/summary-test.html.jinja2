@@ -152,7 +152,7 @@
                 {% else %}
                 <td class="test__issue"></td>
                 {% endif %}
-                <td class="test__bug-id">{{ test_case.issues_details[i].get("bug_id", "") }}</td>
+                <td class="test__bug-id">{{ test_case.issues_details[i].get("bug_html_link", test_case.issues_details[i].get("bug_id", "")) | safe }}</td>
                 <td class="test__comment">{{ test_case.issues_details[i].get("comment", "") }}</td>
             {% elif loop.last and has_test_comment %}
                 <td></td>

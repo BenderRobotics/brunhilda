@@ -1,3 +1,4 @@
+import configparser
 import os
 import re
 from pathlib import Path
@@ -41,6 +42,7 @@ class Reporter:
         self._test_plan_paths = {'_': ''}
         self._user_data = user_data
         self._justification_executed = False
+        self._bug_trackers: List[Dict] = []
 
     def _load(self, path: Union[str, Path]) -> Dict:
         """
@@ -84,22 +86,28 @@ class Reporter:
                                     issue_result = 'JUSTIFIED' if justified else issue['result']
 
                                     if issue['comment'] and issue['bug-id']:
+                                        bug_html_link = self._apply_bugtraq(issue['bug-id'])
                                         issues_details.append(
                                             {
                                                 'bug_id': issue['bug-id'],
+                                                'bug_html_link': bug_html_link,
                                                 'comment': issue['comment'],
                                                 'link': issue_list_link,
                                                 'result': issue_result
                                             }
                                         )
+                                        issue['bug_html_link'] = bug_html_link
                                     elif issue['bug-id']:
+                                        bug_html_link = self._apply_bugtraq(issue['bug-id'])
                                         issues_details.append(
                                             {
                                                 'bug_id': issue['bug-id'],
+                                                'bug_html_link': bug_html_link,
                                                 'link': issue_list_link,
                                                 'result': issue_result
                                             }
                                         )
+                                        issue['bug_html_link'] = bug_html_link
                                     elif issue['comment']:
                                         issues_details.append(
                                             {
@@ -124,6 +132,39 @@ class Reporter:
                     test['issues_details'] = issues_details
 
             self._justification_executed = True
+
+    def _apply_bugtraq(self, text: str) -> str:
+        """
+        Transforms plain bug ID text into HTML links based on bugtraq spec.
+
+        :param text: bug ID
+        :return: HTML link if bug trackers are loaded, else original bug ID
+        """
+        if not text or not self._bug_trackers:
+            return text
+
+        processed_text = text
+        for tracker in self._bug_trackers:
+            if tracker['log_link_regex']:
+                link_matches = re.findall(tracker['log_link_regex'], processed_text)
+                for link_text in link_matches:
+                    id_match = re.search(tracker['log_regex'], link_text)
+                    if id_match:
+                        bug_id = id_match.group(1) if id_match.groups() else id_match.group(0)
+                        target_url = tracker['url'].replace('%BUGID%', bug_id)
+                        html_link = f'<a href="{target_url}" target="_blank">{link_text}</a>'
+                        processed_text = processed_text.replace(link_text, html_link)
+            else:
+
+                def replace_match(match):
+                    full_match = match.group(0)
+                    bug_id = match.group(1) if match.groups() else full_match
+                    target_url = tracker['url'].replace('%BUGID%', bug_id)
+                    return f'<a href="{target_url}" target="_blank">{full_match}</a>'
+
+                processed_text = re.sub(tracker['log_regex'], replace_match, processed_text)
+
+        return processed_text
 
     def _append_requirement(self, req_id: str, out_of_scope_reason: Optional[str] = None) -> None:
         """
@@ -277,6 +318,47 @@ class Reporter:
                     feature_data['oos'] = feature_out_of_scope
 
         self._features = features
+
+    def load_bugtraq(self, path: Union[str, Path]) -> None:
+        """
+        Loads bugtraq configuration file (INI format).
+
+        :param path: path to the file
+        """
+        path = str(path)
+        print(f'... loading bugtraq config {path}')
+
+        config = configparser.ConfigParser(interpolation=None)
+        config.read(path, encoding='utf-8')
+
+        for section in config.sections():
+            match = re.match(r'bugtraq\s+"([^"]+)"', section)
+            if match:
+                # parse mandatory keys
+                url = config.get(section, 'url', fallback='').strip()
+                logregex = config.get(section, 'logregex', fallback='').strip('"\'').replace('\\\\', '\\')
+
+                if not url or not logregex:
+                    print(f"Warning: Section [{section}] is missing mandatory 'url' or 'logregex'. Skipping.")
+                    continue
+
+                # parse loglinkregex
+                loglinkregex = config.get(section, 'loglinkregex', fallback=None)
+                if loglinkregex:
+                    loglinkregex = loglinkregex.strip('"\'').replace('\\\\', '\\')
+
+                # parse projects
+                projects_str = config.get(section, 'projects', fallback=None)
+                if projects_str:
+                    proj_list = [p.strip() for p in projects_str.split(',') if p.strip()]
+
+                    proj_regex_group = f"(?:{'|'.join(proj_list)})"
+
+                    logregex = logregex.replace('%PROJECT%', proj_regex_group)
+                    if loglinkregex:
+                        loglinkregex = loglinkregex.replace('%PROJECT%', proj_regex_group)
+
+                self._bug_trackers.append({'url': url, 'log_regex': logregex, 'log_link_regex': loglinkregex})
 
     def _write_file(self, name: str, path: str, content: str, is_justified_record=False) -> None:
         """

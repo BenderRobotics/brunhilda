@@ -24,6 +24,7 @@ This document describes step-by-step how to generate a test run report with adde
   - [Methods](#methods)
   - [Requirements File](#requirements-file)
   - [Features File](#features-file)
+  - [Bugtraq File](#bugtraq-file)
   - [Evaluation Policy](#evaluation-policy)
     - [Custom Evaluation Policy](#custom-evaluation-policy)
     - [Evaluation Policy Example](#evaluation-policy-example)
@@ -430,6 +431,8 @@ Justified issue record:
   justified: 'yes'
 ```
 
+The ticket number for tracking can also be entered during justification. Together with [bugtraq file](#bugtraq-file) load in reporter, you can achieve clickable Bug IDs (link to ticketing system).
+
 ## Reporting
 
 BRunhilda Reporter supports the creation of advanced reports allowing to combine test runs into a single report file.
@@ -449,6 +452,7 @@ Reporter class `user_data` dictionary is rendered as a table at the top of produ
 - `brunhilda.reporter.Reporter.load_out_of_scope_requirements_list` loads out of scope requirements from list.
 - `brunhilda.reporter.Reporter.load_requirements` loads requirements from [file](#requirements-file).
 - `brunhilda.reporter.Reporter.load_features` loads features linked to the individual tests.
+- `brunhilda.reporter.Reporter.load_bugtraq` loads bugtraq configuration [file](#bugtraq-file).
 - `brunhilda.reporter.Reporter.justify_tests` processes loaded tests and issues and applies the justifications.
 - `brunhilda.reporter.Reporter.print_justified_record` regenerates HTML test record with updated tests results after justification.
 - `brunhilda.reporter.Reporter.print_issue_list` creates a report with all issues and justifications.
@@ -465,15 +469,16 @@ Reporter instance **doesn't allow** to create reports with just part of the test
 It is important to keep the order
 
 1. load tests,
-2. load issues, requirements
+2. load issues, requirements,
 3. load features,
-4. justify,
-5. print justified test record
-6. print test plan report,
-7. print issues report,
-8. print rest of reports,
-9. add links to index page,
-10. print index.
+4. load bugtraq,
+5. justify,
+6. print justified test record
+7. print test plan report,
+8. print issues report,
+9. print rest of reports,
+10. add links to index page,
+11. print index.
 
 ```python
 reporter = brunhilda.reporter.Reporter(requirements=['REQ_01', 'REQ_02'],
@@ -485,6 +490,7 @@ reporter.load_issues('issues_run_1.yaml')
 reporter.load_issues('issues_run_2.yaml')
 reporter.load_requirements('requirements.json')
 reporter.load_features('features.yaml')
+reporter.load_bugtraq('.bugtraq')
 reporter.justify_tests()
 reporter.print_justified_record('tests_run_1.yaml', 'test_run_1_report_justified.html')
 reporter.print_test_plan('plan.html', preamble='preamble.html')
@@ -548,6 +554,50 @@ feature group 1:            # group of features
 feature group 2:
 - feature C:
     ...
+```
+
+### Bugtraq File
+
+The `.bugtraq` file is used to automatically recognize bug IDs in reports and convert them into clickable HTML links. The file uses the standard INI configuration format with subsections. The concept is based on the original [bugtraq](https://github.com/mstrap/bugtraq), but some optional keys are omitted that would be redundant for BRunhilda's purpose.
+
+#### File Structure
+
+Each bug tracker is defined in a separate section with a unique name (each section must begin with the word bugtraq):
+
+```ini
+[bugtraq "tracker_name"]
+key = value
+```
+
+#### Mandatory Fields
+
+- `url` - The target URL of your bug tracker. It must contain the `%BUGID%` placeholder where the actual bug ID will be inserted.
+- `logregex` - A regular expression used to find and isolate the bug ID itself. If it contains a capturing group `()`, only the content of the first group will be used as the `%BUGID%`.
+
+#### Optional Fields
+
+- `loglinkregex` - A regular expression for a broader pre-selection of text that should be completely wrapped in the HTML link (e.g., including a hash symbol `#`). If this parameter is missing, the link will wrap the text found directly by `logregex`.
+- `projects` - A comma-separated list of project keys (commonly used for Jira). You can then use the `%PROJECT%` macro in logregex or loglinkregex, and the generator will automatically expand it into a list of these projects.
+
+#### Examples
+
+``` ini
+# Two-step search
+[bugtraq "redmine"]
+url = https://redmine.company.com/issues/%BUGID%
+loglinkregex = "#\d+"
+logregex = \d+
+
+# %PROJECT% macro
+[bugtraq "jira"]
+url = https://company.atlassian.net/browse/%BUGID%
+projects = PROJA, PROJB
+logregex = %PROJECT%-\d+
+
+# Capturing Groups ()
+[bugtraq "legacy-tracker"]
+url = https://legacy.company.com/tickets?id=%BUGID%
+logregex = BUG-(\d+)
 ```
 
 ### Evaluation Policy

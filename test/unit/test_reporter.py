@@ -312,3 +312,192 @@ def test_justify_tests(reporter):
 
     assert test_C['result'] == 'ERRORED'
     assert 'New error' in test_C['issues_details'][0]['comment']
+
+
+def test_justify_tests_generates_bug_html(reporter):
+    """Test that justify_tests generates bug_html_link alongside bug_id."""
+    reporter._bug_trackers = [
+        {
+            'url': 'https://redmine.company.com/issues/%BUGID%',
+            'log_regex': '#(\\d+)',
+            'log_link_regex': None
+        }
+    ]
+
+    reporter._tests = {
+        'tests.json':
+            [
+                {
+                    'test_id': 'TestCase1.test_01',
+                    'level': 'system',
+                    'result': 'FAILED',
+                    'comment': '',
+                    'bug_id': [],
+                    'subtests': [],
+                    'tags': {}
+                }
+            ]
+    }
+
+    reporter._issues = {
+        'issues.json':
+            {
+                'run': {
+                    'level': 'system'
+                },
+                'errors': [],
+                'failures':
+                    [
+                        {
+                            'test': 'TestCase1.test_01',
+                            'sub-test': None,
+                            'result': 'FAILED',
+                            'justified': 'yes',
+                            'comment': 'Known issue',
+                            'bug-id': '#123',
+                            'extra': []
+                        }
+                    ]
+            }
+    }
+
+    reporter.justify_tests()
+
+    issue_detail = reporter._tests['tests.json'][0]['issues_details'][0]
+
+    assert issue_detail['bug_id'] == '#123'
+
+    assert issue_detail['bug_html_link'] == '<a href="https://redmine.company.com/issues/123" target="_blank">#123</a>'
+
+
+# --- Testing load_bugtraq ---
+
+
+def test_load_bugtraq_success(reporter):
+    """Test that load_bugtraq correctly parses INI, cleans backslashes, and ignores % interpolation."""
+    mock_ini_content = (
+        '[bugtraq "redmine"]\n'
+        'url = https://redmine.company.com/issues/%BUGID%\n'
+        'loglinkregex = "#\\\\d+"\n'
+        'logregex = \\\\d+\n'
+    )
+
+    with patch('builtins.open', mock_open(read_data=mock_ini_content), create=True):
+        reporter.load_bugtraq('.bugtraq')
+
+    assert len(reporter._bug_trackers) == 1
+    tracker = reporter._bug_trackers[0]
+    assert tracker['url'] == 'https://redmine.company.com/issues/%BUGID%'
+    assert tracker['log_regex'] == '\\d+'
+    assert tracker['log_link_regex'] == '#\\d+'
+
+
+def test_load_bugtraq_with_projects(reporter):
+    """Test that %PROJECT% macro is expanded into a non-capturing regex group."""
+    mock_ini_content = (
+        '[bugtraq "jira-al4"]\n'
+        'projects = A4MMI4, A4MMI\n'
+        'url = https://company.atlassian.net/browse/%BUGID%\n'
+        'logregex = %PROJECT%-\\\\d+\n'
+    )
+
+    with patch('builtins.open', mock_open(read_data=mock_ini_content), create=True):
+        reporter.load_bugtraq('.bugtraq')
+
+    assert len(reporter._bug_trackers) == 1
+    tracker = reporter._bug_trackers[0]
+    assert tracker['log_regex'] == '(?:A4MMI4|A4MMI)-\\d+'
+    assert tracker['log_link_regex'] is None
+
+
+def test_load_bugtraq_missing_mandatory(reporter):
+    """Test that sections missing mandatory fields (like logregex) are skipped."""
+    mock_ini_content = ('[bugtraq "broken"]\n'
+                        'url = https://jira.company.com/browse/%BUGID%\n')
+
+    with patch('builtins.open', mock_open(read_data=mock_ini_content), create=True):
+        reporter.load_bugtraq('.bugtraq')
+
+    assert len(reporter._bug_trackers) == 0
+
+
+def test_load_bugtraq_multiple_trackers(reporter):
+    """Test that load_bugtraq correctly parses multiple distinct tracker sections from a single file."""
+    mock_ini_content = (
+        '[bugtraq "redmine"]\n'
+        'url = https://redmine.company.com/issues/%BUGID%\n'
+        'logregex = #(\\\\d+)\n\n'
+        '[bugtraq "jira-al4"]\n'
+        'projects = A4MMI4, AL4MMI\n'
+        'url = https://company.atlassian.net/browse/%BUGID%\n'
+        'logregex = %PROJECT%-\\\\d+\n'
+    )
+
+    with patch('builtins.open', mock_open(read_data=mock_ini_content), create=True):
+        reporter.load_bugtraq('.bugtraq')
+
+    assert len(reporter._bug_trackers) == 2
+
+    redmine_tracker = reporter._bug_trackers[0]
+    assert redmine_tracker['url'] == 'https://redmine.company.com/issues/%BUGID%'
+    assert redmine_tracker['log_regex'] == '#(\\d+)'
+
+    jira_tracker = reporter._bug_trackers[1]
+    assert jira_tracker['url'] == 'https://company.atlassian.net/browse/%BUGID%'
+    assert jira_tracker['log_regex'] == '(?:A4MMI4|AL4MMI)-\\d+'
+
+
+# --- Testing internal _apply_bugtraq method ---
+
+
+def test_apply_bugtraq_no_trackers(reporter):
+    """Test that _apply_bugtraq returns the original text if no trackers are loaded."""
+    text = 'Fixes #123'
+    assert reporter._apply_bugtraq(text) == text
+
+
+def test_apply_bugtraq_with_capturing_groups(reporter):
+    """Test configuration using capturing groups."""
+    reporter._bug_trackers = [
+        {
+            'url': 'https://redmine.company.com/issues/%BUGID%',
+            'log_regex': '#(\\d+)',
+            'log_link_regex': None
+        }
+    ]
+
+    result = reporter._apply_bugtraq('Fixed #12345 in code')
+    expected = 'Fixed <a href="https://redmine.company.com/issues/12345" target="_blank">#12345</a> in code'
+    assert result == expected
+
+
+def test_apply_bugtraq_with_project_macro(reporter):
+    """Test tracking where the project key is part of the URL id."""
+    reporter._bug_trackers = [
+        {
+            'url': 'https://company.atlassian.net/browse/%BUGID%',
+            'log_regex': '(?:A4MMI4|A4MMI)-\\d+',
+            'log_link_regex': None
+        }
+    ]
+
+    result = reporter._apply_bugtraq('See A4MMI-789 for details')
+    expected = 'See <a href="https://company.atlassian.net/browse/A4MMI-789" target="_blank">A4MMI-789</a> for details'
+    assert result == expected
+
+
+def test_apply_bugtraq_with_log_link_regex(reporter):
+    """Test that log_link_regex isolates the text (e.g. #12345) and log_regex extracts the ID (12345)."""
+    reporter._bug_trackers = [
+        {
+            'url': 'https://redmine.company.com/issues/%BUGID%',
+            'log_regex': '\\d+',
+            'log_link_regex': '#\\d+'
+        }
+    ]
+
+    input_text = 'Fixes #12345 and ignores normal number 456'
+
+    expected_html = 'Fixes <a href="https://redmine.company.com/issues/12345" target="_blank">#12345</a> and ignores normal number 456'
+
+    assert reporter._apply_bugtraq(input_text) == expected_html
