@@ -36,10 +36,25 @@ class HtmlTestSummaryOutput(HtmlOutput):
         :return: HTML string
         """
         entries = []
+        subtests_results = {
+            'PASSED': 0,
+            'FAILED': 0,
+            'ERRORED': 0,
+            'JUSTIFIED': 0,
+            'SKIPPED': 0,
+            'EXPECTED-FAILURE': 0,
+            'UNEXPECTED-SUCCESS': 0,
+            'NOT-EXECUTED': 0,
+        }
 
         for tests in testsuite.values():
             for test in tests:
                 entries.append(deepcopy(test))
+                if test['subtests']:
+                    for subtest in test['subtests']:
+                        subtests_results[subtest['result']] += 1
+                else:
+                    subtests_results[test['result']] += 1
 
         template = self.load_template('summary-test.html.jinja2')
         rendered = template.render(
@@ -51,6 +66,7 @@ class HtmlTestSummaryOutput(HtmlOutput):
             test_plan_paths=test_plan_paths,
             user_data=user_data,
             brunhilda_version=brunhilda_version,
-            suite_graph=any(test['result'] == 'NOT-EXECUTED' for test in entries)
+            suite_graph=any(test['result'] == 'NOT-EXECUTED' for test in entries),
+            subtests_results=subtests_results
         )
         return rendered
