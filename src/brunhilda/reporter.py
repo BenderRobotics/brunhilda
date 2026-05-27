@@ -491,6 +491,8 @@ class Reporter:
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         :param evaluation_policy: policy used for evaluating requirement result
         """
+        print('... creating requirements summary')
+
         path = str(path)
         formater = HtmlReqSummaryOutput(preamble=preamble)
         issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
@@ -526,6 +528,8 @@ class Reporter:
         except ImportError as ex:
             raise ImportError(f'Missing pip dependencies. Reason: {ex}')
 
+        print('... creating user stories summary')
+
         path = str(path)
         formater = HtmlUserStoriesSummaryOutput(preamble=preamble)
         issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
@@ -555,6 +559,8 @@ class Reporter:
         :param name: name of the produced report used in title
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
+        print('... creating test summary')
+
         path = str(path)
         formater = HtmlTestSummaryOutput(preamble=preamble)
         issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
@@ -595,6 +601,8 @@ class Reporter:
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         :param level: level to filter the tests
         """
+        print('... creating test plan')
+
         path = str(path)
 
         if isinstance(level, (list, set, tuple, frozenset)):
@@ -627,6 +635,8 @@ class Reporter:
         :param name: name of the output file
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         """
+        print('... creating issue list')
+
         path = str(path)
         self._issue_list_path = path
         formater = HtmlIssueListOutput(preamble=preamble, path=path)
@@ -643,7 +653,8 @@ class Reporter:
         path: Union[str, Path],
         name: str = 'Summary of Features',
         preamble: Union[Sequence[str], str, None] = None,
-        evaluation_policy: Union[CoveragePolicy, Callable[[List[str]], str]] = CoveragePolicy.STRICT
+        evaluation_policy: Union[CoveragePolicy, Callable[[List[str]], str]] = CoveragePolicy.STRICT,
+        disable_progress_bars: bool = True
     ) -> None:
         """
         Prints summary of features with related tests
@@ -652,7 +663,10 @@ class Reporter:
         :param name: name of the output file
         :param preamble: path or multiple paths to the HTML document to be used as a document preamble
         :param evaluation_policy: policy used for evaluating feature result
+        :param disable_progress_bars: if True progress bars will be disabled
         """
+        print('... creating feature summary')
+
         path = str(path)
         self._feature_list_path = path
         formater = HtmlFeatureSummaryOutput(preamble=preamble, path=path)
@@ -662,7 +676,8 @@ class Reporter:
             features=self._features,
             testsuite=self._tests,
             test_plan_paths=test_plan_paths,
-            evaluation_policy=evaluation_policy
+            evaluation_policy=evaluation_policy,
+            disable_progress_bars=disable_progress_bars
         )
         self._write_file(name, path, output)
 
@@ -705,6 +720,8 @@ class Reporter:
         :param tests_path: path to json/yaml tests file
         :param output_path: path to regenerated file
         """
+        print('... creating justified record')
+
         if not tests_path in self._tests:
             raise RuntimeError(
                 f"Given tests ({tests_path}) weren't loaded before justified record print. They must be loaded before this operation."
