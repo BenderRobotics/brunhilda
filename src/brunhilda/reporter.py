@@ -1,6 +1,7 @@
 import configparser
 import os
 import re
+from datetime import datetime
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union, overload
 
@@ -58,7 +59,19 @@ class Reporter:
             if path.endswith(('yaml', 'yml')):
                 content = yaml.safe_load(f)
             elif path.endswith(('json')):
-                content = json.load(f)
+                date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(?:\.\d+)?$')
+
+                def datetime_parser(dct):
+                    for k, v in dct.items():
+                        if isinstance(v, str) and date_pattern.match(v):
+                            try:
+                                dct[k] = datetime.fromisoformat(v)
+                            except ValueError:
+                                pass
+                    return dct
+
+                # Load json file content using custom hook for parsing iso format strings into datetime instance
+                content = json.load(f, object_hook=datetime_parser)
             else:
                 raise ValueError(f'Unsupported file type {path}')
 

@@ -1,3 +1,5 @@
+import json
+from datetime import datetime
 from unittest.mock import MagicMock, call, mock_open, patch
 
 import pytest
@@ -88,6 +90,50 @@ def test_load_tests_multiple(reporter):
         assert reporter._tests['run1.json'][0]['test_id_with_level'] == 'T1_1'
         assert reporter._tests['run2.json'][0]['test_id_with_level'] == 'T2_2'
         assert reporter._tests['run2.json'][0]['result'] == 'NOT-EXECUTED'
+
+
+# --- Testing _load datetime parsing ---
+
+
+def test_load_json_datetime_parsing(reporter):
+    """Test that _load correctly parses datetime strings from JSON into datetime objects."""
+    mock_json_content = json.dumps(
+        {
+            'env_info': {
+                'timestamp_start': '2026-05-27 09:53:02.787515'
+            },
+            'normal_text': 'This is just a normal string'
+        }
+    )
+
+    with patch('builtins.open', mock_open(read_data=mock_json_content)):
+        result = reporter._load('fake_path/run.json')
+
+    parsed_date = result['env_info']['timestamp_start']
+    assert isinstance(parsed_date, datetime)
+
+    assert parsed_date == datetime(2026, 5, 27, 9, 53, 2, 787515)
+
+    assert result['normal_text'] == 'This is just a normal string'
+
+
+def test_load_yaml_datetime_parsing(reporter):
+    """Test that _load correctly parses datetime strings from YAML into datetime objects."""
+    mock_yaml_content = """
+    env_info:
+        timestamp_start: 2026-05-27 09:53:02.787515
+    normal_text: This is just a normal string
+    """
+
+    with patch('builtins.open', mock_open(read_data=mock_yaml_content)):
+        result = reporter._load('fake_path/run.yaml')
+
+    parsed_date = result['env_info']['timestamp_start']
+    assert isinstance(parsed_date, datetime)
+
+    assert parsed_date == datetime(2026, 5, 27, 9, 53, 2, 787515)
+
+    assert result['normal_text'] == 'This is just a normal string'
 
 
 # --- Testing load_issues ---
