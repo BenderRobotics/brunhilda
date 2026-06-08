@@ -81,12 +81,12 @@ prepare-release:
   stage: 🔨 build
   tags:
     - docker
+  needs:
+    - build
   rules:
     - if: $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/
   script:
     - python tools/get_changes.py CHANGELOG.md v${VERSION} > changes.txt
-    - pip install -i https://pypi.benderrobotics.com gitlab_tools
-    - gitlab-tools tag-changelog -p $CI_PROJECT_PATH -t $API_KEY -b $CI_DEFAULT_BRANCH -o changes.txt
   artifacts:
     paths:
       - "changes.txt"
@@ -120,6 +120,7 @@ package-registry-upload:
     - docker
   script:
     - TAG_VERSION=${CI_COMMIT_TAG#"v"}
+    - test $VERSION = $TAG_VERSION
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "dist/${PACKAGE_NAME}" "${PACKAGE_REGISTRY}/${VERSION}/${PACKAGE_NAME}"'
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "dist/${ARCHIVE_NAME}" "${PACKAGE_REGISTRY}/${VERSION}/${ARCHIVE_NAME}"'
   rules:
@@ -133,9 +134,10 @@ release-gitlab:
   needs: [build, prepare-release]
   script:
     - TAG_VERSION=${CI_COMMIT_TAG#"v"}
+    - test $VERSION = $TAG_VERSION
     - DESCRIPTION=$(cat changes.txt)
     - |
-      release-cli create --name "Release of $CI_COMMIT_TITLE $CI_PROJECT_TAG" --tag-name $CI_COMMIT_TAG \
+      release-cli create --name "Release of BRunhilda $CI_COMMIT_TITLE" --tag-name $CI_COMMIT_TAG \
         --description "$DESCRIPTION" \
         --assets-link "{\"name\":\"${PACKAGE_NAME}\",\"url\":\"${PACKAGE_REGISTRY}/${VERSION}/${PACKAGE_NAME}\"}" \
         --assets-link "{\"name\":\"${ARCHIVE_NAME}\",\"url\":\"${PACKAGE_REGISTRY}/${VERSION}/${ARCHIVE_NAME}\"}"
