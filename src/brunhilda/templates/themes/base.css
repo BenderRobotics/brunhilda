@@ -744,11 +744,20 @@ input.test__expander:checked+.test__detail {
 }
 
 .subtest__extra {
-    max-width: 33vw;
+    max-width: 30%;
 }
 
 .subtest__result {
     font-weight: bold;
+}
+
+.subtest__name {
+    min-width: 400px;
+    word-break: break-all;
+}
+
+.subtest__detail {
+    max-width: 30%;
 }
 
 .subtest--passed {
@@ -775,6 +784,62 @@ input.test__expander:checked+.test__detail {
     max-height: 400px;
     max-width: 100%;
     width: auto;
+}
+
+@media print {
+    .subtest__name {
+        min-width: 0%;
+    }
+
+    body.run-summary {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .run-summary .main {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .keyboard-help {
+        display: none;
+    }
+
+    .test__steps__description .document,
+    .test__steps__expectation .document,
+    .test__steps__comments .document,
+    .test__steps__obtained .document,
+    .subtests .subtest__detail pre,
+    .subtests .subtest__extra pre.subtest__extra__text {
+        max-height: none !important;
+        overflow-y: hidden !important;
+    }
+
+}
+/********************************************************/
+
+/* Width modes */
+@media screen {
+    /* --- NARROW MODE --- */
+    body.report-mode--narrow .main {
+        width: 1200px !important;
+        max-width: 100% !important;
+    }
+
+    /* --- WIDE MODE --- */
+    body.report-mode--wide .main {
+        width: 1600px !important;
+        max-width: 100% !important;
+    }
+
+    /* --- FULL MODE --- */
+    body.report-mode--full .main {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
 }
 
 /********************************************************/
@@ -1174,26 +1239,66 @@ ol.lowerroman {
 
 
 /**************************************/
-/* Style of index link floating button */
+/* Style of floating buttons */
 
-.index-link-button {
+.top-right-controls {
     position: fixed;
-    top: 2rem;
-    right: 2rem;
-    padding: 0.75rem 0.75rem;
-    background-color: #00c3ff;
-    color: white;
-    border-radius: 1rem;
-    text-decoration: none;
-    font-weight: bold;
-    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s;
+    top: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     z-index: 9999;
-    font-size: 1.5rem;
 }
 
-.index-link-button:hover {
-    background-color: #0056b3;
+.btn-group {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    display: inline-flex;
+    overflow: hidden;
+    box-sizing: border-box;
+    border: 1px solid #a0a0a0;
+}
+
+.btn {
+    background-color: #b0b0b0;
+    color: white;
+    padding: 0 16px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.2s;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 6px;
+    display: block;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #a0a0a0;
+}
+
+.btn-group .btn {
+    border-radius: 0px;
+    border: none;
+}
+
+.btn-group .btn:not(:last-child) {
+    border-right: 1px solid #a0a0a0;
+}
+
+.btn:hover {
+    background-color: #0099cc;
+}
+
+.btn.active {
+    background-color: #007bff;
+}
+
+@media print {
+    .top-right-controls {
+        display: none !important;
+    }
 }
 
 /**************************************/
@@ -1276,6 +1381,7 @@ ol.lowerroman {
     box-sizing: border-box;
     padding-right: 5px;
     min-width: 8rem;
+    line-height: normal; /* Hack for ghost scrollbar */
 }
 
 /**************************************/

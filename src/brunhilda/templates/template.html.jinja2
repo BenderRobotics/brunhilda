@@ -104,27 +104,47 @@
 
                 // === Checkbox activation by hash ===
                 const hash = window.location.hash;
-                if (!hash) return;
 
-                const testId = hash.substring(1); // remove # from hash
-                const checkboxId = 'test_expand.' + testId;
-                const $checkbox = $('#' + CSS.escape(checkboxId));
+                if (hash) {
+                    const testId = hash.substring(1); // remove # from hash
+                    const checkboxId = 'test_expand.' + testId;
+                    const $checkbox = $('#' + CSS.escape(checkboxId));
 
-                if ($checkbox.length && !$checkbox.prop('checked')) {
-                    $checkbox.prop('checked', true);
+                    if ($checkbox.length && !$checkbox.prop('checked')) {
+                        $checkbox.prop('checked', true);
+                    }
                 }
+
+                // === Width mode switch ===
+                $('.btn-width-mode').click(function() {
+                    $('.btn-width-mode').removeClass('active');
+                    $(this).addClass('active');
+
+                    const mode = $(this).data('mode');
+
+                    $('body').removeClass('report-mode--narrow report-mode--wide report-mode--full')
+                            .addClass('report-mode--' + mode);
+                });
             });
         </script>
     </head>
-    <body>
+    <body class="report-mode--wide">
         <h1>Test Run Report {% if env_info.name %}<strong>[{{ env_info.name }}]</strong>{% endif %}</h1>
         <div class="header">
             {% include "header.html.jinja2" %}
         </div>
 
-        {% if justified_record %}
-        <a href="#index" class="index-link-button">🏠 Home</a>
-        {% endif %}
+        <div class="top-right-controls">
+            <div class="btn-group">
+                <button type="button" class="btn btn-width-mode" data-mode="narrow">Narrow</button>
+                <button type="button" class="btn btn-width-mode active" data-mode="wide">Wide</button>
+                <button type="button" class="btn btn-width-mode" data-mode="full">Full</button>
+            </div>
+
+            {% if justified_record %}
+            <a href="#index" class="btn">🏠 Home</a>
+            {% endif %}
+        </div>
 
         <div class="main">
 {% if preamble %}
@@ -134,7 +154,7 @@
 {% endif %}
             <section>
                 {% include "summary.html.jinja2" %}
-                <div>
+                <div class="keyboard-help">
                     <h3>Help</h3>
                     <p>
                         Use following keys to quick jump:
@@ -215,7 +235,7 @@
                                             {{ test.description }}
                                         </div>
 
-                                        <div class="test__steps">
+                                        <div class="test__steps__table">
                                             <table>
                                                 <caption>Test Steps</caption>
                                                 <thead>

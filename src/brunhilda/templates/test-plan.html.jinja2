@@ -11,11 +11,14 @@
     </style>
 </head>
 
-<a href="#index" class="index-link-button">🏠 Home</a>
 
 {% set ns = namespace(test_case_name='') %}
 
 <body>
+    <div class="top-right-controls">
+        <a href="#index" class="btn">🏠 Home</a>
+    </div>
+
     <h1>{{ name }}</h1>
     <div class="header">
         {% include "header.html.jinja2" %}
