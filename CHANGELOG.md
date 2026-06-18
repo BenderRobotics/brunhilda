@@ -1,5 +1,15 @@
 # Brunhilda project changelog
 
+## 2.8.0 (2026-06-18)
+
+- Added Test Record table width optimization (refs [#13922](https://redmine.benderrobotics.com/issues/13922))
+- Fixed datetime parsing from JSON file (refs [#13986](https://redmine.benderrobotics.com/issues/13986))
+- Added subtest stats into Test Summary summary table (refs [#13940](https://redmine.benderrobotics.com/issues/13940))
+- Optimized printing Summary of Features report (refs [#13946](https://redmine.benderrobotics.com/issues/13946))
+- Added bugtraq file support for bug IDs links (refs [#13941](https://redmine.benderrobotics.com/issues/13941))
+- Added extended filtering options (refs [#13839](https://redmine.benderrobotics.com/issues/13839))
+- Added guide for report producer (refs [#13710](https://redmine.benderrobotics.com/issues/13710))
+
 ## 2.7.0 (2026-04-28)
 
 - Added guide for report readers (refs [#13710](https://redmine.benderrobotics.com/issues/13710))
