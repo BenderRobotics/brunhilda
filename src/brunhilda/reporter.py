@@ -481,7 +481,9 @@ class Reporter:
             for test in tests:
                 test_id = test['test_id_with_level']
                 report_path = test['html_report_path']
-                test_name_to_html_report_path[test_id] = rel_path(self._issue_list_path, report_path)
+                test_name_to_html_report_path[test_id] = rel_path(
+                    self._issue_list_path, report_path
+                ) if report_path != '' else ''
 
         for file_issues in self._issues.values():
             for result in ('errors', 'failures'):

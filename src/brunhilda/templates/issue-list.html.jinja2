@@ -69,7 +69,13 @@
                             <li>{{ spec }}</li>
                             {% endfor %}
                         </ul></td>
-                        <td><a href="{{ issue.html_report_path }}#{{ issue.test }}">ERROR</a></td>
+                        <td>
+                        {% if issue.html_report_path != "" %}
+                            <a href="{{ issue.html_report_path }}#{{ issue.test }}">ERROR</a>
+                        {% else %}
+                            ERROR
+                        {% endif %}
+                        </td>
                         <td class="issues-table__message" colspan="{{ 1 if issue.extra else 2 }}">
                             <pre>{{ issue.message }}</pre>
                         </td>
@@ -121,7 +127,13 @@
                             <li>{{ spec }}</li>
                             {% endfor %}
                         </ul></td>
-                        <td><a href="{{ issue.html_report_path }}#{{ issue.test }}">FAIL</a></td>
+                        <td>
+                        {% if issue.html_report_path != "" %}
+                            <a href="{{ issue.html_report_path }}#{{ issue.test }}">FAIL</a>
+                        {% else %}
+                            FAIL
+                        {% endif %}
+                        </td>
                         <td class="issues-table__message" colspan="{{ 1 if issue.extra else 2 }}">
                             <pre>{{ issue.message }}</pre>
                         </td>
