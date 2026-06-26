@@ -338,6 +338,41 @@ suite = loader.discover('.', pattern='test*.py')
 result = runner.run(suite)
 ```
 
+### Test Evaluation Flow
+
+#### Standard Tests
+
+Fail-Fast per Method: A standard test method executes sequentially. The very first failed assertion (assertEqual, assertTrue, etc.) or uncaught exception immediately terminates that test method.
+
+#### Tests with Subtests
+
+Continuance on Failure: When using the with subTest context manager, a failure inside the block does not stop the execution of the test method.
+
+The overall test outcome is determined by the highest severity status: $\text{ERROR} > \text{FAILED} > \text{PASSED}$, but you will get a detailed report for every single iteration.
+
+#### Mixed Mode (Subtests + Regular Assertions)
+
+If you combine both subtests and top-level (regular) assertions within a single test method, the behavior depends strictly on where the failure occurs:
+
+- **Failure inside a SubTest**: The failure is logged, but execution continues. The runner will execute any subsequent sub-tests or regular assertions further down the method.
+- **Failure in a Regular Assertion**: If a top-level assertion fails, the entire test method terminates immediately. Any sub-tests or code placed after this failed regular assertion will not be executed at all.
+
+The final status of the entire test is depicted in the matrix below:
+
+| Subtest(s) Status | Regular Assertion Status | Overall Test Outcome |
+|------------------ | ------------------------ | -------------------- |
+| All Passed        | Passed                   | `PASSED`             |
+| 1+ Failed         | Passed                   | `FAILED`             |
+| 1+ Errored        | Passed                   | `ERROR`              |
+| 1+ Skipped        | Passed                   | `PASSED`             |
+| 1+ Failed         | Errored                  | `ERROR`              |
+| 1+ Errored        | Failed                   | `FAILED`             |
+| All Passed        | Skipped                  | `SKIPPED`            |
+| All Passed        | Failed                   | `FAILED`             |
+| All Passed        | Errored                  | `ERROR`              |
+
+> In short, subtest outcomes determine the final status only when all regular assertions pass. Otherwise, the status of the first unpassed regular assertion is used as the result for the entire test.
+
 ### Dry run
 
 Test suite `dryrun` allows to generate artifacts without actually executing the tests. This is useful when you want
