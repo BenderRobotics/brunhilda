@@ -413,7 +413,7 @@ runner.save_html_report(result, path)
 
 File produced by `brunhilda.BRunhilda.save_issues` can hold information about *justified* test issue. Test issue
 which is identified as a false-positive (e.g. failure of the testing system) is marked with `justified: 'yes'` and
-`comment` explaining justification.
+`comment` explaining justification. One issue can be tracked with multiple Bug IDs, to split comment for each use `\n` for adding a new row.
 
 Not justified issue record:
 
@@ -426,8 +426,8 @@ Not justified issue record:
 Justified issue record:
 
 ```yaml
-- bug-id: ''
-  comment: 'Not a bug'
+- bug-id: '#123, #321'
+  comment: 'Known issue \n Implementation issue (on a new line)'
   justified: 'yes'
 ```
 
