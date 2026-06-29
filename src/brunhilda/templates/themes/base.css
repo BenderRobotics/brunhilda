@@ -753,11 +753,12 @@ input.test__expander:checked+.test__detail {
 
 .subtest__name {
     min-width: 400px;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 .subtest__detail {
     max-width: 30%;
+    word-break: break-word;
 }
 
 .subtest--passed {
@@ -1388,7 +1389,7 @@ ol.lowerroman {
 /* Subtests table */
 .subtests .subtest__detail pre,
 .subtests .subtest__extra pre.subtest__extra__text {
-    max-height: 10rem;
+    max-height: 20rem;
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
