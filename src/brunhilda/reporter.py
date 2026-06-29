@@ -88,6 +88,8 @@ class Reporter:
                     justifications = []  # list of justifications - there can be several failures in one test
                     issues_details = [
                     ]  # list of dict containing bug ID, bug comment, (sub)test result, issue list link
+                    consumed_subtest_indices = set()  # tracker for used subtests indexes
+
                     for issues in self._issues.values():
                         if issues['run']['level'] == test['level']:
                             for issue in issues['errors'] + issues['failures']:
@@ -133,8 +135,14 @@ class Reporter:
                                         issues_details.append({'link': issue_list_link, 'result': issue_result})
 
                                     for i, subtest in enumerate(test['subtests']):
-                                        if subtest['id'] == issue['sub-test'] and justified:
-                                            test['subtests'][i]['result'] = 'JUSTIFIED'
+                                        subtest_result = test['subtests'][i].get('result')
+                                        if (
+                                            i not in consumed_subtest_indices and subtest['id'] == issue['sub-test']
+                                            and subtest_result in ['FAILED', 'ERRORED']
+                                        ):
+                                            consumed_subtest_indices.add(i)
+                                            if justified:
+                                                test['subtests'][i]['result'] = 'JUSTIFIED'
                                             break
                     if test['comment']:
                         test['test_comment'] = test['comment']
