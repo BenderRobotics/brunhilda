@@ -1,5 +1,13 @@
 # Brunhilda project changelog
 
+## 2.8.1 (2026-06-30)
+
+- Remove test record links leading to nowehere from the issue list when the path to HTML file is not provided (refs [#14208](https://redmine.benderrobotics.com/issues/14208))
+- Optimize line breaks in sub-tests table details to prevent table overflow (refs [#14170](https://redmine.benderrobotics.com/issues/14170))
+- Add legend to test suite execution graph (refs [#14234](https://redmine.benderrobotics.com/issues/14234))
+- Fix justification for multiple sub-tests having same parameters (refs [#14241](https://redmine.benderrobotics.com/issues/14241))
+- Change color used in reports for the `OUT-OF-SCOPE` state to prevent confusion with `PASSED` state (refs [#14248](https://redmine.benderrobotics.com/issues/14248))
+
 ## 2.8.0 (2026-06-18)
 
 - Added Test Record table width optimization (refs [#13922](https://redmine.benderrobotics.com/issues/13922))
