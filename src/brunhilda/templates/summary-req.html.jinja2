@@ -332,6 +332,37 @@
                 }
             })(type);
         }
+
+        function evaluateRequirementsVisibility() {
+            setTimeout(function() {
+                const currentLevel = $("#level-selector").val();
+
+                $("tr.filterable").each(function() {
+                    const $row = $(this);
+                    const $innerTable = $row.find(".inner_table");
+
+                    if ($innerTable.length) {
+                        const totalTests = $innerTable.find("tbody tr").length;
+                        const hiddenTests = $innerTable.find("tbody tr.test--hidden_lvl").length;
+
+                        const allTestsHidden = totalTests > 0 && totalTests === hiddenTests;
+                        const hasNoTests = $innerTable.find("tbody tr td").length === 0;
+                        const shouldHideEmptyReq = hasNoTests && currentLevel !== "all";
+
+                        if (shouldHideEmptyReq || allTestsHidden) {
+                            $row.addClass("req--hidden_lvl");
+                        } else {
+                            $row.removeClass("req--hidden_lvl");
+                        }
+                    }
+                });
+            }, 0);
+        }
+
+        $("#level-selector").on("change", evaluateRequirementsVisibility);
+        $('.run-summary input[type="checkbox"]').on("change", evaluateRequirementsVisibility);
+
+        evaluateRequirementsVisibility();
     });
 
 </script>

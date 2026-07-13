@@ -1238,6 +1238,10 @@ ol.lowerroman {
     display: none !important;
 }
 
+.req--hidden_lvl {
+    display: none !important;
+}
+
 
 /**************************************/
 /* Style of floating buttons */
