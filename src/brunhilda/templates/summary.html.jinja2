@@ -410,14 +410,14 @@
         var chartLevel = new google.visualization.PieChart(document.getElementById('piechart_level'));
 
         chartResult.draw(dataResult, {
-            title: 'Test Result',
+            title: 'Executed Tests Results',
             chartArea: {width: '95%', height: '80%'},
             pieHole: 0.3,
             colors: Object.values(colorPaletteTestResult),
             pieSliceTextStyle: {color: 'black'}
         });
         chartExecution.draw(dataExecution, {
-            title: 'Test Execution',
+            title: 'Tests Execution',
             chartArea: {width: '95%', height: '80%'},
             pieHole: 0.3,
             colors: colorsForExecutionChart,
@@ -471,7 +471,7 @@
         var chartSuiteExecution = new google.visualization.PieChart(document.getElementById('suite_piechart_execution'));
 
         chartSuiteResult.draw(suiteDataResult, {
-            title: 'Suite Test Result',
+            title: 'Test Suite Results',
             chartArea: {width: '95%', height: '80%'},
             pieHole: 0.3,
             colors: Object.values(colorPaletteTestResult),
