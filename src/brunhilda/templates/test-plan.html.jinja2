@@ -44,7 +44,7 @@
     {% endif %}
 
     <section id="{{ test.test_id_with_level }}" class="testdef">
-        <h2>{{ test.test_id }} {% if test.level != "" %}({{ test.level}}){% endif %}</h2>
+        <h2 id="{{ test.test_id }}">{{ test.test_id }} {% if test.level != "" %}({{ test.level}}){% endif %}</h2>
         <div class="test__tags">
         <table class="test__tags__table">
     {% for tag_name in test.tags %}
