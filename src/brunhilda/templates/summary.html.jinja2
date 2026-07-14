@@ -414,21 +414,24 @@
             chartArea: {width: '95%', height: '80%'},
             pieHole: 0.3,
             colors: Object.values(colorPaletteTestResult),
-            pieSliceTextStyle: {color: 'black'}
+            pieSliceTextStyle: {color: 'black'},
+            sliceVisibilityThreshold: 0.000001
         });
         chartExecution.draw(dataExecution, {
             title: 'Tests Execution',
             chartArea: {width: '95%', height: '80%'},
             pieHole: 0.3,
             colors: colorsForExecutionChart,
-            pieSliceTextStyle: {color: 'black'}
+            pieSliceTextStyle: {color: 'black'},
+            sliceVisibilityThreshold: 0.000001
         });
         chartLevel.draw(dataLevel, {
             title: 'Levels',
             chartArea: {width: '95%', height: '80%'},
             pieHole: 0.3,
             colors: colorsForLevelChart,
-            pieSliceTextStyle: {color: 'black'}
+            pieSliceTextStyle: {color: 'black'},
+            sliceVisibilityThreshold: 0.000001
         });
     }
 </script>
@@ -475,14 +478,16 @@
             chartArea: {width: '95%', height: '80%'},
             pieHole: 0.3,
             colors: Object.values(colorPaletteTestResult),
-            pieSliceTextStyle: {color: 'black'}
+            pieSliceTextStyle: {color: 'black'},
+            sliceVisibilityThreshold: 0.000001
         });
         chartSuiteExecution.draw(suiteExecutionData, {
             title: 'Test Suite Execution',
             chartArea: {width: '95%', height: '80%'},
             pieHole: 0.3,
             colors: ['#28a745', '#808080'],
-            pieSliceTextStyle: {color: 'black'}
+            pieSliceTextStyle: {color: 'black'},
+            sliceVisibilityThreshold: 0.000001
         });
     }
     </script>
