@@ -367,6 +367,8 @@
             ['expected failure', {{ summary.results.expected_failures }}],
             ['unexpected success', {{ summary.results.unexpected_successes }}]
         ]);
+        addChartTooltips(dataResult);
+
         {% else %}
         {# To show "No data" string instead of graph #}
         var dataResult = google.visualization.arrayToDataTable([
@@ -390,6 +392,7 @@
         });
 
         var dataExecution = google.visualization.arrayToDataTable(executionArray);
+        addChartTooltips(dataExecution);
 
         var levelArray = [
             ['Level', 'Amount'],
@@ -404,6 +407,7 @@
         });
 
         var dataLevel = google.visualization.arrayToDataTable(levelArray);
+        addChartTooltips(dataLevel);
 
         var chartResult = new google.visualization.PieChart(document.getElementById('piechart_result'));
         var chartExecution = new google.visualization.PieChart(document.getElementById('piechart_execution'));
@@ -415,7 +419,8 @@
             pieHole: 0.3,
             colors: Object.values(colorPaletteTestResult),
             pieSliceTextStyle: {color: 'black'},
-            sliceVisibilityThreshold: 0.000001
+            sliceVisibilityThreshold: 0.000001,
+            tooltip: { isHtml: true }
         });
         chartExecution.draw(dataExecution, {
             title: 'Tests Execution',
@@ -423,7 +428,8 @@
             pieHole: 0.3,
             colors: colorsForExecutionChart,
             pieSliceTextStyle: {color: 'black'},
-            sliceVisibilityThreshold: 0.000001
+            sliceVisibilityThreshold: 0.000001,
+            tooltip: { isHtml: true }
         });
         chartLevel.draw(dataLevel, {
             title: 'Levels',
@@ -431,7 +437,8 @@
             pieHole: 0.3,
             colors: colorsForLevelChart,
             pieSliceTextStyle: {color: 'black'},
-            sliceVisibilityThreshold: 0.000001
+            sliceVisibilityThreshold: 0.000001,
+            tooltip: { isHtml: true }
         });
     }
 </script>
@@ -463,12 +470,14 @@
             ['unexpected success', {{ summary.results.unexpected_successes }}],
             ['not executed', {{ summary.results.not_executed }}]
         ]);
+        addChartTooltips(suiteDataResult);
 
         var suiteExecutionData = google.visualization.arrayToDataTable([
             ['Scope', 'Amount'],
             ['executed', {{ summary.results.passed + summary.results.failed + summary.results.errored + summary.results.skipped + summary.results.justified + summary.results.expected_failures + summary.results.unexpected_successes }}],
             ['excluded', {{ summary.results.not_executed }}]
         ]);
+        addChartTooltips(suiteExecutionData);
 
         var chartSuiteResult = new google.visualization.PieChart(document.getElementById('suite_piechart_result'));
         var chartSuiteExecution = new google.visualization.PieChart(document.getElementById('suite_piechart_execution'));
@@ -479,7 +488,8 @@
             pieHole: 0.3,
             colors: Object.values(colorPaletteTestResult),
             pieSliceTextStyle: {color: 'black'},
-            sliceVisibilityThreshold: 0.000001
+            sliceVisibilityThreshold: 0.000001,
+            tooltip: { isHtml: true }
         });
         chartSuiteExecution.draw(suiteExecutionData, {
             title: 'Test Suite Execution',
@@ -487,7 +497,8 @@
             pieHole: 0.3,
             colors: ['#28a745', '#808080'],
             pieSliceTextStyle: {color: 'black'},
-            sliceVisibilityThreshold: 0.000001
+            sliceVisibilityThreshold: 0.000001,
+            tooltip: { isHtml: true }
         });
     }
     </script>

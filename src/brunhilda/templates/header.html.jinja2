@@ -65,6 +65,28 @@
     };
 </script>
 
+<script id="general_functions">
+    function addChartTooltips(dataTable) {
+        dataTable.addColumn({type: 'string', role: 'tooltip', 'p': {'html': true}});
+
+        let sum = 0;
+        for (let i = 0; i < dataTable.getNumberOfRows(); i++) {
+            sum += dataTable.getValue(i, 1);
+        }
+
+        for (let i = 0; i < dataTable.getNumberOfRows(); i++) {
+            const label = dataTable.getValue(i, 0);
+            const value = dataTable.getValue(i, 1);
+            const percentage = sum === 0 ? '0.0' : ((value / sum) * 100).toFixed(1);
+
+            dataTable.setFormattedValue(i, 0, label + ' (' + percentage + ' %)');
+
+            const tooltipText = label + '<br><strong>' + value + ' (' + percentage + ' %)</strong>';
+            dataTable.setValue(i, 2, tooltipText);
+        }
+    }
+</script>
+
 <svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
     <symbol id="icon-info" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="10" fill="currentColor"></circle>
