@@ -284,7 +284,7 @@
                                     </tr>
                                 {% endfor %}
                             {% else %}
-                                <tr class="filterable" data-filter="{{ feature.group }}">
+                                <tr class="filterable" data-filter="{{ feature.group }}" id="feature--{{ feature.order }}">
                                     {% if row.first %}
                                         <td class="feature--{{ feature.result|lower }}" rowspan="{{ test_count.value }}">{{ feature.name }}</td>
                                         {% set row.first = False %}

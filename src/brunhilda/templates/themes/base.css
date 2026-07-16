@@ -1161,10 +1161,33 @@ ol.lowerroman {
     overflow: auto;
     width: 480px;
     padding-left: 20px;
+    z-index: 999;
 }
 
 .fixed-width {
-    width: calc(100% - 500px);
+    width: calc(100% - 500px); /* 480px TOC + 20px padding */
+    transition: width 0.15s ease-out;
+}
+
+@media screen and (max-width: 1200px) {
+    .toc-right {
+        width: calc(73.33vw - 400px);
+    }
+
+    .fixed-width {
+        width: calc(100% - (73.33vw - 380px));
+        transition: none;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .toc-right {
+        display: none;
+    }
+
+    .fixed-width {
+        width: 100%;
+    }
 }
 
 .piechart {
