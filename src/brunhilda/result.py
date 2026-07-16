@@ -589,10 +589,11 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         test_id = self._get_test_id(test)
         subtest_id = subtest.id().lstrip(test.__module__ + '.')
         self._process_test_extra(subtest, subtest_id)
+        num = 1 + len(self.subtests)
 
         self.subtests.append(
             {
-                'num': 1 + len(self.subtests),
+                'num': num,
                 'id': subtest_id,
                 'name': str(dict(subtest.params)),
                 'result': PASSED,
@@ -623,6 +624,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             issue = {
                 'test': test_id,
                 'sub-test': subtest_id,
+                'num': num,
                 'message': err_str,
                 'extra': subtest.extra,
                 'result': subtest_result,
