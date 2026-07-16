@@ -1,4 +1,5 @@
 <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
     const results = ['passed', 'failed', 'errored', 'justified', 'skipped',
                      'expected-failure', 'unexpected-success', 'not-executed'];
@@ -274,6 +275,136 @@
     </tfoot>
 </table>
 
+{% if suite_graph %}
+    <script>
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(drawSummaryChart);
+
+    function drawSummaryChart() {
+        var suiteDataResult = google.visualization.arrayToDataTable([
+            ['Test result', 'Amount'],
+            ['passed', {{ summary.results.passed }}],
+            ['failed', {{ summary.results.failed }}],
+            ['errored', {{ summary.results.errored }}],
+            ['skipped', {{ summary.results.skipped }}],
+            ['justified', {{ summary.results.justified }}],
+            ['expected failure', {{ summary.results.expected_failures }}],
+            ['unexpected success', {{ summary.results.unexpected_successes }}],
+            ['not executed', {{ summary.results.not_executed }}]
+        ]);
+        addChartTooltips(suiteDataResult);
+
+        var suiteExecutionData = google.visualization.arrayToDataTable([
+            ['Scope', 'Amount'],
+            ['executed', {{ summary.results.passed + summary.results.failed + summary.results.errored + summary.results.skipped + summary.results.justified + summary.results.expected_failures + summary.results.unexpected_successes }}],
+            ['excluded', {{ summary.results.not_executed }}]
+        ]);
+        addChartTooltips(suiteExecutionData);
+
+        var chartSuiteResult = new google.visualization.PieChart(document.getElementById('suite_piechart_result'));
+        var chartSuiteExecution = new google.visualization.PieChart(document.getElementById('suite_piechart_execution'));
+
+        chartSuiteResult.draw(suiteDataResult, {
+            title: 'Test Suite Results',
+            chartArea: {width: '95%', height: '80%'},
+            pieHole: 0.3,
+            colors: Object.values(colorPaletteTestResult),
+            pieSliceTextStyle: {color: 'black'},
+            sliceVisibilityThreshold: 0.000001,
+            tooltip: { isHtml: true }
+        });
+        chartSuiteExecution.draw(suiteExecutionData, {
+            title: 'Test Suite Execution',
+            chartArea: {width: '95%', height: '80%'},
+            pieHole: 0.3,
+            colors: ['#28a745', '#808080'],
+            pieSliceTextStyle: {color: 'black'},
+            sliceVisibilityThreshold: 0.000001,
+            tooltip: { isHtml: true }
+        });
+    }
+    </script>
+    <div class="piechart">
+        <div id="suite_piechart_result" class="piechart__chart"></div>
+        <div id="suite_piechart_execution" class="piechart__chart"></div>
+    </div>
+
+{% endif %}
+
+{% if summary.results.total > 0 %}
+    <h2>Test Suite</h2>
+
+    <script>
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(drawSuiteResultChart);
+
+    function drawSuiteResultChart() {
+        {% if summary.results.total-summary.results.not_executed > 0%}
+        var dataResult = google.visualization.arrayToDataTable([
+            ['Test result', 'Amount'],
+            ['passed', {{ summary.results.passed }}],
+            ['failed', {{ summary.results.failed }}],
+            ['errored', {{ summary.results.errored }}],
+            ['skipped', {{ summary.results.skipped }}],
+            ['justified', {{ summary.results.justified }}],
+            ['expected failure', {{ summary.results.expected_failures }}],
+            ['unexpected success', {{ summary.results.unexpected_successes }}]
+        ]);
+        addChartTooltips(dataResult);
+        {% else %}
+        {# To show "No data" string instead of graph #}
+        var dataResult = google.visualization.arrayToDataTable([
+            ['Test result', 'Amount']
+        ]);
+        {% endif %}
+
+        var levelArray = [
+            ['Level', 'Amount'],
+        {% for name, level in summary.levels.items() %}
+            ['{{ name|capitalize }}', {{ level.tests }}],
+        {% endfor %}
+        ];
+
+        const colorsForLevelChart = levelArray.slice(1).map(row => {
+            const name = row[0].toLowerCase().replace(/\s+/g, '');
+            return colorPaletteTestLevels[name] || getSequentialColor();
+        });
+
+        var dataLevel = google.visualization.arrayToDataTable(levelArray);
+        addChartTooltips(dataLevel);
+
+        var chartLevel = new google.visualization.PieChart(document.getElementById('piechart_level'));
+        var chartResult = new google.visualization.PieChart(document.getElementById('piechart_result'));
+
+        chartResult.draw(dataResult, {
+                title: 'Executed Tests Results',
+                chartArea: {width: '95%', height: '80%'},
+                pieHole: 0.3,
+                colors: Object.values(colorPaletteTestResult),
+                pieSliceTextStyle: {color: 'black'},
+                sliceVisibilityThreshold: 0.000001,
+                tooltip: { isHtml: true }
+            });
+        chartLevel.draw(dataLevel, {
+            title: 'Levels',
+            chartArea: {width: '95%', height: '80%'},
+            pieHole: 0.3,
+            colors: colorsForLevelChart,
+            pieSliceTextStyle: {color: 'black'},
+            sliceVisibilityThreshold: 0.000001,
+            tooltip: { isHtml: true }
+        });
+    }
+    </script>
+
+    <div class="piechart">
+        <div id="piechart_result" class="piechart__chart"></div>
+        <div id="piechart_level" class="piechart__chart"></div>
+    </div>
+
+{% endif %}
+
+
 <h2>Execution Type Distribution</h2>
 
 <table class="run-summary table--wide">
@@ -329,7 +460,6 @@
 
 {% if summary.results.total > 0 %}
 
-<script src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
     const getSequentialColor = (function() {
     const colors = [
@@ -353,29 +483,9 @@
 })();
 
     google.charts.load('current', {'packages': ['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
+    google.charts.setOnLoadCallback(drawExecutionChart);
 
-    function drawChart() {
-        {% if summary.results.total-summary.results.not_executed > 0%}
-        var dataResult = google.visualization.arrayToDataTable([
-            ['Test result', 'Amount'],
-            ['passed', {{ summary.results.passed }}],
-            ['failed', {{ summary.results.failed }}],
-            ['errored', {{ summary.results.errored }}],
-            ['skipped', {{ summary.results.skipped }}],
-            ['justified', {{ summary.results.justified }}],
-            ['expected failure', {{ summary.results.expected_failures }}],
-            ['unexpected success', {{ summary.results.unexpected_successes }}]
-        ]);
-        addChartTooltips(dataResult);
-
-        {% else %}
-        {# To show "No data" string instead of graph #}
-        var dataResult = google.visualization.arrayToDataTable([
-            ['Test result', 'Amount']
-        ]);
-        {% endif %}
-
+    function drawExecutionChart() {
         var executionArray = [
             ['Execution', 'Amount'],
         {% for execution, count in summary.execution.items() %}
@@ -394,34 +504,8 @@
         var dataExecution = google.visualization.arrayToDataTable(executionArray);
         addChartTooltips(dataExecution);
 
-        var levelArray = [
-            ['Level', 'Amount'],
-        {% for name, level in summary.levels.items() %}
-            ['{{ name|capitalize }}', {{ level.tests }}],
-        {% endfor %}
-        ];
-
-        const colorsForLevelChart = levelArray.slice(1).map(row => {
-            const name = row[0].toLowerCase().replace(/\s+/g, '');
-            return colorPaletteTestLevels[name] || getSequentialColor();
-        });
-
-        var dataLevel = google.visualization.arrayToDataTable(levelArray);
-        addChartTooltips(dataLevel);
-
-        var chartResult = new google.visualization.PieChart(document.getElementById('piechart_result'));
         var chartExecution = new google.visualization.PieChart(document.getElementById('piechart_execution'));
-        var chartLevel = new google.visualization.PieChart(document.getElementById('piechart_level'));
 
-        chartResult.draw(dataResult, {
-            title: 'Executed Tests Results',
-            chartArea: {width: '95%', height: '80%'},
-            pieHole: 0.3,
-            colors: Object.values(colorPaletteTestResult),
-            pieSliceTextStyle: {color: 'black'},
-            sliceVisibilityThreshold: 0.000001,
-            tooltip: { isHtml: true }
-        });
         chartExecution.draw(dataExecution, {
             title: 'Tests Execution',
             chartArea: {width: '95%', height: '80%'},
@@ -431,83 +515,11 @@
             sliceVisibilityThreshold: 0.000001,
             tooltip: { isHtml: true }
         });
-        chartLevel.draw(dataLevel, {
-            title: 'Levels',
-            chartArea: {width: '95%', height: '80%'},
-            pieHole: 0.3,
-            colors: colorsForLevelChart,
-            pieSliceTextStyle: {color: 'black'},
-            sliceVisibilityThreshold: 0.000001,
-            tooltip: { isHtml: true }
-        });
     }
 </script>
 <div class="piechart">
-    <div id="piechart_result" class="piechart__chart"></div>
     <div id="piechart_execution" class="piechart__chart"></div>
-    <div id="piechart_level" class="piechart__chart"></div>
 </div>
-
-{% if suite_graph %}
-    <h2>Suite Summary</h2>
-    <script>
-    function randomColor() {
-        return "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-    }
-
-    google.charts.load('current', {'packages': ['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-        var suiteDataResult = google.visualization.arrayToDataTable([
-            ['Test result', 'Amount'],
-            ['passed', {{ summary.results.passed }}],
-            ['failed', {{ summary.results.failed }}],
-            ['errored', {{ summary.results.errored }}],
-            ['skipped', {{ summary.results.skipped }}],
-            ['justified', {{ summary.results.justified }}],
-            ['expected failure', {{ summary.results.expected_failures }}],
-            ['unexpected success', {{ summary.results.unexpected_successes }}],
-            ['not executed', {{ summary.results.not_executed }}]
-        ]);
-        addChartTooltips(suiteDataResult);
-
-        var suiteExecutionData = google.visualization.arrayToDataTable([
-            ['Scope', 'Amount'],
-            ['executed', {{ summary.results.passed + summary.results.failed + summary.results.errored + summary.results.skipped + summary.results.justified + summary.results.expected_failures + summary.results.unexpected_successes }}],
-            ['excluded', {{ summary.results.not_executed }}]
-        ]);
-        addChartTooltips(suiteExecutionData);
-
-        var chartSuiteResult = new google.visualization.PieChart(document.getElementById('suite_piechart_result'));
-        var chartSuiteExecution = new google.visualization.PieChart(document.getElementById('suite_piechart_execution'));
-
-        chartSuiteResult.draw(suiteDataResult, {
-            title: 'Test Suite Results',
-            chartArea: {width: '95%', height: '80%'},
-            pieHole: 0.3,
-            colors: Object.values(colorPaletteTestResult),
-            pieSliceTextStyle: {color: 'black'},
-            sliceVisibilityThreshold: 0.000001,
-            tooltip: { isHtml: true }
-        });
-        chartSuiteExecution.draw(suiteExecutionData, {
-            title: 'Test Suite Execution',
-            chartArea: {width: '95%', height: '80%'},
-            pieHole: 0.3,
-            colors: ['#28a745', '#808080'],
-            pieSliceTextStyle: {color: 'black'},
-            sliceVisibilityThreshold: 0.000001,
-            tooltip: { isHtml: true }
-        });
-    }
-    </script>
-    <div class="piechart">
-        <div id="suite_piechart_result" class="piechart__chart"></div>
-        <div id="suite_piechart_execution" class="piechart__chart"></div>
-    </div>
-
-{% endif %}
 
 {% endif %}
 

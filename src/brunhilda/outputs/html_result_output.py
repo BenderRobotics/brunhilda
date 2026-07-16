@@ -67,6 +67,11 @@ class HtmlResultOutput(HtmlOutput):
                 else:
                     subtests_results[test['result']] += 1
 
+        show_suite_graph = all(
+            test.get('result') == 'NOT-EXECUTED'
+            for test_case in result['testcases'].values()
+            for test in test_case.get('tests', [])
+        )
         template = self.load_template('template.html.jinja2')
         rendered = template.render(
             preamble=self._include_preamble,
@@ -77,6 +82,7 @@ class HtmlResultOutput(HtmlOutput):
             document_path=self.path,
             brunhilda_version=brunhilda_version,
             justified_record=justified_record,
-            subtests_results=subtests_results
+            subtests_results=subtests_results,
+            suite_graph=show_suite_graph
         )
         return rendered
