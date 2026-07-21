@@ -2,6 +2,11 @@
 
 Brunhilda is the test runner with advanced reporting features.
 
+## Documentation
+
+- [How to run tests and create test reports.](doc/producer-guide.md)
+- [How to read test reports.](doc/consumer-guide.md)
+
 ## Contributing
 
 Here is a short guide to the environment setup to ease you up contributing to the
