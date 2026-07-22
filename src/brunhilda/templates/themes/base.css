@@ -884,32 +884,38 @@ input.test__expander:checked+.test__detail {
 .table__col--test_requirement {
     min-width: 160px;
     max-width: 160px;
+    width: 160px;
 }
 
 .table__col--test_level {
     min-width: 100px;
     max-width: 100px;
+    width: 100px;
 }
 
 .table__col--req_name {
     min-width: 600px;
     max-width: 40vw;
+    width: 40vw;
 }
 
 .table__col--cov_p {
     min-width: 125px;
     max-width: 125px;
+    width: 125px;
 }
 
 .table__col--test_result {
     min-width: 125px;
     max-width: 125px;
+    width: 125px;
 }
 
 .table__col--requirement_result {
     font-weight: bold;
     min-width: 125px;
     max-width: 125px;
+    width: 125px;
 }
 
 
