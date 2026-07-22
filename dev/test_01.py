@@ -12,9 +12,9 @@ colorama.init()
 @ddt.ddt
 class TestCase1(unittest.TestCase):
     """
-    This is a test case description. It can contain subset of RST formating.
+    This is a test case description. It can contain subset of RST formatting.
 
-    Also *italics*, **bold**, ``monospace`` ... inline formating is supported.
+    Also *italics*, **bold**, ``monospace`` ... inline formatting is supported.
 
     But *.bin or *.hex is OK!
 
@@ -252,7 +252,7 @@ class TestCase1(unittest.TestCase):
         5) Verify value of the schedule timer action target to be a previous scheduled value.
         6) Verify value of the schedule timer action target to be a new scheduled value.
 
-        Repeat steps 3–6 for entire progam.
+        Repeat steps 3–6 for entire program.
         """
         for i in range(10):
             with self.subTest(i=i, j=i*2, bc="9.1.2") as subtest:
@@ -292,7 +292,7 @@ class TestCase1(unittest.TestCase):
         5) Wait for time pass over the action time.
         6) Verify value of the schedule timer action target to be a new scheduled value.
 
-        Repeat steps 3 – 6 for entire progam.
+        Repeat steps 3 – 6 for entire program.
         """
         self.assertTrue(1 / 0, "Message")
 
@@ -349,7 +349,7 @@ class TestCase1(unittest.TestCase):
         5) Wait for time pass over the action time.
         6) Verify value of the schedule timer action target to be a new scheduled value.
 
-        Repeat steps 3 – 6 for entire progam.
+        Repeat steps 3 – 6 for entire program.
         """
         self.assertTrue(True)
 
