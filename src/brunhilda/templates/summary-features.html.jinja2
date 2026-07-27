@@ -269,7 +269,7 @@
                                                             {% elif test_case.result|lower == 'unexpected-success' %}
                                                                 <i class="fa-solid fa-triangle-exclamation test__steps__result__icon test__steps__result--unexpected-success" title="errored"></i>
                                                             {% elif test_case.result|lower == 'not-executed' %}
-                                                                <i class="fa-regular fa-circle test__steps__result__icon test__steps__result--not-executed" title="not-executed"></i>
+                                                                <i class="fa-solid fa-minus-circle test__steps__result__icon test__steps__result--not-executed" title="not-executed"></i>
                                                             {% else %}
                                                                 {{ test_case.result|lower }}
                                                             {% endif %}
