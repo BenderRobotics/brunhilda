@@ -3,7 +3,7 @@ from typing import Callable, Dict, List, Optional, OrderedDict, Union
 
 from tqdm import tqdm
 
-from ..data import Summary
+from ..data import RequirementsResultSummary
 from ..policies import CoveragePolicy, evaluate_result
 from .html_output import HtmlOutput
 
@@ -114,7 +114,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
         """
         entries = OrderedDict()
         all_tests = self._flatten_tests(testsuite, disable_progress_bars)
-        summary = Summary()
+        feature_results_summary = RequirementsResultSummary()
 
         # Map req to tests
         req_to_tests = {}
@@ -216,10 +216,17 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                                             entry['links'][link][test_group]['seen_tests'].add(test_case_id)
                                             feature_results.append(test_case['result'])
 
-                        result = evaluate_result(feature_results, evaluation_policy
-                                                ) if feature_group[feature_name]['oos'] == False else 'OUT-OF-SCOPE'
+                        if feature_group[feature_name]['oos']:
+                            result = 'OUT-OF-SCOPE'
+                        elif not feature_results:
+                            result = 'NOT-COVERED'
+                        elif all(r.upper() == 'NOT-EXECUTED' for r in feature_results):
+                            result = 'NOT-EXECUTED'
+                        else:
+                            result = evaluate_result(feature_results, evaluation_policy)
+
                         entry['result'] = result.lower()
-                        summary.results += result
+                        feature_results_summary += result
                         entries[group].append(entry)
 
                         pbar.update(1)
@@ -249,7 +256,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
             name=name,
             preamble=self._include_preamble,
             features=entries,
-            summary=summary,
+            feature_results_summary=feature_results_summary,
             test_plan_paths=test_plan_paths,
             brunhilda_version=brunhilda_version
         )

@@ -35,6 +35,7 @@ To interpret the reports correctly, it is essential to understand both the outco
 - **Skipped**: Tests that were excluded from the current run (e.g., due to tags, dependencies, or manual exclusion).
 - **Expected Failure**: A known issue where failure is anticipated (e.g., a feature still in development). These results do not count against the "Failed" total in high-level summaries.
 - **Unexpected Success**: A test marked as an Expected Failure that surprisingly passed. This usually indicates that a fix was deployed or the test criteria need updating.
+- **Not Executed**: A test wasn't executed, just it's artifacts were get via dry run.
 
 ## Reports description
 

@@ -650,14 +650,17 @@ BRunhilda supports multiple polices for feature and requirement evaluation.
 
 *\* = All results*
 
-> If feature / requirement doesn't have any test, the result is `EMPTY`.
+> These two feature / requirement results cannot be affected by evaluation policy:
+>
+> - If feature / requirement doesn't have any test, the result is `NOT-COVERED`.
+> - If feature / requirement have all tests not executed, the result is `NOT-EXECUTED`.
 
 #### Custom Evaluation Policy
 
 Custom policy can be used instead of defined ones. Conditions:
 
 - Function must have one parameter `List[str]` (list of test results)
-- Function must resturn string which corresponds to one of possible results (`PASSED`, `FAILED`, `ERRORED`, `SKIPPED`, `EXPECTED-FAILURE`, `UNEXPECTED-SUCCESS`, `JUSTIFIED`, `EMPTY`)
+- Function must resturn string which corresponds to one of possible results (`PASSED`, `FAILED`, `ERRORED`, `SKIPPED`, `EXPECTED-FAILURE`, `UNEXPECTED-SUCCESS`, `JUSTIFIED`, `NOT-EXECUTED`, `NOT-COVERED`)
 
 #### Evaluation Policy Example
 

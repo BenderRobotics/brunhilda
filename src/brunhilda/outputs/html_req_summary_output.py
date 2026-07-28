@@ -1,7 +1,7 @@
 from copy import deepcopy
 from typing import Callable, Dict, List, Optional, Union
 
-from ..data import ResultsSummary, Summary
+from ..data import RequirementsResultSummary, Summary
 from ..policies import CoveragePolicy, evaluate_result
 from .html_output import HtmlOutput
 
@@ -41,7 +41,7 @@ class HtmlReqSummaryOutput(HtmlOutput):
         """
         entries = []
         count = 0
-        requirements_results = ResultsSummary(0, 0, 0, 0, 0, 0, 0, 0, 0)
+        requirements_results = RequirementsResultSummary()
 
         for requirement, data in requirements:
             levels = {}
@@ -73,7 +73,13 @@ class HtmlReqSummaryOutput(HtmlOutput):
                 requirement_result = 'OUT-OF-SCOPE'
                 requirements_results += requirement_result
             elif requirement != '-':  # Exclude empty requirement from stats
-                requirement_result = evaluate_result(req_tests_results, evaluation_policy)
+                if not req_tests_results:
+                    requirement_result = 'NOT-COVERED'
+                elif all(r.upper() == 'NOT-EXECUTED' for r in req_tests_results):
+                    requirement_result = 'NOT-EXECUTED'
+                else:
+                    requirement_result = evaluate_result(req_tests_results, evaluation_policy)
+
                 requirements_results += requirement_result
             else:
                 requirement_result = ''

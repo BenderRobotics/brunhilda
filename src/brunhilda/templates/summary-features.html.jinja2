@@ -71,63 +71,70 @@
                 <tr class="run-summary--passed">
                     <th>Passed</th>
                     <td>
-                        {{ summary.results.passed }}
+                        {{ feature_results_summary.passed }}
                     </td>
                     <td>All tests of the feature passed.</td>
                 </tr>
                 <tr class="run-summary--failed">
                     <th>Failed</th>
                     <td>
-                        {{ summary.results.failed }}
+                        {{ feature_results_summary.failed }}
                     </td>
                     <td>At least one test of the feature failed.</td>
                 </tr>
                 <tr class="run-summary--errored">
                     <th>Errored</th>
                     <td>
-                        {{ summary.results.errored }}
+                        {{ feature_results_summary.errored }}
                     </td>
                     <td>At least one test of the feature errored.</td>
                 </tr>
                 <tr class="run-summary--justified">
                     <th>Justified</th>
                     <td>
-                        {{ summary.results.justified }}
+                        {{ feature_results_summary.justified }}
                     </td>
                     <td>All failed or erored feature tests were justified.</td>
                 </tr>
                 <tr class="run-summary--skipped">
                     <th>Skipped</th>
                     <td>
-                        {{ summary.results.skipped }}
+                        {{ feature_results_summary.skipped }}
                     </td>
                     <td>All feature tests were skipped.</td>
                 </tr>
                 <tr class="run-summary--expected-failure">
                     <th>Expected failures</th>
                     <td>
-                        {{ summary.results.expected_failures }}
+                        {{ feature_results_summary.expected_failures }}
                     </td>
                     <td>All feature tests failed are expected to fail during execution (e.g. DUT feature implementation is not yet finished).</td>
                 </tr>
                 <tr class="run-summary--unexpected-success">
                     <th>Unexpected successes</th>
                     <td>
-                        {{ summary.results.unexpected_successes }}
+                        {{ feature_results_summary.unexpected_successes }}
                     </td>
                     <td>At least one feature test marked as <em>expected failure</em> which passed despite expectation.</td>
                 </tr>
                 <tr class="run-summary--not-executed">
+                    <th>Not executed</th>
+                    <td>
+                        {{ feature_results_summary.not_executed }}
+                    </td>
+                    <td>All feature tests are not executed.</td>
+                </tr>
+                <tr class="run-summary--not-covered">
                     <th>Not covered</th>
                     <td>
-                        {{ summary.results.not_executed }}
+                        {{ feature_results_summary.not_covered }}
                     </td>
                     <td>No tests are linked to the feature.</td>
                 </tr>
                 <tr class="run-summary--out-of-scope">
                     <th>Out of scope</th>
                     <td>
-                        {{ summary.results.out_of_scope }}
+                        {{ feature_results_summary.out_of_scope }}
                     </td>
                     <td>Features containing only out of scope requirements.</td>
                 </tr>
@@ -135,7 +142,7 @@
             <tfoot>
                 <tr>
                     <th> Total </th>
-                    <td colspan="2">{{ summary.results.total }}</td>
+                    <td colspan="2">{{ feature_results_summary.total }}</td>
                 </tr>
             </tfoot>
         </table>
@@ -148,15 +155,16 @@
             function drawChart() {
                 var dataResult = google.visualization.arrayToDataTable([
                     ['Test result', 'Amount'],
-                    ['passed', {{ summary.results.passed }}],
-                    ['failed', {{ summary.results.failed }}],
-                    ['errored', {{ summary.results.errored }}],
-                    ['skipped', {{ summary.results.skipped }}],
-                    ['justified', {{ summary.results.justified }}],
-                    ['expected failure', {{ summary.results.expected_failures }}],
-                    ['unexpected success', {{ summary.results.unexpected_successes }}],
-                    ['not covered', {{ summary.results.not_executed }}],
-                    ['out of scope', {{ summary.results.out_of_scope }}]
+                    ['passed', {{ feature_results_summary.passed }}],
+                    ['failed', {{ feature_results_summary.failed }}],
+                    ['errored', {{ feature_results_summary.errored }}],
+                    ['skipped', {{ feature_results_summary.skipped }}],
+                    ['justified', {{ feature_results_summary.justified }}],
+                    ['expected failure', {{ feature_results_summary.expected_failures }}],
+                    ['unexpected success', {{ feature_results_summary.unexpected_successes }}],
+                    ['not executed', {{ feature_results_summary.not_executed }}],
+                    ['not covered', {{ feature_results_summary.not_covered }}],
+                    ['out of scope', {{ feature_results_summary.out_of_scope }}]
                 ]);
                 addChartTooltips(dataResult);
 
@@ -166,7 +174,7 @@
                     title: 'Feature Coverage Results',
                     chartArea: {width: '95%', height: '80%'},
                     pieHole: 0.3,
-                    colors: ['green','#dc0000', '#a700d1', 'orange', '#74ad09', '#4000f0', '#00c8c8', '#dddddd', '#6F4E37'],
+                    colors: Object.values({...colorPaletteTestResult, notCovered: '#e83e8c', outOfScope: '#6F4E37'}),
                     tooltip: {isHtml: true},
                     pieSliceTextStyle: {color: 'black'},
                     sliceVisibilityThreshold: 0.000001

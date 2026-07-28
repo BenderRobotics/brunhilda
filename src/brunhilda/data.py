@@ -6,31 +6,30 @@ except ImportError:  # pragma: no cover
     from typing_extensions import Literal
 
 Result = Literal['PASSED', 'FAILED', 'ERRORED', 'JUSTIFIED', 'SKIPPED', 'UNEXPECTED-SUCCESS', 'EXPECTED-FAILURE',
-                 'NOT-EXECUTED']
+                 'NOT-EXECUTED', 'NOT-COVERED', 'OUT-OF-SCOPE']
 
 
 @dataclass(eq=True, unsafe_hash=True)
-class ResultsSummary:
+class TestsResultsSummary:
     """
-    Dataclass representing summary of results.
+    Dataclass representing summary of tests results.
 
     Contains number of passed, failed, ... tests.
     """
-    passed: int
-    failed: int
-    errored: int
-    skipped: int
-    justified: int
-    expected_failures: int
-    unexpected_successes: int
-    not_executed: int
-    out_of_scope: int
+    passed: int = 0
+    failed: int = 0
+    errored: int = 0
+    skipped: int = 0
+    justified: int = 0
+    expected_failures: int = 0
+    unexpected_successes: int = 0
+    not_executed: int = 0
 
     @property
     def total(self) -> int:
         return (
             self.passed + self.failed + self.errored + self.skipped + self.justified + self.expected_failures +
-            self.unexpected_successes + self.not_executed + self.out_of_scope
+            self.unexpected_successes + self.not_executed
         )
 
     @property
@@ -65,15 +64,11 @@ class ResultsSummary:
     def pct_not_executed(self) -> float:
         return (self.not_executed / self.total * 100.0) if (self.total != 0) else 0.0
 
-    @property
-    def pct_out_of_scope(self) -> float:
-        return (self.out_of_scope / self.total * 100.0) if (self.total != 0) else 0.0
-
     def __add__(self, result: Result):
         """
         Add result to summary.
 
-        :param result: result that will be add to summary
+        :param result: result that will be added to summary
         """
         result = str(result).upper().replace(' ', '-').replace('_', '-').strip()
 
@@ -93,12 +88,49 @@ class ResultsSummary:
             self.unexpected_successes += 1
         elif result in ['NOT-EXECUTED', 'EMPTY']:
             self.not_executed += 1
-        elif result == 'OUT-OF-SCOPE':
-            self.out_of_scope += 1
         else:
             raise ValueError(f'Unknown result "{result}".')
 
         return self
+
+
+@dataclass(eq=True, unsafe_hash=True)
+class RequirementsResultSummary(TestsResultsSummary):
+    """
+    Dataclass representing summary of requirements results.
+    This class is also used for representing summary of features results.
+    """
+    out_of_scope: int = 0
+    not_covered: int = 0
+
+    @property
+    def total(self) -> int:
+        return super().total + self.not_covered + self.out_of_scope
+
+    @property
+    def pct_out_of_scope(self) -> float:
+        return (self.out_of_scope / self.total * 100.0) if (self.total != 0) else 0.0
+
+    @property
+    def pct_not_covered(self) -> float:
+        return (self.not_covered / self.total * 100.0) if (self.total != 0) else 0.0
+
+    def __add__(self, result: Result):
+        """
+        Add result to summary.
+
+        :param result: result that will be added to summary
+        """
+        result = str(result).upper().replace(' ', '-').replace('_', '-').strip()
+
+        if result == 'NOT-COVERED':
+            self.not_covered += 1
+            return self
+        elif result == 'OUT-OF-SCOPE':
+            self.out_of_scope += 1
+            return self
+
+        return super().__add__(result)
 
 
 class Summary:
@@ -107,7 +139,7 @@ class Summary:
     """
 
     def __init__(self):
-        self.results = ResultsSummary(0, 0, 0, 0, 0, 0, 0, 0, 0)
+        self.results = TestsResultsSummary(0, 0, 0, 0, 0, 0, 0, 0)
         self.execution = {}
         self.levels = {}
 

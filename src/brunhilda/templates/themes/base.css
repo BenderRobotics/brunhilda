@@ -150,6 +150,9 @@ table {
     --color--inactive: orange;
     --color--out-of-scope: #6F4E37;
     --color--out-of-scope-bg: rgba(111, 78, 55, 0.1);
+    --color--not-covered: #e83e8c;
+    --color--not-covered-bg: rgba(232, 62, 141, 0.3);
+
 }
 
 body {
@@ -577,8 +580,13 @@ input.testcase__expander:checked+.testcase__description {
 
 .test--not-executed .test__result,
 .test--not-executed .test__result a,
+.req--not-executed,
 .run-summary--not-executed{
     color: var(--color--not-executed);
+}
+
+.run-summary--not-covered{
+    color: var(--color--not-covered);
 }
 
 .run-summary--out-of-scope{
@@ -1231,6 +1239,10 @@ ol.lowerroman {
     background-color: var(--color--error-bg);
 }
 
+.feature--not-executed {
+    background-color: var(--color--not-executed-bg);
+}
+
 .feature--out-of-scope {
     background-color: var(--color--out-of-scope-bg);
 }
@@ -1252,7 +1264,7 @@ ol.lowerroman {
 }
 
 .req--not-covered {
-    color: var(--color--not-executed);
+    color: var(--color--not-covered);
     text-align: left;
     font-weight: bold;
 }

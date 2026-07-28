@@ -108,11 +108,21 @@
                 </tr>
                 <tr class="run-summary--not-executed">
                     <th>
+                        <input type="checkbox" id="req-summary--not-executed" checked>
+                        <label for="req-summary--not-executed">Not executed</label>
+                    </th>
+                    <td>
+                        {{ requirements_results.not_executed }}
+                    </td>
+                    <td>All requirement tests are not executed.</td>
+                </tr>
+                <tr class="run-summary--not-covered">
+                    <th>
                         <input type="checkbox" id="req-summary--not-covered" checked>
                         <label for="req-summary--not-covered">Not covered</label>
                     </th>
                     <td>
-                        {{ requirements_results.not_executed }}
+                        {{ requirements_results.not_covered }}
                     </td>
                     <td>No tests are linked to the requirement.</td>
                 </tr>
@@ -150,7 +160,8 @@
                     ['justified', {{ requirements_results.justified }}],
                     ['expected failure', {{ requirements_results.expected_failures }}],
                     ['unexpected success', {{ requirements_results.unexpected_successes }}],
-                    ['not covered', {{ requirements_results.not_executed }}],
+                    ['not executed', {{ requirements_results.not_executed }}],
+                    ['not covered', {{ requirements_results.not_covered }}],
                     ['out of scope', {{ requirements_results.out_of_scope }}]
                 ]);
                 addChartTooltips(dataResult);
@@ -161,7 +172,7 @@
                     title: 'Requirements Coverage Results',
                     chartArea: {width: '95%', height: '80%'},
                     pieHole: 0.3,
-                    colors: ['green','#dc0000', '#a700d1', 'orange', '#74ad09', '#4000f0', '#00c8c8', '#dddddd', '#6F4E37'],
+                    colors: Object.values({...colorPaletteTestResult, notCovered: '#e83e8c', outOfScope: '#6F4E37'}),
                     tooltip: {isHtml: true},
                     pieSliceTextStyle: {color: 'black'},
                     sliceVisibilityThreshold: 0.000001
@@ -234,8 +245,10 @@
                                 {% set req_result_class = "req--expected-failure" %}
                             {%- elif requirement.result == "UNEXPECTED-SUCCESS" %}
                                 {% set req_result_class = "req--unexpected-success" %}
+                            {%- elif requirement.result == "NOT-EXECUTED" %}
+                                {% set req_result_class = "req--not-executed" %}
                             {%- else %}
-                                {% set test_result_class = requirement.result|lower %}
+                                {% set req_result_class = requirement.result|lower %}
                             {%- endif %}
                         <td class="table__col--requirement_result {{ req_result_class }}">{{ requirement.result }}</td>
                         {% endif %}
