@@ -1,5 +1,24 @@
 # Brunhilda project changelog
 
+## 2.9.0 (2026-07-29)
+
+- Improve Test summary charts naming (refs [#14264](https://redmine.benderrobotics.com/issues/14264))
+- Improve Features and Requirements summary charts naming (refs [#14276](https://redmine.benderrobotics.com/issues/14276))
+- Add showing all non-zero chart segments in legend (refs [#14267](https://redmine.benderrobotics.com/issues/14267))
+- Fix filtering by level in Requirements cummary (refs [#14268](https://redmine.benderrobotics.com/issues/14268))
+- Add percentage to chart legend (refs [#14265](https://redmine.benderrobotics.com/issues/14265))
+- Remove number of Not Executed subtests from summary table (refs [#14235](https://redmine.benderrobotics.com/issues/14235))
+- Change color of chart label to black (refs [#14236](https://redmine.benderrobotics.com/issues/14236))
+- Fix test result in Features summary (refs [#14269](https://redmine.benderrobotics.com/issues/14269))
+- Add test name as test heading ID in test plan (refs [#14258](https://redmine.benderrobotics.com/issues/14258))
+- Improve subtests justification (refs [#14249](https://redmine.benderrobotics.com/issues/14249))
+- Improve responsiveness of features summary (refs [#14266](https://redmine.benderrobotics.com/issues/14266), [#14272](https://redmine.benderrobotics.com/issues/14272))
+- Fix TOC links in features summary (refs [#14274](https://redmine.benderrobotics.com/issues/14274))
+- Rearrange charts in test summary (refs [#14238](https://redmine.benderrobotics.com/issues/14238))
+- Fix inconsistent column width in Requirements summary table (refs [#14273](https://redmine.benderrobotics.com/issues/14273))
+- Change Not Executed test result icon (refs [#14270](https://redmine.benderrobotics.com/issues/14270))
+- Add Not Executed result to features and requirements (refs [#14275](https://redmine.benderrobotics.com/issues/14275))
+
 ## 2.8.1 (2026-06-30)
 
 - Remove test record links leading to nowehere from the issue list when the path to HTML file is not provided (refs [#14208](https://redmine.benderrobotics.com/issues/14208))
