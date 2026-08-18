@@ -256,10 +256,8 @@ def test_load_issues_newline_update(reporter):
 # --- Testing justify_tests ---
 
 
-def test_justify_tests(reporter):
-    """Test the logic that matches issues to tests and updates results."""
-
-    reporter._tests = {
+def _subtest_scenario_tests() -> dict:
+    tests = {
         'tests.json':
             [
                 {
@@ -273,17 +271,27 @@ def test_justify_tests(reporter):
                 }, {
                     'test_id': 'TestCase1.test_02_subtest',
                     'level': 'system',
-                    'result': 'FAILED',
+                    'result': 'ERRORED',
                     'comment': 'Some comment',
                     'bug_id': [],
                     'subtests':
                         [
                             {
                                 'id': "TestCase1.test_02_subtest (i=0, j=0, bc='9.1.2')",
-                                'result': 'FAILED'
+                                'result': 'FAILED',
+                                'num': 1
                             }, {
                                 'id': "TestCase1.test_02_subtest (i=1, j=2, bc='9.1.2')",
-                                'result': 'PASSED'
+                                'result': 'PASSED',
+                                'num': 2
+                            }, {
+                                'id': "TestCase1.test_02_subtest (i=2, j=3, bc='9.1.2')",
+                                'result': 'ERRORED',
+                                'num': 3
+                            }, {
+                                'id': "TestCase1.test_02_subtest (i=2, j=3, bc='9.1.2')",
+                                'result': 'FAILED',
+                                'num': 4
                             }
                         ],
                     'tags': {}
@@ -299,14 +307,29 @@ def test_justify_tests(reporter):
             ]
     }
 
-    reporter._issues = {
+    return tests
+
+
+def _subtest_scenario_issues(with_num: bool) -> dict:
+    issues = {
         'issues.json':
             {
                 'run': {
                     'level': 'system',
                     'dut': 'MMI2'
                 },
-                'errors': [],
+                'errors':
+                    [
+                        {
+                            'test': 'TestCase1.test_02_subtest',
+                            'sub-test': "TestCase1.test_02_subtest (i=2, j=3, bc='9.1.2')",
+                            'result': 'ERRORED',
+                            'justified': '',
+                            'comment': '',
+                            'bug-id': '',
+                            'extra': []
+                        }
+                    ],
                 'failures':
                     [
                         {
@@ -326,6 +349,14 @@ def test_justify_tests(reporter):
                             'bug-id': '456',
                             'extra': []
                         }, {
+                            'test': 'TestCase1.test_02_subtest',
+                            'sub-test': "TestCase1.test_02_subtest (i=2, j=3, bc='9.1.2')",
+                            'result': 'FAILED',
+                            'justified': 'YES',
+                            'comment': '',
+                            'bug-id': '321',
+                            'extra': []
+                        }, {
                             'test': 'TestCase1.test_03_error',
                             'sub-test': None,
                             'result': 'ERRORED',
@@ -337,6 +368,21 @@ def test_justify_tests(reporter):
                     ]
             }
     }
+
+    nums = [3, 1, 4]
+
+    if with_num:
+        for issue in issues['issues.json']['errors'] + issues['issues.json']['failures']:
+            if issue['sub-test'] is not None:
+                issue['num'] = nums.pop(0)
+
+    return issues
+
+
+@pytest.mark.parametrize('with_num', [True, False], ids=['num-key', 'subtest-indices'])
+def test_justify_tests(reporter, with_num):
+    reporter._tests = _subtest_scenario_tests()
+    reporter._issues = _subtest_scenario_issues(with_num=with_num)
 
     reporter.justify_tests()
 
@@ -351,10 +397,13 @@ def test_justify_tests(reporter):
 
     assert test_B['subtests'][0]['result'] == 'JUSTIFIED'
     assert test_B['subtests'][1]['result'] == 'PASSED'
-    assert test_B['result'] == 'JUSTIFIED'
+    assert test_B['subtests'][2]['result'] == 'ERRORED'
+    assert test_B['subtests'][3]['result'] == 'JUSTIFIED'
+    assert test_B['result'] == 'ERRORED'
     assert 'Some comment' in test_B['test_comment']
-    assert 'Subtest fail' in test_B['issues_details'][0]['comment']
-    assert '456' in test_B['issues_details'][0]['bug_id']
+    assert 'Subtest fail' in test_B['issues_details'][1]['comment']
+    assert 'comment' not in test_B['issues_details'][2]
+    assert '456' in test_B['issues_details'][1]['bug_id']
 
     assert test_C['result'] == 'ERRORED'
     assert 'New error' in test_C['issues_details'][0]['comment']

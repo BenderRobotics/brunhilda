@@ -38,7 +38,7 @@ test-unit:
   extends: .test
   parallel:
     matrix:
-      - PYTHON_VERSION: ["3.9", "3.13"]
+      - PYTHON_VERSION: ["3.9", "3.11", "3.13", "3.14"]
   artifacts:
     expire_in: 1 day
     paths:
@@ -51,6 +51,19 @@ test-unit:
   script:
     - pytest test/unit --pyargs --tb=short --cov=. --cov-config=.coveragerc --cov-report xml:coverage.xml --cov-report html:htmlcov --cov-report term --junitxml=report.xml
   coverage: /^TOTAL.+?\s(\d+\.?\d*\%)$/
+
+test-integration:
+  stage: 🕵️ test
+  extends: .test
+  parallel:
+    matrix:
+      - PYTHON_VERSION: ["3.13"]
+  artifacts:
+    expire_in: 1 day
+    reports:
+      junit: report-integration.xml
+  script:
+    - pytest test/integration --pyargs --ignore-glob="*/data/*" --tb=short --junitxml=report-integration.xml
 
 build:
   stage: 🔨 build

@@ -80,6 +80,12 @@ class Reporter:
     def justify_tests(self) -> None:
         """
         Updates loaded test with justifications.
+
+        :note:
+            Supports two matching strategies for subtests based on the loaded execution data version:
+
+            - v2.9.0+: matches subtests directly using the unique `num` key.
+            - <= v2.8.1: falls back to first-unconsumed order matching.
         """
         # link with justification taken from issues
         if (self._issues is not None) and (self._tests is not None):
@@ -90,59 +96,54 @@ class Reporter:
                     ]  # list of dict containing bug ID, bug comment, (sub)test result, issue list link
 
                     for issues in self._issues.values():
-                        if issues['run']['level'] == test['level']:
-                            for issue in issues['errors'] + issues['failures']:
-                                if issue['test'] == test['test_id']:
-                                    justified = issue['justified'].lower().strip() == 'yes'
-                                    justifications.append(justified)
+                        if issues['run']['level'] != test['level']:
+                            continue
 
-                                    issue_list_link = f"{issue['sub-test'] if issue['sub-test'] else issue['test']}_{test['level']}"
-                                    issue_result = 'JUSTIFIED' if justified else issue['result']
+                        consumed_subtest_indices = set()  # tracker for used subtest indices (used for <= v2.8.1)
 
-                                    if issue['comment'] and issue['bug-id']:
-                                        bug_html_link = self._apply_bugtraq(issue['bug-id'])
-                                        issues_details.append(
-                                            {
-                                                'bug_id': issue['bug-id'],
-                                                'bug_html_link': bug_html_link,
-                                                'comment': issue['comment'],
-                                                'link': issue_list_link,
-                                                'result': issue_result
-                                            }
-                                        )
-                                        issue['bug_html_link'] = bug_html_link
-                                    elif issue['bug-id']:
-                                        bug_html_link = self._apply_bugtraq(issue['bug-id'])
-                                        issues_details.append(
-                                            {
-                                                'bug_id': issue['bug-id'],
-                                                'bug_html_link': bug_html_link,
-                                                'link': issue_list_link,
-                                                'result': issue_result
-                                            }
-                                        )
-                                        issue['bug_html_link'] = bug_html_link
-                                    elif issue['comment']:
-                                        issues_details.append(
-                                            {
-                                                'comment': issue['comment'],
-                                                'link': issue_list_link,
-                                                'result': issue_result
-                                            }
-                                        )
-                                    else:
-                                        issues_details.append({'link': issue_list_link, 'result': issue_result})
+                        for issue in issues['errors'] + issues['failures']:
+                            if issue['test'] != test['test_id']:
+                                continue
 
-                                    for i, subtest in enumerate(test['subtests']):
-                                        subtest_result = test['subtests'][i].get('result')
-                                        subtest_num = test['subtests'][i].get('num')
-                                        if (
-                                            subtest['id'] == issue['sub-test'] and subtest_num == issue.get('num')
-                                            and subtest_result in ['FAILED', 'ERRORED']
-                                        ):
-                                            if justified:
-                                                test['subtests'][i]['result'] = 'JUSTIFIED'
-                                            break
+                            justified = issue['justified'].lower().strip() == 'yes'
+                            justifications.append(justified)
+
+                            issue_list_link = f"{issue['sub-test'] if issue['sub-test'] else issue['test']}_{test['level']}"
+                            issue_result = 'JUSTIFIED' if justified else issue['result']
+
+                            detail = {'link': issue_list_link, 'result': issue_result}
+                            if bug_id := issue.get('bug-id'):
+                                bug_html_link = self._apply_bugtraq(bug_id)
+                                detail['bug_id'] = bug_id
+                                detail['bug_html_link'] = bug_html_link
+                                issue['bug_html_link'] = bug_html_link
+
+                            if comment := issue['comment']:
+                                detail['comment'] = comment
+
+                            issues_details.append(detail)
+                            issue_has_subtest_num = 'num' in issue  # `num` added in v2.9.0
+
+                            for i, subtest in enumerate(test['subtests']):
+                                subtest_result = subtest.get('result')
+
+                                if subtest_result not in ('FAILED', 'ERRORED'):
+                                    continue
+                                if subtest['id'] != issue['sub-test']:
+                                    continue
+
+                                is_match = (
+                                    subtest.get('num') == issue.get('num')
+                                    if issue_has_subtest_num else i not in consumed_subtest_indices
+                                )
+
+                                if is_match:
+                                    if not issue_has_subtest_num:
+                                        consumed_subtest_indices.add(i)
+                                    if justified:
+                                        subtest['result'] = 'JUSTIFIED'
+                                    break
+
                     if test['comment']:
                         test['test_comment'] = test['comment']
 

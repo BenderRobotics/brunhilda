@@ -45,11 +45,13 @@ test = [
     "pytest",
     "pytest-cov",
     "pytest-mock",
+    "bs4",
 ]
 dev = [
     "mypy",
     "yapf",
     "numpy",
+    "lorem",
 ]
 doorstop-user-stories = [
     "doorstop==2.2.1"

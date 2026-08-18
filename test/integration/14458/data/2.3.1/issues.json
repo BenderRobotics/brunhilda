@@ -1,0 +1,58 @@
+{
+    "errors": [],
+    "failures": [
+        {
+            "bug-id": "SDHW-052",
+            "comment": "The possibility to connect to the SmartDevice device from external network is enabled on stag environment.",
+            "extra": [
+                {
+                    "type": "text",
+                    "value": "Connection was successful and values were read back successfully."
+                }
+            ],
+            "justified": "yes",
+            "message": "AssertionError: Connection was successful and values were read back successfully.\n",
+            "result": "FAILED",
+            "sub-test": "Test_C02.test_01_firewall_smoke_test (step=4)",
+            "tags": {
+                "author": [
+                    "John Doe"
+                ],
+                "environment": [
+                    "ENV_TEST_01"
+                ],
+                "exec-time": [
+                    "200s"
+                ],
+                "execution": [
+                    "manual"
+                ],
+                "name": [
+                    "Access to the SmartDevice"
+                ],
+                "priority": [
+                    "high"
+                ],
+                "spec": [
+                    "REQ-001"
+                ],
+                "test-id": [
+                    "SD_DEV_SYS_M_000"
+                ]
+            },
+            "test": "Test_C02.test_01_firewall_smoke_test"
+        }
+    ],
+    "run": {
+        "date-time": "2026-06-09 12:01:40.277525",
+        "dut": "",
+        "level": "system-static",
+        "user data": {
+            "Execution": "manual",
+            "Project cover": "SmartDevice",
+            "Project name": "Tests",
+            "Software version": "1.0.0",
+            "Tester name": "John Doe"
+        }
+    }
+}

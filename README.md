@@ -42,6 +42,29 @@ pip install -e .[doorstop-user-stories]
 Now you can use `BRunhilda` package directly from the command line and all
 changes to the source code are instantly applied.
 
+### Testing
+
+The project includes both unit tests and integration tests.
+
+#### Integration Tests
+
+Most reporting issues stem from backward-compatibility bugs—specifically when generating reports from datasets produced by older runner versions. To prevent regressions, integration tests are executed against **two datasets**:
+
+1. **Original Dataset (`<runner_version>`):** Anonymized execution data captured from the specific runner version where the bug was reported.
+2. **Current Dataset (`head`):** Fresh execution data generated dynamically by running sample tests on the current version.
+
+##### Directory Structure
+
+Integration tests are organized by bug tickets (`test/integration/<bug_ticket_number>/`):
+
+```text
+test/integration/14492/
+├── test_14492_report_generation.py
+└── data/
+    ├── 2.8.1/    # Original data from the bug ticket
+    └── head/      # Data generated from current execution
+```
+
 ### Visual Studio Code tasks
 
 To speed up the execution of useful operations for development, vscode tasks are implemented.

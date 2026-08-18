@@ -1,0 +1,121 @@
+[
+    {
+        "case": "Test_C02",
+        "comment": "",
+        "description": "\n\n        Verify that access to the SmartDevice is only possible from the internal network.\n\n        Following cases should be tested:\n          - internal network 10.0.0.*\n          - internal network 192.168.0.*\n          - external network 203.0.113.*\n\n        ",
+        "level": "system-static",
+        "requirements": [
+            "REQ-001"
+        ],
+        "result": "FAILED",
+        "steps": [
+            {
+                "comment": "SmartDevice has IP address 10.0.0.251.",
+                "description": "             Connect the SmartDevice device to the switch port labeled `test device`.",
+                "expectation": "             The SmartDevice device is successfully connected.",
+                "number": 1,
+                "obtained": "",
+                "result": "PASSED"
+            },
+            {
+                "comment": "Accessed from 10.0.0.248.",
+                "description": "             Connect to the 10.0.0.* range (private: A) and attempt connection and reading from the DUT.",
+                "expectation": "             Connection was successful and values were read back successfully.",
+                "number": 2,
+                "obtained": "",
+                "result": "PASSED"
+            },
+            {
+                "comment": "Accessed from 192.168.0.253.",
+                "description": "             Connect to the 192.168.0.* range (private: C) and attempt connection and reading from the DUT.",
+                "expectation": "             Connection was successful and values were read back successfully.",
+                "number": 3,
+                "obtained": "",
+                "result": "PASSED"
+            },
+            {
+                "comment": "Accessed from 203.0.113.2.",
+                "description": "             Connect to the 203.0.113.* range (non-private) and attempt connection and reading from the DUT.",
+                "expectation": "             Connection was not successful and values were not read back successfully.",
+                "number": 4,
+                "obtained": "",
+                "result": "FAILED"
+            }
+        ],
+        "subtests": [
+            {
+                "extra": [],
+                "id": "Test_C02.test_01_firewall_smoke_test (step=1)",
+                "name": "{'step': 1}",
+                "num": 1,
+                "parameters": {
+                    "step": 1
+                },
+                "result": "PASSED"
+            },
+            {
+                "extra": [],
+                "id": "Test_C02.test_01_firewall_smoke_test (step=2)",
+                "name": "{'step': 2}",
+                "num": 2,
+                "parameters": {
+                    "step": 2
+                },
+                "result": "PASSED"
+            },
+            {
+                "extra": [],
+                "id": "Test_C02.test_01_firewall_smoke_test (step=3)",
+                "name": "{'step': 3}",
+                "num": 3,
+                "parameters": {
+                    "step": 3
+                },
+                "result": "PASSED"
+            },
+            {
+                "error": "AssertionError: Connection was successful and values were read back successfully.\n",
+                "extra": [
+                    {
+                        "type": "text",
+                        "value": "Connection was successful and values were read back successfully."
+                    }
+                ],
+                "id": "Test_C02.test_01_firewall_smoke_test (step=4)",
+                "name": "{'step': 4}",
+                "num": 4,
+                "parameters": {
+                    "step": 4
+                },
+                "result": "FAILED"
+            }
+        ],
+        "tags": {
+            "author": [
+                "John Doe"
+            ],
+            "environment": [
+                "ENV_TEST_01"
+            ],
+            "exec-time": [
+                "200s"
+            ],
+            "execution": [
+                "manual"
+            ],
+            "name": [
+                "Access to the SmartDevice"
+            ],
+            "priority": [
+                "high"
+            ],
+            "spec": [
+                "REQ-001"
+            ],
+            "test-id": [
+                "SD_DEV_SYS_M_000"
+            ]
+        },
+        "test_id": "Test_C02.test_01_firewall_smoke_test"
+    }
+]
