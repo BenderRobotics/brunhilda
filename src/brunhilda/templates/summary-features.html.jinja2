@@ -303,7 +303,7 @@
                             {% endif %}
                         {% endfor %}
                     {% else %}
-                        <tr class="filterable" data-filter="{{ feature.group }}">
+                        <tr class="filterable" data-filter="{{ feature.group }}" id="feature--{{ feature.order }}">
                             <td class="feature--{{ feature.result|lower }}">{{ feature.name }}</td>
                             <td class=""></td>
                             <td class="" colspan="2">-</td>
