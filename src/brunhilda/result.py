@@ -22,6 +22,11 @@ from .outputs.output import Output
 from .parser import parse_description, parse_requirements, parse_steps, parse_tags
 from .rel_path import rel_path
 
+try:
+    from .__version__ import version as brunhilda_version
+except ImportError:
+    brunhilda_version = 'unknown'
+
 if TYPE_CHECKING:
     import numpy
 
@@ -795,10 +800,11 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         :param filename: filename to put the serialized form into
         """
         self._issues['run'] = {
-            'user data': self._user_data,
+            'user-data': self._user_data,
             'date-time': self.run_start_timestamp,
             'level': self._name,
-            'dut': self._dut
+            'dut': self._dut,
+            'brunhilda-version': brunhilda_version
         }
 
         issues = self._issues_relative_to(filename)
@@ -830,7 +836,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                     'date-time': self.run_start_timestamp,
                     'level': self._name,
                     'dut': self._dut,
-                    'env-info': self._env_info
+                    'env-info': self._env_info,
+                    'brunhilda-version': brunhilda_version
                 },
             'test-cases': test_cases
         }
