@@ -84,6 +84,12 @@ Example:
 @priority: mid
 ```
 
+> [!IMPORTANT]
+> Some tags are highly recommended because they have an impact on reports generating:
+>
+> - `@spec` - used for linking test to requirement
+> - `@execution` - used for *Tests Execution* graph in *Test Run Report* and *Test Summary Report*
+
 ### Description Field
 
 `{description}` field holds general description of the test.

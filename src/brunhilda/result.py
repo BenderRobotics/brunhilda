@@ -469,6 +469,8 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
             self.results['testcases'][testcase_name]['result'] = PASSED
 
         test_id = self._get_test_id(test)
+        test_tags = parse_tags(test._testMethodDoc)
+        level = self._name
         output = self.stream_buffer.read()
         test_time = self.test_execution_time
         self._process_test_extra(test, test_id)
@@ -483,7 +485,7 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
                 'time': test_time,
                 'description': parse_description(test._testMethodDoc),
                 'steps': parse_steps(test.steps, test._testMethodDoc),
-                'tags': parse_tags(test._testMethodDoc),
+                'tags': test_tags,
                 'result': self._last_result,
                 'output': output,
                 'errors': self._errors_strings,
@@ -492,6 +494,22 @@ class BRunhildaTestResult(unittest.runner.TextTestResult):
         )
 
         self._summary.results += self._last_result
+
+        if level not in self._summary.levels:
+            self._summary.levels[level] = {'execution': {}, 'tests': 0}
+
+        self._summary.levels[level]['tests'] += 1
+
+        if 'execution' in test_tags:
+            for execution in test_tags['execution']:
+                if execution not in self._summary.execution:
+                    self._summary.execution[execution] = 0
+
+                if execution not in self._summary.levels[level]['execution']:
+                    self._summary.levels[level]['execution'][execution] = 0
+
+                self._summary.execution[execution] += 1
+                self._summary.levels[level]['execution'][execution] += 1
 
         self._record(
             testcase_name, test_id, test.steps, test._testMethodDoc, self._last_result, self.skip_reason, self.subtests,
