@@ -64,6 +64,15 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                                 subtest_['subtest_id'] = ','.join(
                                     f'{parameter}:{value}' for parameter, value in parameters.items()
                                 )
+                                parameters_string = [
+                                    f"{key}='{value}'" if isinstance(value, str) else f'{key}={value}'
+                                    for key, value in parameters.items()
+                                ]
+
+                                for issue_detail in subtest_['issues_details']:
+                                    if all(param in issue_detail['link'] for param in parameters_string):
+                                        subtest_['issues_details'] = [issue_detail]
+                                        break
 
                             subtest_['result'] = subtest['result']
                             subtest_['subtests'] = []  # clear the subtests, now the test is the subtest actually
@@ -98,6 +107,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
         features: Dict,
         testsuite: Dict,
         test_plan_paths: Optional[Dict[str, str]] = None,
+        issue_list_path: Optional[str] = None,
         evaluation_policy: Union[CoveragePolicy, Callable[[List[str]], str]] = CoveragePolicy.STRICT,
         disable_progress_bars: bool = True
     ) -> str:
@@ -258,6 +268,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
             features=entries,
             feature_results_summary=feature_results_summary,
             test_plan_paths=test_plan_paths,
+            issue_list_path=issue_list_path,
             brunhilda_version=brunhilda_version
         )
         return rendered

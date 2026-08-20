@@ -690,6 +690,7 @@ class Reporter:
         """
         print('... creating feature summary')
 
+        issue_list_path = rel_path(path, self._issue_list_path) if (self._issue_list_path is not None) else None
         path = str(path)
         self._feature_list_path = path
         formater = HtmlFeatureSummaryOutput(preamble=preamble, path=path)
@@ -699,6 +700,7 @@ class Reporter:
             features=self._features,
             testsuite=self._tests,
             test_plan_paths=test_plan_paths,
+            issue_list_path=issue_list_path,
             evaluation_policy=evaluation_policy,
             disable_progress_bars=disable_progress_bars
         )

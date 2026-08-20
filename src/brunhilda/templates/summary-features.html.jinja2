@@ -260,6 +260,13 @@
                                                         {% else %}
                                                             {% set test_plan_path = test_plan_paths['_'] %}
                                                         {% endif %}
+                                                        {% if test_case.result|lower == 'failed' or test_case.result|lower == 'errored' %}
+                                                            {% if test_case.issues_details|length == 1 %}
+                                                                {% set issue_link = test_case.issues_details[0]['link'] %}
+                                                            {% else %}
+                                                                {% set issue_link = '' %}
+                                                            {% endif %}
+                                                        {% endif %}
                                                         <li>
                                                             <a href="{{ test_plan_path }}#{{ test_case.test_id_with_level }}">{{ test_case.test_id }} {{ test_case.subtest_id }}</a>
                                                             {% if test_case.result|lower == 'passed' %}
@@ -267,11 +274,11 @@
                                                             {% elif test_case.result|lower == 'justified' %}
                                                                <i class="fa-solid fa-magnifying-glass test__steps__result__icon test__steps__result--justified" title="justified"></i>
                                                             {% elif test_case.result|lower == 'failed' %}
-                                                                <i class="fa-regular fa-circle-xmark test__steps__result__icon test__steps__result--failed" title="failed"></i>
+                                                                <a href="{{ issue_list_path }}#{{ issue_link }}"><i class="fa-regular fa-circle-xmark test__steps__result__icon test__steps__result--failed" title="failed"></i></a>
                                                             {% elif test_case.result|lower == 'skipped' %}
                                                                 <i class="fa-solid fa-forward-step test__steps__result__icon test__steps__result--skipped" title="skipped"></i>
                                                             {% elif test_case.result|lower == 'errored' %}
-                                                                <i class="fa-solid fa-triangle-exclamation test__steps__result__icon test__steps__result--errored" title="errored"></i>
+                                                                <a href="{{ issue_list_path }}#{{ issue_link }}"><i class="fa-solid fa-triangle-exclamation test__steps__result__icon test__steps__result--errored" title="errored"></i></a>
                                                             {% elif test_case.result|lower == 'expected-failure' %}
                                                                <i class="fa-solid fa-person-digging test__steps__result__icon test__steps__result--expected-failure" title="expected-failure"></i>
                                                             {% elif test_case.result|lower == 'unexpected-success' %}
