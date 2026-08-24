@@ -79,6 +79,7 @@ Example:
 ```python
 @execution: automatic
 @exec-time: 46
+@spec: requirement_156
 @covering:
 @environment: INT_ENV_MMI1, INT_ENV_MMI2, INT_ENV_VIRT
 @priority: mid
@@ -129,6 +130,7 @@ def test_01(self):
     @maintainer: Pavel Kumpan
     @execution: automatic
     @exec-time: 46
+    @spec: requirement_156
     @covering:
     @environment: INT_ENV_MMI1, INT_ENV_MMI2, INT_ENV_VIRT
     @priority: mid
@@ -507,31 +509,30 @@ Reporter class `user_data` dictionary is rendered as a table at the top of produ
 
 Reporter instance **doesn't allow** to create reports with just part of the tests (eg. load tests → justify → print reports → load tests → justify → print reports). Similar behaviour can be achieved using multiple reporter instances and using reporters method `add_index_link`.
 
-It is important to keep the order
-
-1. load tests,
-2. load issues, requirements,
-3. load features,
-4. load bugtraq,
-5. justify,
-6. print justified test record
-7. print test plan report,
-8. print issues report,
-9. print rest of reports,
-10. add links to index page,
-11. print index.
+> [!IMPORTANT]
+> It is important to keep the order
+>
+> 1. load tests,
+> 2. load issues, requirements, bugtraq,
+> 3. load features,
+> 4. justify,
+> 5. print justified test record
+> 6. print test plan report,
+> 7. print issues report,
+> 8. print rest of reports,
+> 9. add links to index page,
+> 10. print index.
 
 ```python
-reporter = brunhilda.reporter.Reporter(requirements=['REQ_01', 'REQ_02'],
-                                       user_data={'version': '1.1.2', 'reporter': 'Marry Poppins'},
+reporter = brunhilda.reporter.Reporter(user_data={'version': '1.1.2', 'reporter': 'Marry Poppins'},
                                        user_stories=[doorstop.Item])
 reporter.load_tests('tests_run_1.yaml', 'test_run_1_report.html')
 reporter.load_tests('tests_run_2.yaml', 'test_run_2_report.html')
 reporter.load_issues('issues_run_1.yaml')
 reporter.load_issues('issues_run_2.yaml')
 reporter.load_requirements('requirements.json')
-reporter.load_features('features.yaml')
 reporter.load_bugtraq('.bugtraq')
+reporter.load_features('features.yaml')
 reporter.justify_tests()
 reporter.print_justified_record('tests_run_1.yaml', 'test_run_1_report_justified.html')
 reporter.print_test_plan('plan.html', preamble='preamble.html')
@@ -656,6 +657,7 @@ BRunhilda supports multiple polices for feature and requirement evaluation.
 
 *\* = All results*
 
+> [!NOTE]
 > These two feature / requirement results cannot be affected by evaluation policy:
 >
 > - If feature / requirement doesn't have any test, the result is `NOT-COVERED`.
