@@ -303,6 +303,33 @@ def _subtest_scenario_tests() -> dict:
                     'bug_id': [],
                     'subtests': [],
                     'tags': {}
+                }, {
+                    'test_id': 'TestCase1.test_04_subtest',
+                    'level': 'system',
+                    'result': 'ERRORED',
+                    'comment': 'Some comment',
+                    'bug_id': [],
+                    'subtests':
+                        [
+                            {
+                                'id': "TestCase1.test_04_subtest (i=0, j=0, bc='9.1.2')",
+                                'result': 'FAILED',
+                                'num': 1
+                            }, {
+                                'id': "TestCase1.test_04_subtest (i=1, j=2, bc='9.1.2')",
+                                'result': 'PASSED',
+                                'num': 2
+                            }, {
+                                'id': "TestCase1.test_04_subtest (i=2, j=3, bc='9.1.2')",
+                                'result': 'ERRORED',
+                                'num': 3
+                            }, {
+                                'id': "TestCase1.test_04_subtest (i=2, j=3, bc='9.1.2')",
+                                'result': 'FAILED',
+                                'num': 4
+                            }
+                        ],
+                    'tags': {}
                 }
             ]
     }
@@ -325,6 +352,14 @@ def _subtest_scenario_issues(with_num: bool) -> dict:
                             'sub-test': "TestCase1.test_02_subtest (i=2, j=3, bc='9.1.2')",
                             'result': 'ERRORED',
                             'justified': '',
+                            'comment': '',
+                            'bug-id': '',
+                            'extra': []
+                        }, {
+                            'test': 'TestCase1.test_04_subtest',
+                            'sub-test': "TestCase1.test_04_subtest (i=2, j=3, bc='9.1.2')",
+                            'result': 'ERRORED',
+                            'justified': 'yes',
                             'comment': '',
                             'bug-id': '',
                             'extra': []
@@ -364,12 +399,28 @@ def _subtest_scenario_issues(with_num: bool) -> dict:
                             'comment': 'New error',
                             'bug-id': '',
                             'extra': []
+                        }, {
+                            'test': 'TestCase1.test_04_subtest',
+                            'sub-test': "TestCase1.test_04_subtest (i=0, j=0, bc='9.1.2')",
+                            'result': 'FAILED',
+                            'justified': '',
+                            'comment': '',
+                            'bug-id': '',
+                            'extra': []
+                        }, {
+                            'test': 'TestCase1.test_04_subtest',
+                            'sub-test': "TestCase1.test_04_subtest (i=2, j=3, bc='9.1.2')",
+                            'result': 'FAILED',
+                            'justified': '',
+                            'comment': '',
+                            'bug-id': '',
+                            'extra': []
                         }
                     ]
             }
     }
 
-    nums = [3, 1, 4]
+    nums = [3, 3, 1, 4, 1, 4]
 
     if with_num:
         for issue in issues['issues.json']['errors'] + issues['issues.json']['failures']:
@@ -390,6 +441,7 @@ def test_justify_tests(reporter, with_num):
     test_A = tests[0]
     test_B = tests[1]
     test_C = tests[2]
+    test_D = tests[3]
 
     assert test_A['result'] == 'JUSTIFIED'
     assert 'Known HW error' in test_A['issues_details'][0]['comment']
@@ -407,6 +459,9 @@ def test_justify_tests(reporter, with_num):
 
     assert test_C['result'] == 'ERRORED'
     assert 'New error' in test_C['issues_details'][0]['comment']
+
+    # Check test result reevaluation after subtets justification
+    assert test_D['result'] == 'FAILED'
 
 
 def test_justify_tests_generates_bug_html(reporter):

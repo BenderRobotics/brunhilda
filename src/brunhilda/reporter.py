@@ -19,7 +19,7 @@ from .outputs.html_req_summary_output import HtmlReqSummaryOutput
 from .outputs.html_test_plan_output import HtmlTestPlanOutput
 from .outputs.html_test_summary_output import HtmlTestSummaryOutput
 from .outputs.output import Output
-from .policies import CoveragePolicy
+from .policies import CoveragePolicy, evaluate_result
 from .rel_path import rel_path
 
 try:
@@ -147,7 +147,10 @@ class Reporter:
                     if test['comment']:
                         test['test_comment'] = test['comment']
 
-                    if justifications and all(justifications):
+                    if test['subtests']:
+                        subtest_results = {st.get('result') for st in test['subtests']}
+                        test['result'] = evaluate_result(subtest_results)
+                    elif justifications and all(justifications):
                         test['result'] = 'JUSTIFIED'
 
                     test['issues_details'] = issues_details
