@@ -1,5 +1,15 @@
 # Brunhilda project changelog
 
+## 2.9.1 (2026-08-25)
+
+- Add backward compatibility for older versions execution outputs (refs [#14458](https://redmine.benderrobotics.com/issues/14458), [#14471](https://redmine.benderrobotics.com/issues/14471), [#14479](https://redmine.benderrobotics.com/issues/14479))
+- Add BRunhilda version to execution outputs (refs [#14491](https://redmine.benderrobotics.com/issues/14491))
+- Add link to issue list from features summary (refs [#14463](https://redmine.benderrobotics.com/issues/14463))
+- Add setup of integration tests (refs [#14492](https://redmine.benderrobotics.com/issues/14492))
+- Fix execution distribution and levels graphs protting in Test Run Report (refs [#14495](https://redmine.benderrobotics.com/issues/14495))
+- Fix navigation panel links in features summary (refs [#14274](https://redmine.benderrobotics.com/issues/14274))
+- Fix test result reevaluation after subtests justification (refs [#14489](https://redmine.benderrobotics.com/issues/14489))
+
 ## 2.9.0 (2026-07-29)
 
 - Improve Test summary charts naming (refs [#14264](https://redmine.benderrobotics.com/issues/14264))
