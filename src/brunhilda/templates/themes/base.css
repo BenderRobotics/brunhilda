@@ -126,6 +126,10 @@ table {
     border-spacing: 0;
 }
 
+html {
+    scroll-padding-top: 1.5rem;
+}
+
 
 /**************************************/
 

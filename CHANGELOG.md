@@ -1,5 +1,17 @@
 # Brunhilda project changelog
 
+## [Unreleased]
+
+### 🪄 Added
+
+### 🐛 Fixed
+
+- Fix fixed header overlapping target elements when scrolling to anchors (refs [#14560](https://redmine.benderrobotics.com/issues/14560))
+
+### 🏗️ Changed
+
+### 🗑️ Removed
+
 ## 2.9.1 (2026-08-25)
 
 - Add backward compatibility for older versions execution outputs (refs [#14458](https://redmine.benderrobotics.com/issues/14458), [#14471](https://redmine.benderrobotics.com/issues/14471), [#14479](https://redmine.benderrobotics.com/issues/14479))
