@@ -6,6 +6,7 @@
     <title>{{ name }}</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" media="all">
     <style>
             {% include "themes/base.css" %}
     </style>
@@ -137,19 +138,26 @@
 
             {% if i < issue_count %}
                 {% if has_issue_link %}
+                    {% if '(' in test_case.issues_details[i]['link'] and ')' in test_case.issues_details[i]['link'] %}
+                        {% set subtest_params = ' - ' ~ test_case.issues_details[i]['link'].split('(')[1].split(')')[0] %}
+                    {% else %}
+                        {% set subtest_params = '' %}
+                    {% endif %}
                     {% if test_case.issues_details[i]['result'] == 'ERRORED' %}
                         {% set subtest_class = "subtest--errored" %}
+                        {% set link_icon = '<i class="fa-solid fa-triangle-exclamation test__steps__result--errored" title="errored' ~ subtest_params ~ '"></i>' %}
                     {% elif test_case.issues_details[i]['result'] == 'FAILED' %}
                         {% set subtest_class = "subtest--failed" %}
+                        {% set link_icon = '<i class="fa-regular fa-circle-xmark test__steps__result--failed" title="failed' ~ subtest_params ~ '"></i>' %}
                     {% elif test_case.issues_details[i]['result'] == 'JUSTIFIED' %}
                         {% set subtest_class = "subtest--justified" %}
+                        {% set link_icon = '<i class="fa-solid fa-magnifying-glass test__steps__result--justified" title="justified' ~ subtest_params ~ '"></i>' %}
+                    {% else %}
+                        {% set subtest_class = "" %}
+                        {% set link_icon = '<i class="fa-regular fa-circle-question test__steps__result--failed" title="unknown' ~ subtest_params ~ '"></i>' %}
                     {% endif %}
                 <td class="test__issue {{ subtest_class }}">
-                    <a href="{{ issue_list_path }}#{{ test_case.issues_details[i]['link'] }}"
-                    {% if '(' in test_case.issues_details[i]['link'] and ')' in test_case.issues_details[i]['link'] %}
-                    title="{{ test_case.issues_details[i]['link'].split('(')[1].split(')')[0] }}"
-                    {% endif %}
-                    >🔗 {{ test_case.issues_details[i]['result'][0] }}</a>
+                    <a href="{{ issue_list_path }}#{{ test_case.issues_details[i]['link'] }}">{{ link_icon }}</a>
                 </td>
                 {% else %}
                 <td class="test__issue"></td>

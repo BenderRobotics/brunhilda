@@ -14,6 +14,7 @@
 ### 🏗️ Changed
 
 - Move result icon in front test name in Features Summary (refs [#14476](https://redmine.benderrobotics.com/issues/14476))
+- Replace visualization of issue links with result icon in Test Summary (refs [#14467](https://redmine.benderrobotics.com/issues/14467))
 
 ### 🗑️ Removed
 

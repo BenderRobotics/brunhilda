@@ -522,6 +522,7 @@ input.testcase__expander:checked+.testcase__description {
 .test__issue {
     white-space: nowrap;
     vertical-align: middle;
+    text-align: center;
 }
 
 .test__time {

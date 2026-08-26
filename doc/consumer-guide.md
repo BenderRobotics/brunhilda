@@ -110,7 +110,7 @@ The core of the report is a comprehensive table listing every executed test with
 - **Filters**: You can narrow down the list using the Test Level dropdown or by typing into the Test ID and Test Name search fields which supports `&` (AND), `|` (OR), `!` (NOT), `*` (any string) and `?` (single character), keep in mind that `&` has priority over `|`.
 - **Requirements**: Lists the specific project requirements mapped to each test case.
 - **Test Result (with Links)**: Each result (e.g., "PASSED", "FAILED") is a clickable link that takes you directly to the specific Test Run Report for that execution.
-- **Issue**: Direct link (🔗) to detailed issue descriptions ([List of Issues](#list-of-issues)). This cell is tinted by test result, it's useful for subtests result visualization.
+- **Issue**: Direct link to detailed issue descriptions ([List of Issues](#list-of-issues)). This cell is tinted by test result, it's useful for subtests result visualization.
 - **Bug ID**: Displays associated tickets from issue tracking system.
 - **Comment**: Notes from the QA engineer (for issues) or notes from the test run, usually reason of test skip.
 
