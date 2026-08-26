@@ -10,6 +10,8 @@
 
 ### 🏗️ Changed
 
+- Move result icon in front test name in Features Summary (refs [#14476](https://redmine.benderrobotics.com/issues/14476))
+
 ### 🗑️ Removed
 
 - Remove confusing stats from Features Summary printing progress bar (refs [#14483](https://redmine.benderrobotics.com/issues/14483))
