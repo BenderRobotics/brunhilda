@@ -7,6 +7,7 @@
 ### 🐛 Fixed
 
 - Fix fixed header overlapping target elements when scrolling to anchors (refs [#14560](https://redmine.benderrobotics.com/issues/14560))
+- Fix TOC overlap by Home button in Features Summary (refs [#14461](https://redmine.benderrobotics.com/issues/14461))
 
 ### 🏗️ Changed
 

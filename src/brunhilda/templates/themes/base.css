@@ -1179,6 +1179,7 @@ ol.lowerroman {
     overflow: auto;
     width: 480px;
     padding-left: 20px;
+    padding-top: 4.5rem;
     z-index: 999;
 }
 
