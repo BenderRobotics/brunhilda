@@ -12,6 +12,8 @@
 
 ### 🗑️ Removed
 
+- Remove confusing stats from Features Summary printing progress bar (refs [#14483](https://redmine.benderrobotics.com/issues/14483))
+
 ## 2.9.1 (2026-08-25)
 
 - Add backward compatibility for older versions execution outputs (refs [#14458](https://redmine.benderrobotics.com/issues/14458), [#14471](https://redmine.benderrobotics.com/issues/14471), [#14479](https://redmine.benderrobotics.com/issues/14479))

@@ -22,7 +22,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
     feature group using a specified `FeatureCoveragePolicy` (e.g., STRICT, MAJORITY).
     """
 
-    TQDM_BAR_FORMAT = '    - {desc:<36}: {percentage:3.0f}% |{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]'
+    TQDM_BAR_FORMAT = '    - {desc:<36}: {percentage:3.0f}% |{bar}| {n_fmt}/{total_fmt}'
 
     def _flatten_tests(self, testsuite: Dict, disable_progress_bar: bool) -> List:
         """
