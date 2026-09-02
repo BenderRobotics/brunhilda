@@ -81,7 +81,7 @@ Example:
 @exec-time: 46
 @spec: requirement_156
 @covering:
-@environment: INT_ENV_MMI1, INT_ENV_MMI2, INT_ENV_VIRT
+@environment: INT_ENV_1, INT_ENV_2, INT_ENV_VIRT
 @priority: mid
 ```
 
@@ -132,7 +132,7 @@ def test_01(self):
     @exec-time: 46
     @spec: requirement_156
     @covering:
-    @environment: INT_ENV_MMI1, INT_ENV_MMI2, INT_ENV_VIRT
+    @environment: INT_ENV_1, INT_ENV_2, INT_ENV_VIRT
     @priority: mid
     @variants:
 
@@ -433,7 +433,7 @@ runner = brunhilda.BRunhilda(user_data={'version': '1.0.0'},
                              verbosity=3,
                              stream=sys.stdout,
                              name='system',
-                             dut='MMI2',
+                             dut='PC1',
                              extra_data_output="dev/extra")
 
 # create the test loader
@@ -585,11 +585,11 @@ BRunhilda supports linking DUT features to individual test requirements. Each fe
 feature group 1:            # group of features
 - feature A:                # feature A
     link:
-      MMI_PGF_G04:          # name of the specification used in test @spec tag
+      REQ_G04:              # name of the specification used in test @spec tag
         bc:                 # additional specification parameter name (sub-test parameter)
         - 9.E               # additional specification parameter value (sub-test parameter)
         - 9.*               # additional specification parameter value wildcard (sub-test parameter)
-      MMI_PGF_L21_4: {}     # specification without additional parameter
+      REQ_L21_4: {}         # specification without additional parameter
     order: 8100             # numerical order
 - feature B:
     ...

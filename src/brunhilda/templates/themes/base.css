@@ -1252,6 +1252,10 @@ ol.lowerroman {
     background-color: var(--color--out-of-scope-bg);
 }
 
+.feature--not-covered {
+    background-color: var(--color--not-covered-bg);
+}
+
 
 /**************************************/
 /* Style of requirements fields */

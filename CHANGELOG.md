@@ -4,6 +4,8 @@
 
 ### 🪄 Added
 
+- Add background color for not covered features in Features Summary (refs [#14460](https://redmine.benderrobotics.com/issues/14460))
+
 ### 🐛 Fixed
 
 - Fix fixed header overlapping target elements when scrolling to anchors (refs [#14560](https://redmine.benderrobotics.com/issues/14560))
