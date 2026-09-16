@@ -240,7 +240,7 @@
                                         {% endif %}
                                             {% if feature.links[link][test_group].tests %}
                                                 <td class="">{{ feature.links[link][test_group].level }}</td>
-                                                <td class="feature--{{ feature.links[link][test_group].result|lower }}">
+                                                <td class="feature-test--{{ feature.links[link][test_group].result|lower }}">
                                                     {% set test_cases_ok = namespace(value=0) %}
 
                                                     {% for test_case in feature.links[link][test_group].tests %}

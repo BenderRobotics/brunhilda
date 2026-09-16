@@ -195,7 +195,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                                                 entry['links'][link][test_group] = {
                                                     'tests': [],
                                                     'level': test['level'],
-                                                    'results': set(),
+                                                    'results': [],
                                                     'seen_tests': set(),
                                                 }
 
@@ -204,7 +204,9 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                                                 requirement_tests[link].add(test_case_id)
                                                 if test_case_id not in entry['links'][link][test_group]['seen_tests']:
                                                     entry['links'][link][test_group]['tests'].append(test_case)
-                                                    entry['links'][link][test_group]['result'] = test_case['result']
+                                                    entry['links'][link][test_group]['results'].append(
+                                                        test_case['result']
+                                                    )
                                                     entry['links'][link][test_group]['seen_tests'].add(test_case_id)
                                                     feature_results.append(test_case['result'])
                                     else:
@@ -214,7 +216,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                                             entry['links'][link][test_group] = {
                                                 'tests': [],
                                                 'level': test['level'],
-                                                'results': set(),
+                                                'results': [],
                                                 'seen_tests': set(),
                                             }
 
@@ -222,7 +224,7 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
                                         requirement_tests[link].add(test_case_id)
                                         if test_case_id not in entry['links'][link][test_group]['seen_tests']:
                                             entry['links'][link][test_group]['tests'].append(test_case)
-                                            entry['links'][link][test_group]['result'] = test_case['result']
+                                            entry['links'][link][test_group]['results'].append(test_case['result'])
                                             entry['links'][link][test_group]['seen_tests'].add(test_case_id)
                                             feature_results.append(test_case['result'])
 
@@ -252,13 +254,20 @@ class HtmlFeatureSummaryOutput(HtmlOutput):
             colour='#2ecc71',
             bar_format=self.TQDM_BAR_FORMAT
         ) as pbar:
-            # remove empty test groups
+            # remove empty test groups and evaluate test groups results
             for group in entries:
                 for entry in entries[group]:
                     for link in entry['links']:
                         for test_group in list(entry['links'][link].keys()):
-                            if not entry['links'][link][test_group]['tests'] and len(entry['links'][link]) > 1:
+                            test_group_dict = entry['links'][link][test_group]
+                            if not test_group_dict['tests'] and len(entry['links'][link]) > 1:
                                 del entry['links'][link][test_group]
+                            else:
+                                if test_group_dict['results']:
+                                    test_group_dict['result'] = evaluate_result(
+                                        test_group_dict['results'], evaluation_policy
+                                    )
+
                     pbar.update(1)
 
         template = self.load_template('summary-features.html.jinja2')

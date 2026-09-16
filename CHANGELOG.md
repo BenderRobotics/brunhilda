@@ -11,11 +11,13 @@
 
 - Fix fixed header overlapping target elements when scrolling to anchors (refs [#14560](https://redmine.benderrobotics.com/issues/14560))
 - Fix TOC overlap by Home button in Features Summary (refs [#14461](https://redmine.benderrobotics.com/issues/14461))
+- Fix test case background color in Features Summary (refs [#14479](https://redmine.benderrobotics.com/issues/14479))
 
 ### 🏗️ Changed
 
 - Move result icon in front test name in Features Summary (refs [#14476](https://redmine.benderrobotics.com/issues/14476))
 - Replace visualization of issue links with result icon in Test Summary (refs [#14467](https://redmine.benderrobotics.com/issues/14467))
+- Reduce size of test case collapsible button in Features Summary
 
 ### 🗑️ Removed
 

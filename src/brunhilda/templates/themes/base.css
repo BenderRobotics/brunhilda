@@ -1153,8 +1153,8 @@ ol.lowerroman {
     color: #444;
     cursor: pointer;
     padding: 5px;
-    width: 100%;
     border: none;
+    border-radius: 6px;
     text-align: left;
     outline: none;
   }
@@ -1255,6 +1255,38 @@ ol.lowerroman {
 
 .feature--not-covered {
     background-color: var(--color--not-covered-bg);
+}
+
+.feature-test--passed {
+    background-color: var(--color--pass-bg);
+}
+
+.feature-test--justified {
+    background-color: var(--color--justified-bg);
+}
+
+.feature-test--skipped {
+    background-color: var(--color--skip-bg);
+}
+
+.feature-test--failed {
+    background-color: var(--color--fail-bg);
+}
+
+.feature-test--errored {
+    background-color: var(--color--error-bg);
+}
+
+.feature-test--not-executed {
+    background-color: var(--color--not-executed-bg);
+}
+
+.feature-test--unexpected-success {
+    background-color: var(--color--unexpected-success-bg);
+}
+
+.feature-test--expected-failure {
+    background-color: var(--color--expected-failure-bg);
 }
 
 

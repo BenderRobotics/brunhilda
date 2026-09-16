@@ -1,0 +1,5 @@
+Core:
+- F1:
+    link:
+      REQ-001: {}
+    order: 1

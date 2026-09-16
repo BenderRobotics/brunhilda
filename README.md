@@ -48,10 +48,14 @@ The project includes both unit tests and integration tests.
 
 #### Integration Tests
 
-Most reporting issues stem from backward-compatibility bugs—specifically when generating reports from datasets produced by older runner versions. To prevent regressions, integration tests are executed against **two datasets**:
+Integration tests verify report generation and prevent regressions. They support two execution modes depending on whether backward compatibility needs to be verified:
 
-1. **Original Dataset (`<runner_version>`):** Anonymized execution data captured from the specific runner version where the bug was reported.
-2. **Current Dataset (`head`):** Fresh execution data generated dynamically by running sample tests on the current version.
+- **Backward-Compatibility Testing (Two Datasets)**: Used for bug fixes where reports must be validated against datasets produced by older runner versions.
+
+    1. **Original Dataset (`<runner_version>`):** Anonymized execution data captured from the specific runner version where the bug was reported.
+    2. **Current Dataset (`head`):** Fresh execution data generated dynamically by running sample tests on the current version.
+
+- **Single-Dataset Testing**: Used when testing general report features, layout, or formatting without needing legacy version comparisons. Only the current dataset is required, and the test fixture automatically skips the legacy execution pass if no legacy dataset folder is present.
 
 ##### Directory Structure
 
@@ -62,8 +66,11 @@ test/integration/14492/
 ├── test_14492_report_generation.py
 └── data/
     ├── 2.8.1/    # Original data from the bug ticket
-    └── head/      # Data generated from current execution
+    └── head/     # Data generated from current execution
 ```
+
+> [!NOTE]
+> If no legacy folder (e.g., `2.8.1/`) is present in `data/`, the fixture automatically detects this and runs in single-dataset mode.
 
 ### Visual Studio Code tasks
 
@@ -71,5 +78,6 @@ To speed up the execution of useful operations for development, vscode tasks are
 
 - `static-type-check` Static type checking using `mypy`
 - `test-with-coverage` Running unit tests including measuring code coverage.
+- `integration-tests` Running integration tests.
 
 > Tasks can be run within vscode `Terminal -> Run Tasks...`

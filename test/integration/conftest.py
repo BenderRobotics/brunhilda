@@ -1,3 +1,5 @@
+import sys
+import unittest
 from pathlib import Path
 
 import pytest
@@ -16,8 +18,16 @@ def generated_reports(request: pytest.FixtureRequest,
     """
     Generate the three HTML reports for one dataset and parse them with BeautifulSoup.
 
-    Parametrized over both datasets: the legacy `data/<version>` folder captured from the
-    runner version that reported the bug, and `data/head` executed against the current code.
+    This fixture is parametrized to run over two datasets:
+    1. 'original_data' - legacy data captured from an older runner version.
+    2. 'actual_data' - data executed against the current code in the `data/head` directory.
+
+    If no legacy data folder is found in the `data/` directory (ignoring `head`,
+    `__pycache__`, etc.), the 'original_data' run is automatically skipped via `pytest.skip`,
+    effectively adapting to a single-dataset test environment.
+
+    The `features.yaml` file is resolved dynamically, searching in `data/`, `data/head/`,
+    and the legacy folder, making it suitable for both legacy and single-dataset layouts.
 
     A test module may define a module-level `customize_issues(issues_file: Path) -> None`
     hook. When present it is called on the freshly generated `issues.json` before the
@@ -32,17 +42,37 @@ def generated_reports(request: pytest.FixtureRequest,
     test_dir = Path(request.module.__file__).resolve().parent
     data_dir = test_dir / 'data'
 
-    legacy_folders = sorted(p for p in data_dir.iterdir() if p.is_dir() and p.name != 'head')
-    if len(legacy_folders) != 1:
-        pytest.fail(f'expected one legacy data folder in {data_dir}, found {[p.name for p in legacy_folders]}')
-    legacy_folder = legacy_folders[0]
+    legacy_folders = sorted(p for p in data_dir.iterdir() if p.is_dir() and p.name not in ('head', '__pycache__'))
+    legacy_folder = legacy_folders[0] if legacy_folders else None
+    print(legacy_folder)
 
-    head_folder = data_dir / 'head'
+    if data_source == 'original_data':
+        if legacy_folder is None:
+            pytest.skip('Test needs just actual dataset (legacy data are skipped).')
 
-    features_yaml_path = legacy_folder / 'features.yaml'
+    head_folder = data_dir / 'head' if (data_dir / 'head').exists() else data_dir
+
+    # features.yaml search
+    candidate_paths = [
+        data_dir / 'features.yaml',
+        head_folder / 'features.yaml',
+    ]
+    if legacy_folder:
+        candidate_paths.append(legacy_folder / 'features.yaml')
+
+    features_yaml_path = next((path for path in candidate_paths if path.is_file()), None)
+
+    if not features_yaml_path:
+        pytest.fail(f'features.yaml was not find in any of those locations: {candidate_paths}')
 
     if data_source == 'actual_data':
         folder = tmp_path
+
+        # Reset inner loader state
+        if 'test' in sys.modules:
+            del sys.modules['test']
+        unittest.defaultTestLoader._top_level_dir = None
+
         # Create suite
         runner = BRunhilda()
         loader = BRunhildaTestLoader()

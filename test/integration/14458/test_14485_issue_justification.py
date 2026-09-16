@@ -101,7 +101,7 @@ def test_test_case_justification_in_features_summary(generated_reports: dict[str
     test_case_cell = main_table_feature_row.find_all('td')[-1]
 
     assert 'feature--justified' in feature_name_cell.get('class')
-    assert 'feature--justified' in test_case_cell.get('class')
+    assert 'feature-test--justified' in test_case_cell.get('class')
 
     test_cases = test_case_cell.select_one('div.collapsible__content').ul.find_all('li')
 
