@@ -72,6 +72,10 @@ class BRunhildaTestLoader:
             )
 
             for test in iter_suite(suite):
+                if test.__class__ == unittest.loader._FailedTest:
+                    tests.addTest(test)
+                    continue
+
                 if tag_filter is None:
                     tests.addTest(test)
                 else:

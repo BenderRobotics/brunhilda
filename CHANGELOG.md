@@ -13,6 +13,7 @@
 - Fix fixed header overlapping target elements when scrolling to anchors (refs [#14560](https://redmine.benderrobotics.com/issues/14560))
 - Fix TOC overlap by Home button in Features Summary (refs [#14461](https://redmine.benderrobotics.com/issues/14461))
 - Fix test case background color in Features Summary (refs [#14479](https://redmine.benderrobotics.com/issues/14479))
+- Fix test discover mechanism for invalid import modules whose tests are not dropped now (refs [#14749](https://redmine.benderrobotics.com/issues/14749))
 
 ### 🏗️ Changed
 
