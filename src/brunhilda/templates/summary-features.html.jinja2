@@ -260,7 +260,7 @@
                                                         {% else %}
                                                             {% set test_plan_path = test_plan_paths['_'] %}
                                                         {% endif %}
-                                                        {% if test_case.result|lower == 'failed' or test_case.result|lower == 'errored' %}
+                                                        {% if test_case.result|lower == 'failed' or test_case.result|lower == 'errored' or test_case.result|lower == 'justified' %}
                                                             {% if test_case.issues_details|length == 1 %}
                                                                 {% set issue_link = test_case.issues_details[0]['link'] %}
                                                             {% else %}
@@ -271,7 +271,7 @@
                                                             {% if test_case.result|lower == 'passed' %}
                                                                 <i class="fa-solid fa-check fa-fw test__steps__result__icon test__steps__result--passed" title="passed"></i>
                                                             {% elif test_case.result|lower == 'justified' %}
-                                                               <i class="fa-solid fa-magnifying-glass fa-fw test__steps__result__icon test__steps__result--justified" title="justified"></i>
+                                                               <a href="{{ issue_list_path }}#{{ issue_link }}"><i class="fa-solid fa-magnifying-glass fa-fw test__steps__result__icon test__steps__result--justified" title="justified"></i></a>
                                                             {% elif test_case.result|lower == 'failed' %}
                                                                 <a href="{{ issue_list_path }}#{{ issue_link }}"><i class="fa-regular fa-circle-xmark fa-fw test__steps__result__icon test__steps__result--failed" title="failed"></i></a>
                                                             {% elif test_case.result|lower == 'skipped' %}

@@ -255,7 +255,7 @@ The main body of the report contains detailed tables for each group:
 
 - **Feature Mapping**: Each row shows a feature and the specific Requirement IDs associated with it.
 - **Traceability**: Displays the Test Level (System, Manual, etc.) and the specific Test Case names.
-- **Interactive Details**: If a requirement is covered by tests or subtests, a collapsible button with test name is available. Clicking it expands a list of individual results where result icon for FAILED and ERRORED tests work as a link to [List of Issues](#list-of-issues).
+- **Interactive Details**: If a requirement is covered by tests or subtests, a collapsible button with test name is available. Clicking it expands a list of individual results where result icon for FAILED, ERRORED and JUSTIFIED tests work as a link to [List of Issues](#list-of-issues).
 
 | ![Summary of Features screenshot](images/summary_of_features_screenshot.png) |
 | :--: |
