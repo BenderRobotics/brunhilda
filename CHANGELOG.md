@@ -6,6 +6,7 @@
 
 - Add background color for not covered features in Features Summary (refs [#14460](https://redmine.benderrobotics.com/issues/14460))
 - Add list of issues link for justified tests in Features Summary (refs [#14463](https://redmine.benderrobotics.com/issues/14463))
+- Add pypi.com package upload CI job (refs [#8387](https://redmine.benderrobotics.com/issues/8387))
 
 ### 🐛 Fixed
 
