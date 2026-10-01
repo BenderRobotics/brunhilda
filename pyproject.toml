@@ -36,9 +36,9 @@ classifiers = [
 ]
 
 [project.urls]
-homepage = "https://gitlab.benderrobotics.com/br/tools/brunhilda"
-documentation = "https://gitlab.benderrobotics.com/br/tools/brunhilda"
-repository = "https://gitlab.benderrobotics.com/br/tools/brunhilda"
+homepage = "https://www.benderrobotics.com"
+repository = "https://github.com/BenderRobotics/brunhilda"
+issues = "https://github.com/BenderRobotics/brunhilda/issues"
 
 [project.optional-dependencies]
 test = [
