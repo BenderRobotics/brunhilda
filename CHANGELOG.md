@@ -1,5 +1,11 @@
 # Brunhilda project changelog
 
+## 2.9.3 (2026-10-13)
+
+### 🐛 Fixed
+
+- Fix declared Python version to actual valid one (refs [#14864](https://redmine.benderrobotics.com/issues/14864))
+
 ## 2.9.2 (2026-09-23)
 
 ### 🪄 Added
