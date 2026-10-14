@@ -3,7 +3,7 @@ name = "brunhilda"
 description = "Bender Robotics System Test Runner"
 dynamic = ["version"]
 authors = [
-    { name = "Pavel Kumpan", email = "kumpan@benderrobotics.com" },
+    { name = "Bender Robotics s.r.o", email = "opensource@benderrobotics.com" },
 ]
 license = "MIT"
 license-files = ["LICENSE"]
